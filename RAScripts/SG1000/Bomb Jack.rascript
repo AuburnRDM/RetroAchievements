@@ -65,11 +65,11 @@ LevelBlock = {
     "11":{"titleProg":"Chariots of Fire","titleBomb":"Bombs in The Parthenon","titleSpeed":"Short Fuse II", 
         "points":5,"pointsBomb":10,"pointsSpeed":10, "start":11, "last":20, "firebombtarget":22, "speedDesc":"3 minutes and 15 seconds", "speedrun":11701},
     "21":{"titleProg":"Royal Flames","titleBomb":"Bombs in the Castle","titleSpeed":"Short Fuse III", 
-        "points":5,"pointsBomb":10,"pointsSpeed":10, "start":21, "last":30, "firebombtarget":22, "speedDesc":"3 minutes and 30 seconds","speedrun":12601},
+        "points":5,"pointsBomb":10,"pointsSpeed":10, "start":21, "last":30, "firebombtarget":21, "speedDesc":"3 minutes and 30 seconds","speedrun":12601},
     "31":{"titleProg":"Tense Situations","titleBomb":"Bombs in the City","titleSpeed":"Short Fuse IV", 
-        "points":5,"pointsBomb":10,"pointsSpeed":10, "start":31, "last":40, "firebombtarget":22, "speedDesc":"3 minutes and 45 seconds","speedrun":13501},
+        "points":5,"pointsBomb":10,"pointsSpeed":10, "start":31, "last":40, "firebombtarget":20, "speedDesc":"3 minutes and 30 seconds","speedrun":12601},
     "41":{"titleProg":"California Sun","titleBomb":"Bombs on the Horizon","titleSpeed":"Short Fuse V", 
-        "points":10,"pointsBomb":10,"pointsSpeed":25, "start":41, "last":50, "firebombtarget":22, "speedDesc":"4 minutes","speedrun":14401}
+        "points":10,"pointsBomb":25,"pointsSpeed":25, "start":41, "last":50, "firebombtarget":20, "speedDesc":"3 minutes and 45 seconds","speedrun":13501}
 }
 
 level_array = [1,11,21,31,41]
@@ -107,7 +107,7 @@ function BombAchievement(startround) { achievement(
             once(GameState == Active && RoundDisplay == LevelBlock[startround]["start"]+7 && FireBombs >= LevelBlock[startround]["firebombtarget"]),
             once(GameState == Active && RoundDisplay == LevelBlock[startround]["start"]+8 && FireBombs >= LevelBlock[startround]["firebombtarget"]),
             once(GameState == Active && RoundDisplay == LevelBlock[startround]["start"]+9 && FireBombs >= LevelBlock[startround]["firebombtarget"]))) &&
-        never(BombsRemaining != 0 && BombsRemaining + FireBombs < 22) &&
+        never(BombsRemaining != 0 && BombsRemaining + FireBombs < LevelBlock[startround]["firebombtarget"]) &&
         never(prev(Round) != Round && prev(BombsRemaining) > 0) && 
         never(TwoPlayerActive)
 )}
@@ -172,7 +172,7 @@ achievement(
 achievement( // test this
     title = "Lucky Player", points = 2,
     description = "Collect the 'S' token and learn how to use the round select.",
-    trigger = InGame && RoundDisplay > prev(RoundDisplay) && prev(BombsRemaining) > 0 && FireBombs != 0x19
+    trigger = InGame && RoundDisplay > prev(RoundDisplay) && prev(BombsRemaining) > 0 && prior(FireBombs) != 0x19
 )
 achievement(
     title = "Coin Collector", points = 4,
@@ -216,12 +216,12 @@ function SpeedLeaderboard(startround) { leaderboard(
 for level_array in LevelBlock
     SpeedLeaderboard(level_array)
     
-rich_presence_conditional_display(GameState == Active, "Jack is defusing bombs on Round {0} [Score: {1}] [Lives: {2}]",
+rich_presence_conditional_display(GameState == Active, "Jack is defusing bombs on Round {0} • Score: {1} • Lives: {2}",
         rich_presence_value("Digit", RoundDisplay, format="VALUE"),
         rich_presence_value("Digit", CurrentScore * 10, format="VALUE"),
         rich_presence_value("Digit", Lives, format="VALUE")
 )
 rich_presence_conditional_display(GameState == Demo || GameState == 2, "Jack is putting on a show during the demo play")
-rich_presence_display("Jack is on the menus [High Score: {0}]",
+rich_presence_display("Jack is on the menus • High Score: {0}",
         rich_presence_value("Digit", HighScore * 10, format="VALUE")
 )
