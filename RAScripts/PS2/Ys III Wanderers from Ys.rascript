@@ -1355,13 +1355,13 @@ rich_presence_conditional_display(Game_State == 1 && Game_Status == 1 && Stage =
 )
 
 rich_presence_conditional_display(RushBest== 0x1b7740 && Stage == 9 && Items() == 10 && Ring == None && RingMP == 0xff,
-    "Adol is challenging {0} in the Boss Rush without Rings or Items || Current: {1}",
+    "Adol is challenging {0} in the Boss Rush without Rings or Items • Current: {1}",
         rich_presence_lookup("Boss", Screen, BRLookup),
         rich_presence_value("Time2", Playtime, format="FRAMES")
 )
 
 rich_presence_conditional_display(Stage == 9 && Items() == 10 && Ring == None && RingMP == 0xff,
-    "Adol is challenging {0} in the Boss Rush without Rings or Items || Current: {1} || Last: {2} || Best: {3}",
+    "Adol is challenging {0} in the Boss Rush without Rings or Items • Current: {1} • Last: {2} • Best: {3}",
         rich_presence_lookup("Boss", Screen, BRLookup),
         rich_presence_value("Time2", Playtime, format="FRAMES"),
         rich_presence_value("Rush", RecentRush/10, format="MILLISECS"),
@@ -1369,20 +1369,20 @@ rich_presence_conditional_display(Stage == 9 && Items() == 10 && Ring == None &&
 )
 
 rich_presence_conditional_display(RushBest== 0x1b7740 && Stage == 9,
-    "Adol is challenging {0} in the Boss Rush || Current: {1}",
+    "Adol is challenging {0} in the Boss Rush • Current: {1}",
         rich_presence_lookup("Boss", Screen, BRLookup),
         rich_presence_value("Time2", Playtime, format="FRAMES")
 )
 
 rich_presence_conditional_display(Stage == 9,
-    "Adol is challenging {0} in the Boss Rush || Current: {1} || Last: {2} || Best: {3}",
+    "Adol is challenging {0} in the Boss Rush • Current: {1} • Last: {2} • Best: {3}",
         rich_presence_lookup("Boss", Screen, BRLookup),
         rich_presence_value("Time2", Playtime, format="FRAMES"),
         rich_presence_value("Rush", RecentRush/10, format="MILLISECS"),
         rich_presence_value("Rush", RushBest/10, format="MILLISECS")        
 )
 rich_presence_conditional_display(Game_Status == 1 && Game_State == 0 || Game_State == 3, 
-    "[{0}] Adol is Level {1} and exploring {2} || ⚔️[{3}/6] 👚[{4}/6] 🛡️[{5}/6] 💰[{6}] 🕘[{7}m]",
+    "[{0}] Adol is Level {1} and exploring {2} • ⚔️[{3}/6] 👚[{4}/6] 🛡️[{5}/6] 💰[{6}] 🕘[{7}m]",
         rich_presence_lookup("Difficulty", Difficulty, DifficultyLookup),
         rich_presence_value("Digit", Adol_Level, format="VALUE"),
         rich_presence_lookup("Stage", Stage, StageLookup),        
@@ -1393,7 +1393,7 @@ rich_presence_conditional_display(Game_Status == 1 && Game_State == 0 || Game_St
         rich_presence_value("Time", Playtime/3600, format="MINUTES")
 )
 
-rich_presence_conditional_display(Game_State == 4, "[{0}] Adol is Level {1} and in the menus || ⚔️[{2}/6] 👚[{3}/6] 🛡️[{4}/6] 💰[{5}] 🕘[{6}m]",
+rich_presence_conditional_display(Game_State == 4, "[{0}] Adol is Level {1} and in the menus • ⚔️[{2}/6] 👚[{3}/6] 🛡️[{4}/6] 💰[{5}] 🕘[{6}m]",
         rich_presence_lookup("Difficulty", Difficulty, DifficultyLookup),
         rich_presence_value("Digit", Adol_Level, format="VALUE"),               
         rich_presence_value("Digit", SwordCount, format="VALUE"),
@@ -1403,7 +1403,7 @@ rich_presence_conditional_display(Game_State == 4, "[{0}] Adol is Level {1} and 
         rich_presence_value("Time", Playtime/3600, format="MINUTES")
 )
 
-rich_presence_display("[{0}] Adol is Level {1} on the Overworld Map || ⚔️[{2}/6] 👚[{3}/6] 🛡️[{4}/6] 💰[{5}] 🕘[{6}m]",
+rich_presence_display("[{0}] Adol is Level {1} on the Overworld Map • ⚔️[{2}/6] 👚[{3}/6] 🛡️[{4}/6] 💰[{5}] 🕘[{6}m]",
     rich_presence_lookup("Difficulty", Difficulty, DifficultyLookup),
     rich_presence_value("Digit", Adol_Level, format="VALUE"),
     rich_presence_value("Digit", SwordCount, format="VALUE"),
