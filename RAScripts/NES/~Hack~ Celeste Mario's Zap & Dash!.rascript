@@ -744,49 +744,49 @@ leaderboard(
 
 rich_presence_conditional_display(MaxHearts != 2, "Mario is preparing for a journey"    
 )
-rich_presence_conditional_display(Map==BSide,"Mario is taking on the B-Side challenge 🌙[{2}/101] 💀[{3}]",
+rich_presence_conditional_display(Map==BSide,"Mario is taking on the B-Side challenge • 🌙[{2}/101] 💀[{3}]",
     rich_presence_lookup("map", Map, map),
     rich_presence_value("Digit", MapCheckFull(), format="VALUE"),
     rich_presence_value("Digit", TotalMoons, format="VALUE"),
     rich_presence_value("Digit", TotalDeath(), format="VALUE")
 )
-rich_presence_conditional_display(Map==Cave && Room == 0x1d,"Mario is taking on the Spiky challenge 🌙[{2}/101] 💀[{3}]",
+rich_presence_conditional_display(Map==Cave && Room == 0x1d,"Mario is taking on the Spiky challenge • 🌙[{2}/101] 💀[{3}]",
     rich_presence_lookup("map", Map, map),
     rich_presence_value("Digit", MapCheckFull(), format="VALUE"),
     rich_presence_value("Digit", TotalMoons, format="VALUE"),
     rich_presence_value("Digit", TotalDeath(), format="VALUE")
 )
-rich_presence_conditional_display(Map==Mountain&&(Room==0||Room ==2),"Mario is learning the ropes in the Intro 🌙[{2}/101] 💀[{3}]",
+rich_presence_conditional_display(Map==Mountain&&(Room==0||Room ==2),"Mario is learning the ropes in the Intro • 🌙[{2}/101] 💀[{3}]",
     rich_presence_lookup("map", Map, map),
     rich_presence_value("Digit", MapCheckFull(), format="VALUE"),
     rich_presence_value("Digit", TotalMoons, format="VALUE"),
     rich_presence_value("Digit", TotalDeath(), format="VALUE")
 )
-rich_presence_conditional_display(Deathless > 0,"Mario is attempting a deathless challenge in the {0} 🌙[{2}/101] 💀[{3}]",
+rich_presence_conditional_display(Deathless > 0,"Mario is attempting a deathless challenge in the {0} • 🌙[{2}/101] 💀[{3}]",
     rich_presence_lookup("map", Map, map),
     rich_presence_value("Digit", MapCheckFull(), format="VALUE"),
     rich_presence_value("Digit", TotalMoons, format="VALUE"),
     rich_presence_value("Digit", TotalDeath(), format="VALUE")
 )
-rich_presence_conditional_display(DreamMapCheck() || Map == Dream,"Mario is exploring the Dream area 🗺️[{1}/95] 🌙[{2}/101] 💀[{3}]",
+rich_presence_conditional_display(DreamMapCheck() || Map == Dream,"Mario is exploring the Dream area • 🗺️[{1}/95] 🌙[{2}/101] 💀[{3}]",
     rich_presence_lookup("map", Map, map),
     rich_presence_value("Digit", MapCheckFull(), format="VALUE"),
     rich_presence_value("Digit", TotalMoons, format="VALUE"),
     rich_presence_value("Digit", TotalDeath(), format="VALUE")
 )
-rich_presence_conditional_display(Map==Cave,"Mario is exploring the Cave area 🗺️[{1}/77] 🌙[{2}/101] 💀[{3}]",
+rich_presence_conditional_display(Map==Cave,"Mario is exploring the Cave area • 🗺️[{1}/77] 🌙[{2}/101] 💀[{3}]",
     rich_presence_lookup("map", Map, map),
     rich_presence_value("Digit", MapCheckFull(), format="VALUE"),
     rich_presence_value("Digit", TotalMoons, format="VALUE"),
     rich_presence_value("Digit", TotalDeath(), format="VALUE")
 )
-rich_presence_conditional_display(Map==Mountain,"Mario is exploring the Mountain area 🗺️[{1}/64] 🌙[{2}/101] 💀[{3}]",
+rich_presence_conditional_display(Map==Mountain,"Mario is exploring the Mountain area • 🗺️[{1}/64] 🌙[{2}/101] 💀[{3}]",
     rich_presence_lookup("map", Map, map),
     rich_presence_value("Digit", MapCheckFull(), format="VALUE"),
     rich_presence_value("Digit", TotalMoons, format="VALUE"),
     rich_presence_value("Digit", TotalDeath(), format="VALUE")
 )
-rich_presence_display("Mario is exploring the {0} 🌙[{2}/101] 💀[{3}]",
+rich_presence_display("Mario is exploring the {0} • 🌙[{2}/101] 💀[{3}]",
     rich_presence_lookup("map", Map, map),
     rich_presence_value("Digit", MapCheckFull(), format="VALUE"),
     rich_presence_value("Digit", TotalMoons, format="VALUE"),
