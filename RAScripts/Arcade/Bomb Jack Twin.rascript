@@ -52,7 +52,7 @@ MaxLives = bit6(0x9807) == 1 && bit7(0x9807) == 0
 //        Bits 1,2,3
 // $9820: [8-bit] Number of levels cleared in current arcade run; - Changing this changes the next level
 //        - Goes up to 0x45 and then rolls back to 0x00 and adds 0x01 to $9822 and 'loops' even though there are only 32 unique maps
-Stage = byte(0x9820) + 1
+Stage = byte(0x9820)
 StageRP = {
     1:"1-1",2:"1-2",3:"1-3",4:"Bonus"
 // $9822: [8-bit] Current 'loop'; this starts at 0x00 and goes up by 0x01 every 20 rounds cleared
@@ -84,6 +84,7 @@ Multiplier = byte(0x9870)
 // $9878: [8-bit] Progress towards extra life; goes up every time an enemy is killed and will spawn a life if the threshold is met and a bonus coin would otherwise spawn
 //        - First extra life at 0x2f, next at 0x
 //        - Resets with continue
+EnemyKills = byte(0x9878)
 // $9882: [8-bit] Game states
 //        0x01 - Main menu/demo
 //        0x02 ~ 0x04 - In a stage (changes in order)
@@ -106,39 +107,42 @@ EnemyCombo = byte(0x988C)
 
 //Data
 RoundData = {
-    1:{"pTitle":"1jdf","pPoints":2,"fTitle":"1dl","fPoints","startLevel":1,"endLevel":3"},
-    2:{"pTitle":"2jdf1","pPoints":2,"fTitle":"2dl1","fPoints","startLevel":1,"endLevel":3"},
-    3:{"pTitle":"3jdf","pPoints":2,"fTitle":"3dl","fPoints","startLevel":1,"endLevel":3"},
-    4:{"pTitle":"4jdf","pPoints":2,"fTitle":"4dl","fPoints","startLevel":1,"endLevel":3"},
-    5:{"pTitle":"5jdf","pPoints":2,"fTitle":"5dl","fPoints","startLevel":1,"endLevel":3"},
-    6:{"pTitle":"6jdf","pPoints":2,"fTitle":"6dl","fPoints","startLevel":1,"endLevel":3"},
-    7:{"pTitle":"7jdf","pPoints":2,"fTitle":"7dl","fPoints","startLevel":1,"endLevel":3"},
-    8:{"pTitle":"8jdf","pPoints":2,"fTitle":"8dl","fPoints","startLevel":1,"endLevel":3"},
-    9:{"pTitle":"9jdf","pPoints":2,"fTitle":"9dl","fPoints","startLevel":1,"endLevel":3"}
+    1:{"fTitle":"bomb1","fPoints":5,"fBombs":23,"startLevel":0x0,"endLevel":0x2},
+    2:{"fTitle":"bomb2","fPoints":5,"fBombs":23,"startLevel":0x4,"endLevel":0x6},
+    3:{"pTitle":"3prog","pPoints":2,"fTitle":"bomb3","fPoints":5,"fBombs":22,"startLevel":0x7,"endLevel":0x9,"fDesc":"at least "},
+    4:{"fTitle":"bomb4","fPoints":5,"fBombs":22,"startLevel":0xb,"endLevel":0xd,"fDesc":"at least "},
+    5:{"fTitle":"bomb5","fPoints":10,"fBombs":21,"startLevel":0xe,"endLevel":0x1a,"fDesc":"at least "},
+    6:{"pTitle":"6prog","pPoints":3,"fTitle":"bomb6","fPoints":10,"fBombs":21,"startLevel":0x1c,"endLevel":0x1e,"fDesc":"at least "},
+    7:{"fTitle":"bomb7","fPoints":10,"fBombs":20,"startLevel":0x1f,"endLevel":0x21,"fDesc":"at least "},
+    8:{"fTitle":"bomb8","fPoints":10,"fBombs":20,"startLevel":0x22,"endLevel":0x25,"fDesc":"at least "},
+    9:{"pTitle":"9prog","pPoints":5,"fTitle":"bomb9","fPoints":25,"fBombs":20,"startLevel":0x26,"endLevel":0x28,"fDesc":"at least "}
 
 //Functions
-
-function CreditProtection(round) =>
+CreditUsed = (Credit < prev(Credit)) || (FreePlay && prev(Credit) == 0 && Credit == 9)
+CreditProtection = once(InGame && InStage && BombsCollected == 0)
+function CreditProtectionRound(round) =>
     once(InGame && InStage && Stage == RoundData[round]["startLevel"] && BombsCollected == 0)
 
-function ProgressionAchievement(stage)=>
+function ProgressionAchievement(round)=>
     achievement(
-        title=StageData[stage]["pTitle"],points=StageData[stage]["pPoints"],type=Progression,
-        description="Complete " + StageData[stage]["Round"] + " with any settings.",
-        title= InGame && prev(Stage) == stage && Stage == stage + 1
-function FireBombAchievement(stage) =>
+        title=RoundData[round]["pTitle"],points=RoundData[round]["pPoints"],type=Progression,
+        description="Complete all of Round " + RoundData[round]["Round"] + " with any settings.",
+        title= InGame && prev(Stage) == RoundData[round]["endLevel"] && Stage == RoundData[round]["endLevel"] + 1
+function FireBombAchievement(round) =>
     achievement(
-        title=StageData[stage]["fTitle"],points=StageData[stage]["fPoints"],
-        description="Collect " + StageData[stage]["fBombs"] + " on each level of Round " + StageData[stage]["Round"],
-        trigger=
+        title=RoundData[round]["fTitle"],points=RoundData[round]["fPoints"],
+        description="Collect " +RoundData[round]["fDesc"] + RoundData[round]["fBombs"] + " on all 3 levels of Round " + round + " without using a credit after collecting the first bomb on " + round + "-1.",
+        trigger=InGame && InStage && CreditProtectionRound(round) &&
+                trigger_when(tally(3,
+                    once(InGame && Stage == RoundData[stage]["startLevel"] && prev(FireBombs) == RoundData[round]["fBombs"] -1 && FireBombs == RoundData[round]["fBombs"]),
+                    once(InGame && Stage == RoundData[stage]["startLevel"] + 1 && prev(FireBombs) == RoundData[round]["fBombs"] -1 && FireBombs == RoundData[round]["fBombs"]),
+                    once(InGame && Stage == RoundData[stage]["startLevel"] + 2 && prev(FireBombs) == RoundData[round]["fBombs"] -1 && FireBombs == RoundData[round]["fBombs"]))) &&
+                never(CreditUsed) &&
+                never(BombsCollected > (FireBombs + (23 - RoundData[round]["fBombs]) + 1))
 
-
-
-// fill in FullRoundArray[3,etc]
-//fill in ProgressionRoundArray[3,etc]
-
+//fill in BonusArray[4,etc]
 //Achievements
-for i in ProgressionRoundArray
+for i in [3,6,9]
     ProgressionAchievement(i)
 
 achievement(
@@ -147,20 +151,45 @@ achievement(
     trigger= InGame && prev(Stage) == //find this && Stage == (+1)
 
 //1/3CC
+achievement(
+    title="3cc any", points=10,
+    description="Complete the first 9 rounds in 3 or fewer credits on any difficulty with a maximum of 3 starting lives. [1P only]",
+    trigger=InGame && OnePlayer && CreditProtectionRound(1) && never(tally(3,CreditUsed) && never(TwoPlayer)
 //23 fire bomb any
+achievement(
+    title="any bonus",points=2,
+    description="Collect 23 fire bombs on any stage without using a credit.",
+    trigger= InGame && CreditProtection && prev(FireBombs) == 22 && FireBombs == 23 && never(CreditUsed)
 //23 fire bomb bonus
+achievement(
+    title="any bonus",points=2,
+    description="Collect 23 fire bombs on any bonus stage.",
+    trigger= InGame && Stage == [BonusArray] && prev(FireBombs) == 22 && FireBombs == 23
 
-for i in FullRoundArray
+for i in range(1,9)
     FireBombAchievement(i)
 
-//5x  multi
-//10k  point enemy
-//extra  life
+achievement(
+    title="x5 multi",points=5,
+    description="Reach a x5 multiplier.",
+    trigger=InGame && prev(Multiplier) == 4 && Multiplier == 5
+achievement(
+    title="10k enemy",points=5,
+    description="Earn 10,000 points from a single enemy.",
+    trigger=InGame && Multiplier == 5 && EnemyCombo == 7 && prev(EnemyKills) != EnemyKills
+achievement(
+    title="extra life",points=3,
+    description="Collect an extra life.",
+    trigger=InGame && InStage && EnemyKills != 0 && __ornext(Lives1P > prev(Lives1P) || Lives2P > prev(Lives2P))
 //1s on bonus stage
-//1m points
-//2m points
-
-
+achievement(
+    title="1m score",points=10,
+    description="Achieve a score of 1,000,000 or more.",
+    trigger=InGame && (prev(Score1P) < 1000000 && Score1P >= 1000000) || (prev(Score2P) < 1000000 && Score2P >= 1000000)
+achievement(
+    title="1m score",points=25,
+    description="Achieve a score of 2,000,000 or more.",
+    trigger=InGame && (prev(Score1P) < 2000000 && Score1P >= 2000000) || (prev(Score2P) < 2000000 && Score2P >= 2000000)
 //Leaderboards
 
 //RP
