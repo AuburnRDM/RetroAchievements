@@ -23,6 +23,8 @@ FireBombs = byte(0x186C) + byte(0x196C)
 //        Bit1 - 1P active
 //        Bit5 - Any player active in stage
 //        Bit7 - Game started; this is 0 during demo and on main menu
+P1Active = bit1(0x9801) == 1
+P2Active = bit0(0x9801) == 1
 P1 = bit0(0x9801) + bit1(0x9801) == 1
 P2 = bit0(0x9801) + bit1(0x9801) == 2
 InStage = bit5(0x9801) == 1
@@ -50,8 +52,11 @@ MaxLives = bit6(0x9807) == 1 && bit7(0x9807) == 0
 //        Bits 1,2,3
 // $9820: [8-bit] Number of levels cleared in current arcade run; - Changing this changes the next level
 //        - Goes up to 0x45 and then rolls back to 0x00 and adds 0x01 to $9822 and 'loops' even though there are only 32 unique maps
+Level = byte(0x9820) + 1
+LevelRP = {
+    1:"1-1",2:"1-2",3:"1-3",4:"Bonus"
 // $9822: [8-bit] Current 'loop'; this starts at 0x00 and goes up by 0x01 every 20 rounds cleared
-
+Loop = byte(0x9822) + 1
 // $9844: [16-bit BCD] High Score - leftmost 4 digits - xxxx0000; multiply by 10,000 and add to 0x9846
 // $9846: [16-bit BCD] High Score - rightmost 4 digits - 0000xxxx; add to (0x9844 * 10,000)
 // $9848: [8-bit] Round that the last death was on; starts at 0x00 when starting a new game and will change to 0x01 if player dies in the first round, etc.
@@ -99,3 +104,30 @@ EnemyCombo = byte(0x988C)
 // $9902: [16-bit BCD] High Score leaderboard #1 - rightmost 4 digits - 0000xxxx; add to (0x9900 * 10,000)
 // $9904: [8-bit BCD] High Score leaderboard #1 - Round reached
 
+//Achievements
+
+//Leaderboards
+
+//RP
+rich_presence_conditional_display(InGame && P1 && P1Active,"Bomb Jack is defusing the situation on {0} • Difficulty:  {1} • Score: {2} • Lives:{3},
+    rich_presence_lookup("Level",Level,LevelRP),
+    rich_presence_lookup("Difficulty",DifficultyCheck,DifficultyCheckRP),
+    rich_presence_value("Digit",Score1P, format="VALUE"),
+    rich_presence_value("Digit",Lives1P, format="VALUE")
+)
+rich_presence_conditional_display(InGame && P1 && P2Active,"Bomb Jill is defusing the situation on {0} • Difficulty:  {1} • Score: {2} • Lives:{3},
+    rich_presence_lookup("Level",Level,LevelRP),
+    rich_presence_lookup("Difficulty",DifficultyCheck,DifficultyCheckRP),
+    rich_presence_value("Digit",Score2P, format="VALUE"),
+    rich_presence_value("Digit",Lives2P, format="VALUE")
+)
+rich_presence_conditional_display(InGame && P2,"Bomb Jack & Jill is defusing the situation on {0} • Difficulty:  {1} • 1P Score: {2} • 1P Lives:{3} • 1P Score: {4} • 1P Lives:{5},
+    rich_presence_lookup("Level",Level,LevelRP),
+    rich_presence_lookup("Difficulty",DifficultyCheck,DifficultyCheckRP),
+    rich_presence_value("Digit",Score1P, format="VALUE"),
+    rich_presence_value("Digit",Lives1P, format="VALUE"),
+    rich_presence_value("Digit",Score2P, format="VALUE"),
+    rich_presence_value("Digit",Lives2P, format="VALUE")
+)
+rich_presence_display("Getting ready to play")
+    
