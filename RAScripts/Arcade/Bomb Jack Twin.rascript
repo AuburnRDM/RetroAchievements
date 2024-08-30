@@ -25,8 +25,8 @@ FireBombs = byte(0x186C) + byte(0x196C)
 //        Bit7 - Game started; this is 0 during demo and on main menu
 P1Active = bit1(0x9801) == 1
 P2Active = bit0(0x9801) == 1
-P1 = bit0(0x9801) + bit1(0x9801) == 1
-P2 = bit0(0x9801) + bit1(0x9801) == 2
+OnePlayer = bit0(0x9801) + bit1(0x9801) == 1
+TwoPlayer = bit0(0x9801) + bit1(0x9801) == 2
 InStage = bit5(0x9801) == 1
 InGame = bit7(0x9801) == 1
 
@@ -52,8 +52,8 @@ MaxLives = bit6(0x9807) == 1 && bit7(0x9807) == 0
 //        Bits 1,2,3
 // $9820: [8-bit] Number of levels cleared in current arcade run; - Changing this changes the next level
 //        - Goes up to 0x45 and then rolls back to 0x00 and adds 0x01 to $9822 and 'loops' even though there are only 32 unique maps
-Level = byte(0x9820) + 1
-LevelRP = {
+Stage = byte(0x9820) + 1
+StageRP = {
     1:"1-1",2:"1-2",3:"1-3",4:"Bonus"
 // $9822: [8-bit] Current 'loop'; this starts at 0x00 and goes up by 0x01 every 20 rounds cleared
 Loop = byte(0x9822) + 1
@@ -104,25 +104,80 @@ EnemyCombo = byte(0x988C)
 // $9902: [16-bit BCD] High Score leaderboard #1 - rightmost 4 digits - 0000xxxx; add to (0x9900 * 10,000)
 // $9904: [8-bit BCD] High Score leaderboard #1 - Round reached
 
+//Data
+RoundData = {
+    1:{"pTitle":"1jdf","pPoints":2,"fTitle":"1dl","fPoints","startLevel":1,"endLevel":3"},
+    2:{"pTitle":"2jdf1","pPoints":2,"fTitle":"2dl1","fPoints","startLevel":1,"endLevel":3"},
+    3:{"pTitle":"3jdf","pPoints":2,"fTitle":"3dl","fPoints","startLevel":1,"endLevel":3"},
+    4:{"pTitle":"4jdf","pPoints":2,"fTitle":"4dl","fPoints","startLevel":1,"endLevel":3"},
+    5:{"pTitle":"5jdf","pPoints":2,"fTitle":"5dl","fPoints","startLevel":1,"endLevel":3"},
+    6:{"pTitle":"6jdf","pPoints":2,"fTitle":"6dl","fPoints","startLevel":1,"endLevel":3"},
+    7:{"pTitle":"7jdf","pPoints":2,"fTitle":"7dl","fPoints","startLevel":1,"endLevel":3"},
+    8:{"pTitle":"8jdf","pPoints":2,"fTitle":"8dl","fPoints","startLevel":1,"endLevel":3"},
+    9:{"pTitle":"9jdf","pPoints":2,"fTitle":"9dl","fPoints","startLevel":1,"endLevel":3"}
+
+//Functions
+
+function CreditProtection(round) =>
+    once(InGame && InStage && Stage == RoundData[round]["startLevel"] && BombsCollected == 0)
+
+function ProgressionAchievement(stage)=>
+    achievement(
+        title=StageData[stage]["pTitle"],points=StageData[stage]["pPoints"],type=Progression,
+        description="Complete " + StageData[stage]["Round"] + " with any settings.",
+        title= InGame && prev(Stage) == stage && Stage == stage + 1
+function FireBombAchievement(stage) =>
+    achievement(
+        title=StageData[stage]["fTitle"],points=StageData[stage]["fPoints"],
+        description="Collect " + StageData[stage]["fBombs"] + " on each level of Round " + StageData[stage]["Round"],
+        trigger=
+
+
+
+// fill in FullRoundArray[3,etc]
+//fill in ProgressionRoundArray[3,etc]
+
 //Achievements
+for i in ProgressionRoundArray
+    ProgressionAchievement(i)
+
+achievement(
+    title="Around the World",points=5,
+    description="Complete Round 13 with any settings.",
+    trigger= InGame && prev(Stage) == //find this && Stage == (+1)
+
+//1/3CC
+//23 fire bomb any
+//23 fire bomb bonus
+
+for i in FullRoundArray
+    FireBombAchievement(i)
+
+//5x  multi
+//10k  point enemy
+//extra  life
+//1s on bonus stage
+//1m points
+//2m points
+
 
 //Leaderboards
 
 //RP
-rich_presence_conditional_display(InGame && P1 && P1Active,"Bomb Jack is defusing the situation on {0} • Difficulty:  {1} • Score: {2} • Lives:{3},
-    rich_presence_lookup("Level",Level,LevelRP),
+rich_presence_conditional_display(InGame && OnePlayer && P1Active,"Bomb Jack is defusing the situation on {0} • Difficulty:  {1} • Score: {2} • Lives:{3}",
+    rich_presence_lookup("Stage",Stage,StageRP),
     rich_presence_lookup("Difficulty",DifficultyCheck,DifficultyCheckRP),
     rich_presence_value("Digit",Score1P, format="VALUE"),
     rich_presence_value("Digit",Lives1P, format="VALUE")
 )
-rich_presence_conditional_display(InGame && P1 && P2Active,"Bomb Jill is defusing the situation on {0} • Difficulty:  {1} • Score: {2} • Lives:{3},
-    rich_presence_lookup("Level",Level,LevelRP),
+rich_presence_conditional_display(InGame && OnePlayer && P2Active,"Bomb Jill is defusing the situation on {0} • Difficulty:  {1} • Score: {2} • Lives:{3}",
+    rich_presence_lookup("Stage",Stage,StageRP),
     rich_presence_lookup("Difficulty",DifficultyCheck,DifficultyCheckRP),
     rich_presence_value("Digit",Score2P, format="VALUE"),
     rich_presence_value("Digit",Lives2P, format="VALUE")
 )
-rich_presence_conditional_display(InGame && P2,"Bomb Jack & Jill is defusing the situation on {0} • Difficulty:  {1} • 1P Score: {2} • 1P Lives:{3} • 1P Score: {4} • 1P Lives:{5},
-    rich_presence_lookup("Level",Level,LevelRP),
+rich_presence_conditional_display(InGame && TwoPlayer,"Bomb Jack & Jill is defusing the situation on {0} • Difficulty:  {1} • 1P Score: {2} • 1P Lives:{3} • 1P Score: {4} • 1P Lives:{5}",
+    rich_presence_lookup("Stage",Stage,StageRP),
     rich_presence_lookup("Difficulty",DifficultyCheck,DifficultyCheckRP),
     rich_presence_value("Digit",Score1P, format="VALUE"),
     rich_presence_value("Digit",Lives1P, format="VALUE"),
