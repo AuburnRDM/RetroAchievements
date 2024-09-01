@@ -1216,7 +1216,7 @@ function AchievementArcade(points,puzzles)
                 trigger = 
                            prev(ArcadeCompletion()) == puzzles - 1
                         && measured(ArcadeCompletion() == puzzles, GameStatus != 0)
-                        && __ornext(GameStatus == 3 || GameStatus == 2)
+                        && GameStatus == 3
                 )
 }
 
@@ -1229,7 +1229,7 @@ function AchievementPerfect(points,puzzles)
                            PrevArcadePerfect(puzzles -1)
                         && measured(ArcadePerfect(puzzles))
                         && never(PrevArcadePerfect(puzzles))
-                        && __ornext(GameStatus == 3 || GameStatus == 2)
+                        && GameStatus == 3
                         && never(GameStatus == 0)
                 )
 }
@@ -1237,31 +1237,31 @@ function AchievementPerfect(points,puzzles)
 achievement(
     title = "Dirty Laundry", points = 5,
     description = "Finish all of the Trainee puzzles and earn a promotion",
-    trigger = CurrentLevel == 10 && __ornext(GameStatus == 3 || GameStatus == 2) 
+    trigger = CurrentLevel == 10 && GameStatus == 3 
                 && prev(StoryComplete) == 9 && StoryComplete == 10
 )
 achievement(
     title = "Life and Death Luggage", points = 5,
     description = "Finish all of the Recruit puzzles and earn a promotion",
-    trigger = CurrentLevel == 20 && __ornext(GameStatus == 3 || GameStatus == 2)
+    trigger = CurrentLevel == 20 && GameStatus == 3 
                 && prev(StoryComplete) == 19 && StoryComplete == 20
 )
 achievement(
     title = "Photos and Paintings and Pasta, Oh My!", points = 10,
     description = "Finish all of the Senior puzzles and earn a promotion",
-    trigger = CurrentLevel == 30 && __ornext(GameStatus == 3 || GameStatus == 2) 
+    trigger = CurrentLevel == 30 && GameStatus == 3 
                 && prev(StoryComplete) == 29 && StoryComplete == 30
 )
 achievement(
     title = "Exceptional Case", points = 10,
     description = "Finish all of the Expert puzzles and earn a promotion",
-    trigger = CurrentLevel == 40 && __ornext(GameStatus == 3 || GameStatus == 2) 
+    trigger = CurrentLevel == 40 && GameStatus == 3 
                 && prev(StoryComplete) == 39 && StoryComplete == 40 
 )
 achievement(
     title = "Classified Information", points = 10,
     description = "Finish all of the Officer puzzles and become the best Luggage Retriever around",
-    trigger = CurrentLevel == 50 && __ornext(GameStatus == 3 || GameStatus == 2) 
+    trigger = CurrentLevel == 50 && GameStatus == 3 
                 && prev(StoryComplete) == 49 && StoryComplete == 50 
 )
 //achievement(

@@ -314,13 +314,13 @@ achievement("Seek the Switches", "Activate enough switches and pass through the 
 achievement("Summit of The Dormant", "Complete the normal exit of Requiescence.", 10, LevelComplete(Requiescence, RequiescenceNormalExit, Key))
 achievement("Thinking Outside of the Box", "Complete the secret exit of Requiescence.", 10, LevelComplete(Requiescence, RequiescenceSecretExit, Normal))
 
-rich_presence_conditional_display(GameStatus >= 0x0b && GameStatus <= 0x0e,"Mario is taking a break on the overworld | Switches: {0} {1} {2} | Exits: {3}/15",
+rich_presence_conditional_display(GameStatus >= 0x0b && GameStatus <= 0x0e,"Mario is taking a break on the overworld • Switches: {0} {1} {2} • Exits: {3}/15",
     rich_presence_lookup("Green",GreenSwitch,GreenSwitchRP),
     rich_presence_lookup("Yellow",YellowSwitch,YellowSwitchRP),
     rich_presence_lookup("Blue",BlueSwitch,BlueSwitchRP),
     rich_presence_value("Digit",TotalExit,format="VALUE")
 )
-rich_presence_conditional_display(GameStatus >= 0x0f,"Mario is {0} | Switches: {1} {2} {3} | Exits: {4}/15",
+rich_presence_conditional_display(GameStatus >= 0x0f,"Mario is {0} • Switches: {1} {2} {3} • Exits: {4}/15",
     rich_presence_lookup("Level",Level,LevelRP),
     rich_presence_lookup("Green",GreenSwitch,GreenSwitchRP),
     rich_presence_lookup("Yellow",YellowSwitch,YellowSwitchRP),

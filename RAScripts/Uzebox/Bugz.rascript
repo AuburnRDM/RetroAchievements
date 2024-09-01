@@ -260,22 +260,22 @@ for i in range (1,21)
 StageLeaderboard(i)
 
 //RP
-rich_presence_conditional_display(Mode == 1 && Level == 22, "[1P] Minion has beaten the game! | Score: {0} | Total Bonus Points: {1}",
+rich_presence_conditional_display(Mode == 1 && Level == 22, "[1P] Minion has beaten the game! • Score: {0} • Total Bonus Points: {1}",
         rich_presence_value("Digit", Score, format="VALUE"),
         rich_presence_value("Digit", TotalBonus, format="VALUE")
         
 )
-rich_presence_conditional_display(Mode == 1 && Level > 0, "[1P] Minion is collecting cookies on Level {0} | Score: {1} | Total Bonus Points: {2}",
+rich_presence_conditional_display(Mode == 1 && Level > 0, "[1P] Minion is collecting cookies on Level {0} • Score: {1} • Total Bonus Points: {2}",
         rich_presence_value("Digit", Level, format="VALUE"),
         rich_presence_value("Digit", Score, format="VALUE"),
         rich_presence_value("Digit", TotalBonus, format="VALUE")
 )
-rich_presence_conditional_display(Mode >= 2 && Level == 22, "[{2}] Minions have beaten the game! | 1P Score: {0} | 2P Score: {1}",
+rich_presence_conditional_display(Mode >= 2 && Level == 22, "[{2}] Minions have beaten the game! • 1P Score: {0} • 2P Score: {1}",
         rich_presence_value("Digit", Score, format="VALUE"),
         rich_presence_value("Digit", TotalBonus, format="VALUE"),
         rich_presence_lookup("Mode", Mode, ModeLookup)        
 )
-rich_presence_conditional_display(Mode >= 2 && Level > 0, "[{3}] Minions are collecting cookies on Level {0} | 1P Score: {1} | 2P Score: {2}",
+rich_presence_conditional_display(Mode >= 2 && Level > 0, "[{3}] Minions are collecting cookies on Level {0} • 1P Score: {1} • 2P Score: {2}",
         rich_presence_value("Digit", Level, format="VALUE"),
         rich_presence_value("Digit", Score, format="VALUE"),
         rich_presence_value("Digit", TotalBonus, format="VALUE"),

@@ -768,6 +768,15 @@ leaderboard(
         value=P1Score, 
         format="VALUE", lower_is_better= false
 )
+leaderboard(
+        title="RetroOlympics 2023 - Time Tracker",
+        description="This is simply a time tracker for the RetroOlympics competition.",
+        start=LeaderboardProtection && Speed == High,
+        cancel=((P1BallsGameOver && prev(Screen) != Leaderboard && Screen == Leaderboard) || repeated(25200, always_true())) && never(TitleScreen),
+        value=always_true(),
+        submit=always_false(), 
+        format="FRAMES", lower_is_better= false
+)
 //Speedrun leaderboards
 for bonus_array in BonusGame
     SpeedBonusLeaderboard(bonus_array) 

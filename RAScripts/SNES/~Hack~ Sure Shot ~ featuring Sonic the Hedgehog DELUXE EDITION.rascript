@@ -549,7 +549,7 @@ leaderboard(
     format = "FRAMES"
 )
 
-rich_presence_conditional_display(once(Slowdown != 0 && Slowdown != 0x55 && Level != StopRunning), "{0} is selecting a track. 💿 | 🚩️[{1}/11]",
+rich_presence_conditional_display(once(Slowdown != 0 && Slowdown != 0x55 && Level != StopRunning), "{0} is selecting a track. 💿 • 🚩️[{1}/11]",
     rich_presence_lookup("Character", Character, CharacterLookup),
     rich_presence_value("Digit",Exits,format="VALUE")
 )
@@ -558,12 +558,12 @@ rich_presence_conditional_display(GameStatus <= 9, "{0} is getting ready to load
     rich_presence_lookup("Character", Character, CharacterLookup)
 )
 
-rich_presence_conditional_display(GameStatus > 9 && GameStatus < 15, "{0} is selecting a track 💿 | 🚩️[{1}/11]",
+rich_presence_conditional_display(GameStatus > 9 && GameStatus < 15, "{0} is selecting a track 💿 • 🚩️[{1}/11]",
     rich_presence_lookup("Character", Character, CharacterLookup),
     rich_presence_value("Digit",Exits,format="VALUE")
 )
 
-rich_presence_display("{0} is listening to 🎵{1}🎵 | 🚩️[{2}/11]",
+rich_presence_display("{0} is listening to 🎵{1}🎵 • 🚩️[{2}/11]",
     rich_presence_lookup("Character", Character, CharacterLookup),
     rich_presence_lookup("Level", Level, LevelLookup),
     rich_presence_value("Digit",Exits,format="VALUE")

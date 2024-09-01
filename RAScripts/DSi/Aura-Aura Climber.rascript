@@ -50,19 +50,32 @@ SpeedrunTarget = {
     1:263,
     2:260,
     3:260,
-    4:413,
+    4:415,
     5:397,
-    6:385,
+    6:390,
     7:540,
     8:525,
     9:525,
-    10:469,
+    10:500,
     11:1129
 }
 
+InitialTime = {
+    1:300000,
+    2:300000,
+    3:300000,
+    4:450000,
+    5:450000,
+    6:450000,
+    7:600000,
+    8:600000,
+    9:600000,
+    10:600000,
+    11:1800000
+}
 SpeedrunTitle = {
     1:"Swift Scaling I",
-    2:"Swift Scaling III",
+    2:"Swift Scaling II",
     3:"Swift Scaling III",
     4:"Swift Scaling IV",
     5:"Swift Scaling V",
@@ -102,6 +115,7 @@ ClassicMode = bit5(0x7bd69)
 EndlessRecord = dword(0x7bd6c) / 4096
 // $07BD34: [32 Bit] Max Height Reached in Game
 // $07BD78: [32 Bit] 1st Place Score | Level 1
+Level1FirstPlace = dword(0x07bd78)
 // $07BD7C: [32 Bit] 2nd Place Score | Level 1
 // $07BD80: [32 Bit] 3rd Place Score | Level 1
 // $07BD84: [32 Bit] 1st Place Score | Level 2
@@ -187,8 +201,8 @@ S10 = byte(0x7be1a)
 // $07BE1D: [8 Bit] 1st Place Rank | Marathon
 //          0x00 - S | 0x01- A | 0x02 - B | 0x03 - C / None
 SM = byte(0x7be1d)
-SCounter = tally(11,once(S1 == 0),once(S2 == 0),once(S3 ==0),once(S4 ==0),once(S5 ==0),once(S6 ==0),
-        once(S7 ==0),once(S8 ==0),once(S9 ==0),once(S10 ==0),once(SM ==0)) && never(!AURA)
+SCounter = tally(12,once(S1 == 0),once(S2 == 0),once(S3 ==0),once(S4 ==0),once(S5 ==0),once(S6 ==0),
+        once(S7 ==0),once(S8 ==0),once(S9 ==0),once(S10 ==0),once(SM ==0)) && never(!AURA) && never(Level1FirstPlace == 0)
 // $07BE1E: [8 Bit] 2nd Place Rank | Marathon
 // $07BE1F: [8 Bit] 3rd Place Rank | Marathon
 SRankTarget = {
@@ -246,7 +260,7 @@ StagePoints = {
 LevelDescription ={
     1:"Score Attack 1",2:"Score Attack 2",3:"Score Attack 3",4:"Score Attack 4",5:"Score Attack 5",
     6:"Score Attack 6",7:"Score Attack 7",8:"Score Attack 8",9:"Score Attack 9",10:"Score Attack 10",
-    11:"Marathon mode"
+    11:"Marathon"
 }
 // $07BE20: [8 Bit] Medal Bitflags (1)
 //          Bit0 = Clear | Score Attack
@@ -330,6 +344,9 @@ Pause = bit0(0x7c724)
 CurrentHP = dword(tbyte(0xed1c90) + 0x7a8)
 CurrentBombs = dword(tbyte(0xed1c90) + 0x9a8)
 CurrentArm = byte(tbyte(0xed1c90) + 0x9bc)
+UFOCombo = byte(tbyte(0xed1c90) + 0x9ea)
+UFOSpawn = dword(tbyte(0xed1c90) + 0x9ec)
+UFOCollect = dword(tbyte(0xed1c90) + 0x9e4)
 ActivePlay = GameState == 1 && InGame == 1 && Character == 4
 MarathonEndless = (Mode == ScoreAttack && Level == Marathon) || (Mode == ModeEndless && Level == Endless)
 
@@ -346,13 +363,13 @@ achievement(
 )
 achievement(
     title = "Amateur Climber", points = 10,
-    description = "Complete Score Attack 10 and unlock Marathon mode.",
+    description = "Complete Score Attack 10 and unlock Marathon.",
     trigger = AURA && Mode == ScoreAttack && Level == 10 && LevelComplete && ScoreCalculation
 )
 
 achievement(
     title = "Professional Climber", points = 10,
-    description = "Complete Marathon mode.",
+    description = "Complete Marathon.",
     trigger = AURA && Mode == ScoreAttack && Level == Marathon && LevelComplete && ScoreCalculation
 )
 
@@ -387,27 +404,27 @@ SpeedrunCheevo(i)
 
 achievement(
     title = "Reach for the Remote", points = 5,
-    description = "Reach 1,000m in Endless mode.",
+    description = "Reach 1,000m in Endless.",
     trigger = AURA && Mode == ModeEndless && Level == Endless && ActivePlay && PrevCurrentHeight < 1000 && CurrentHeight >= 1000
 )
 achievement(
     title = "Reach for the Top", points = 10,
-    description = "Reach 2,500m in Endless mode.",
+    description = "Reach 2,500m in Endless.",
     trigger = AURA && Mode == ModeEndless && Level == Endless && ActivePlay && PrevCurrentHeight < 2500 && CurrentHeight >= 2500
 )
 achievement(
     title = "Reach for the Sky", points = 10,
-    description = "Reach 5,000m in Endless mode.",
+    description = "Reach 5,000m in Endless.",
     trigger = AURA && Mode == ModeEndless && Level == Endless && ActivePlay && PrevCurrentHeight < 5000 && CurrentHeight >= 5000
 )
 achievement(
     title = "Reach for the Stars", points = 25,
-    description = "Reach 7,500m in Endless mode.",
+    description = "Reach 7,500m in Endless.",
     trigger = AURA && Mode == ModeEndless && Level == Endless && ActivePlay && PrevCurrentHeight < 7500 && CurrentHeight >= 7500
 )
 achievement(
     title = "Keep it Going!", points = 25,
-    description = "Reach 10,000m in Endless mode.",
+    description = "Reach 10,000m in Endless.",
     trigger = AURA && Mode == ModeEndless && Level == Endless && ActivePlay && PrevCurrentHeight < 10000 && CurrentHeight >= 10000
 )
 
@@ -457,26 +474,26 @@ achievement(
 )
 
 achievement(
-    title = "Bungee Jump", points = 5,
+    title = "Bungee Jump", points = 3,
     description = "Earn a medal for performing a swing-back worth more than 600 points in Score Attack.",
     trigger = AURA && ActivePlay && prev(BungeeJump) == 0 && BungeeJump == 1
 )
 
 achievement(
     title = "Minimalist", points = 10,
-    description = "Earn a medal for climbing 5,000m in Marathon or Endless mode with minimum arm length.",
+    description = "Earn a medal for climbing 5,000m in Marathon or Endless with minimum arm length.",
     trigger = AURA && ActivePlay && MarathonEndless && CurrentArm == 0 && prev(Minimalist) == 0 && trigger_when(Minimalist == 1)
 )
 
 achievement(
     title = "Pure Climber", points = 10,
-    description = "Earn a medal for climbing 5,000m in Marathon or Endless mode without using a bomb.",
+    description = "Earn a medal for climbing 5,000m in Marathon or Endless without using a bomb.",
     trigger = AURA && ActivePlay && prev(PureClimber) == 0 && PureClimber == 1
 )
 
 achievement(
     title = "Careful Climber", points = 10,
-    description = "Reach 3,000m in Marathon or Endless mode without taking damage.",
+    description = "Reach 3,000m in Marathon or Endless without taking damage.",
     trigger = AURA && ActivePlay && MarathonEndless && 
             ((once(CurrentHeight == 0 && never(prev(CurrentHP) > CurrentHP)) && trigger_when(CurrentHeight >= 3000)) || 
             (prev(CarefulClimber) == 0 && CarefulClimber == 1))
@@ -484,22 +501,38 @@ achievement(
 //needs trigger and confirmation if it's consecutive
 achievement(
     title = "Daring Escape", points = 5,
-    description = "Earn a medal for climbing 1,500m in Marathon or Endless mode while at one health.",
+    description = "Earn a medal for climbing 1,500m in Marathon or Endless while at one health.",
     trigger = AURA && ActivePlay && MarathonEndless && CurrentHP == 1 && prev(DaringEscape) == 0 && trigger_when(DaringEscape == 1)
 )
 
 achievement(
     title = "Perfect Path", points = 10,
-    description = "Earn a medal for climbing 2,500m in Marathon or Endless mode without touching the same grapple point twice",
+    description = "Earn a medal for climbing 2,500m in Marathon or Endless without touching the same grapple point twice",
     trigger = AURA && ActivePlay && MarathonEndless && prev(PerfectPath) == 0 && PerfectPath == 1
 )
+achievement(
+    title = "Time to Spare", points = 5,
+    description = "Have 300 or more seconds remaining in Endless.",
+    trigger = AURA && ActivePlay && Mode == ModeEndless && Level == Endless && prev(TimeLeftSpeedrun) < 300 && TimeLeftSpeedrun >= 300
+)    
+achievement(
+    title = "All the Time in the World", points = 10,
+    description = "Have 500 or more seconds remaining in Endless.",
+    trigger = AURA && ActivePlay && Mode == ModeEndless && Level == Endless && prev(TimeLeftSpeedrun) < 500 && TimeLeftSpeedrun >= 500
+)    
 //needs some adjustment to pop if the time is over 30 just in case. change in the GUI manually
 achievement(
     title = "Close Call", points = 10,
-    description = "Have less than 30 seconds remaining for more than 2 consecutive minutes in Endless mode.",
+    description = "Have less than 30 seconds remaining for more than 2 consecutive minutes in Endless.",
     trigger = AURA && ActivePlay && Mode == ModeEndless && Level == Endless && 
             ((trigger_when(repeated(7200, TimeLeftSpeedrun < 30 && Pause == 0 && ActivePlay)) && never(TimeLeftSpeedrun >= 30)) ||
             (prev(CloseCall) == 0 && trigger_when(CloseCall == 1)))
+)
+
+achievement(
+    title = "A Bonus from Beyond", points = 5,
+    description = "Earn the largest bonus by collecting the platinum UFO. Each UFO will spawn by climbing on 12 normal nodes without touching the same grapple point twice or taking damage.",
+    trigger = AURA && ActivePlay && UFOCombo == 4 && UFOSpawn != 0 && prev(UFOCollect) == 0 && UFOCollect == UFOSpawn
 )
 
 achievement(
@@ -540,20 +573,29 @@ achievement(
 )
 //Leaderboards
 leaderboard(
-        title = "Endless",
-        description = "Reach as high as you can in Endless mode.",
+        title = "Endless - Height",
+        description = "Reach as high as you can in Endless.",
         start = AURA && Mode == ModeEndless && Level == Endless && LevelFailed && ScoreCalculation,
         cancel = always_false(),
         submit = always_true(),
         value = MaxHeight,
         format = "VALUE", lower_is_better = false
 )
+leaderboard(
+        title = "Endless - Time",
+        description = "Have as much extra time as you can when losing all HP in Endless.",
+        start = AURA && Mode == ModeEndless && Level == Endless && LevelFailed && ScoreCalculation,
+        cancel = always_false(),
+        submit = always_true(),
+        value = TimeLeftLB,
+        format = "MILLISECS", lower_is_better = false
+)
     
 function ScoreLeaderboard(level)
 {
     leaderboard(
         title = LevelDescription[level] + " - Points",
-        description = "Earn as many points as you can on " + LevelDescription[level] + ".",
+        description = "Earn as many points as you can in " + LevelDescription[level] + ".",
         start = AURA && Mode == ScoreAttack && Level == level && (LevelComplete || LevelFailed) && ScoreCalculation,
         cancel = always_false(),
         submit = always_true(),
@@ -570,12 +612,12 @@ function SpeedLeaderboard(level)
 {
     leaderboard(
         title = LevelDescription[level] + " - Speed",
-        description = "Complete " + LevelDescription[level] + " with as much time left as you can.",
+        description = "Complete " + LevelDescription[level] + " as fast as you can.",
         start = AURA && Mode == ScoreAttack && Level == level && LevelComplete && ScoreCalculation,
         cancel = always_false(),
         submit = always_true(),
-        value = TimeLeftLB,
-        format = "MILLISECS", lower_is_better = false
+        value = InitialTime[level]/10 - TimeLeftLB,
+        format = "MILLISECS", lower_is_better = true
     )
 }
 
@@ -584,34 +626,34 @@ for i in range(1,11)
 SpeedLeaderboard(i)
 
 //Rich Presence
-rich_presence_conditional_display(AURA && InGame == 0 && CurrentScore > 0 && Mode == ScoreAttack,"Aura is in the menus | [Recent: {2} - {3} Points] | [S-Ranks: {0}/11] [Medals: {1}/30]",
+rich_presence_conditional_display(AURA && InGame == 0 && CurrentScore > 0 && Mode == ScoreAttack,"Aura is in the menus • [Recent: {2} - {3} Points] • [S-Ranks: {0}/11] [Medals: {1}/30]",
     rich_presence_value("Digit",SCounter,format="VALUE"),
     rich_presence_value("Digit",TotalMedal,format="VALUE"),
     rich_presence_lookup("Level",Level,LevelDescription),
     rich_presence_value("Digit",CurrentScore,format="VALUE")
 )
-rich_presence_conditional_display(AURA && InGame == 0 && CurrentHeight > 0 && Mode == ModeEndless,"Aura is in the menus | [Recent: Endless - {3}m] | [S-Ranks: {0}/11] [Medals: {1}/30]",
+rich_presence_conditional_display(AURA && InGame == 0 && CurrentHeight > 0 && Mode == ModeEndless,"Aura is in the menus • [Recent: Endless - {3}m] • [S-Ranks: {0}/11] [Medals: {1}/30]",
     rich_presence_value("Digit",SCounter,format="VALUE"),
     rich_presence_value("Digit",TotalMedal,format="VALUE"),
     rich_presence_lookup("Level",Level,LevelDescription),
     rich_presence_value("Digit",MaxHeight,format="VALUE")
 )
-rich_presence_conditional_display(AURA && InGame == 0,"Aura is in the menus | [S-Ranks: {0}/11] [Medals: {1}/30]",
+rich_presence_conditional_display(AURA && InGame == 0,"Aura is in the menus • [S-Ranks: {0}/11] [Medals: {1}/30]",
     rich_presence_value("Digit",SCounter,format="VALUE"),
     rich_presence_value("Digit",TotalMedal,format="VALUE")
 )
-rich_presence_conditional_display(AURA && InGame == 1 && Mode == Tutorial,"Aura is learning how to climb in the Tutorial | [S-Ranks: {0}/11] [Medals: {1}/30]",
+rich_presence_conditional_display(AURA && InGame == 1 && Mode == Tutorial,"Aura is learning how to climb in the Tutorial • [S-Ranks: {0}/11] [Medals: {1}/30]",
     rich_presence_value("Digit",SCounter,format="VALUE"),
     rich_presence_value("Digit",TotalMedal,format="VALUE")
 )
 rich_presence_conditional_display(AURA && InGame == 1 && (CurrentArm > 1000 || CurrentBombs > 1000 || CurrentHP > 1000),
-    "Aura is getting ready to climb | [S-Ranks: {0}/11] [Medals: {1}/30]",
+    "Aura is getting ready to climb • [S-Ranks: {0}/11] [Medals: {1}/30]",
     rich_presence_value("Digit",SCounter,format="VALUE"),
     rich_presence_value("Digit",TotalMedal,format="VALUE"),
     rich_presence_value("Digit",CurrentHeight,format="VALUE")
 )
 rich_presence_conditional_display(AURA && InGame == 1 && Mode == ScoreAttack,
-    "Aura is climbing in {0} [Points: {1}] [Time Left: {2}s] | [HP: {3}/3] [Bombs: {4}/5] [Arm: {5}/5] | [S-Ranks: {6}/11] [Medals: {7}/30]",
+    "Aura is climbing in {0} [Points: {1}] [Time Left: {2}s] • [HP: {3}/3] [Bombs: {4}/5] [Arm: {5}/5] • [S-Ranks: {6}/11] [Medals: {7}/30]",
     rich_presence_lookup("Level",Level,LevelDescription),
     rich_presence_value("Digit",CurrentScore,format="VALUE"),
     rich_presence_value("Digit",TimeLeftSpeedrun,format="VALUE"),
@@ -622,7 +664,7 @@ rich_presence_conditional_display(AURA && InGame == 1 && Mode == ScoreAttack,
     rich_presence_value("Digit",TotalMedal,format="VALUE")
 )
 rich_presence_conditional_display(AURA && InGame == 1 && Mode == ModeEndless,
-    "Aura is climbing in Endless [Current: {0}m] [Best: {1}m] | [HP: {2}/3] [Bombs: {3}/5] [Arm: {4}/5] | [S-Ranks: {5}/11] [Medals: {6}/30]",
+    "Aura is climbing in Endless [Current: {0}m] [Best: {1}m] • [HP: {2}/3] [Bombs: {3}/5] [Arm: {4}/5] • [S-Ranks: {5}/11] [Medals: {6}/30]",
     rich_presence_value("Digit",MaxHeight,format="VALUE"),
     rich_presence_value("Digit",EndlessRecord,format="VALUE"),
     rich_presence_value("Digit",CurrentHP,format="VALUE"),
