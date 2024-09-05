@@ -1891,6 +1891,8 @@ function MissionProgress() =>
 //          Bit0 - Unlocked
 // $350B3E: [8-bit] Gallery - Special - Special Illustration 19
 //          Bit0 - Unlocked
+function GallerySpecial() =>
+  sum_of(range(0x350B2C,0x350B3E,step=1), addr => byte(addr)
 // $350B3F: [8-bit] Gallery - Secret - Secret Voice 1
 //          Bit0 - Unlocked
 // $350B40: [8-bit] Gallery - Secret - Secret Voice 2
@@ -1905,6 +1907,8 @@ function MissionProgress() =>
 //          Bit0 - Unlocked
 // $350B45: [8-bit] Gallery - Secret - Secret Voice 7
 //          Bit0 - Unlocked
+function GallerySecret() =>
+  sum_of(range(0x350B3F,0x350B45,step=1), addr => byte(addr)
 // $350B70: [8-bit] Gallery - Arcade Mode - Sol
 //          b0 - Unlocked
 // $350B71: [8-bit] Gallery - Arcade Mode - Ky
@@ -2001,6 +2005,10 @@ function MissionProgress() =>
 //          b0 - Unlocked
 // $350B9F: [8-bit] Gallery - EX Character - EX Order Sol
 //          b0 - Unlocked
+
+function GalleryArcade() =>
+  sum_of(range(0x350B70,350B9F,step=1), addr => byte(addr)
+
 // $350BA2: [8-bit] Gallery - Story Mode - Sol
 //          Bit0 - Ending 1 unlocked
 //          Bit1 - Ending 2 unlocked
@@ -2073,6 +2081,10 @@ function MissionProgress() =>
 //          Bit0 - Ending 1 unlocked
 // $350BBA: [8-bit] Gallery - Story Mode - Justice
 //          Bit0 - Ending 1 unlocked
+
+function GalleryStory() => 
+  sum_of(range(0x350BA2,350BBA,step=1), addr => bitcount(addr)
+
 // $350BBB: [8-bit] Display settings - Anti alias
 //          0x00 - Off
 //          0x01 - On
@@ -2176,6 +2188,17 @@ TwoPlayer = bit0(0x3C6B54) + bit1(0x3C6B54) == 2
 //          bit5 - VS. CPU / Team VS. CPU (0x20); see 0x3C6B56
 //          bit6 - Story (0x40)
 //          bit7 - Mission (0x80)
+
+ArcadeMode = byte(0x3C6B55) == 0 && byte(0x3C6B20) == 0
+TrainingMode = bit0(0x3C6B55) == 1
+SurvivalMode = bit1(0x3C6B55) == 1
+VS2P = bit3(0x3C6B55) == 1 && bit2(0x3C6B56) == 0
+VS2PTeam = bit3(0x3C6B55) == 1 && bit2(0x3C6B56) == 1
+VSCPU = bit5(0x3C6B55) == 1 && bit2(0x3C6B56) == 0
+VSCPUTeam = bit5(0x3C6B55) == 1 && bit2(0x3C6B56) == 1
+StoryMode = bit6(0x3C6B55) == 1
+MissionMode = bit7(0x3C6B55) == 1
+
 // $3C6B56: [8-bit] Team VS status; each side selects 3 characters
 //          bit2 - Active
 // $3C6B70: [8-bit] Arcade/M.O.M modifier - Gold; this affects all opponents
@@ -2246,6 +2269,9 @@ TwoPlayer = bit0(0x3C6B54) + bit1(0x3C6B54) == 2
 // $3E99CC: [8-bit] Painting shown in London stage
 //          0x00 - Bridge
 //          0x01 - Alien
+
+LondonPainting = byte(0x3E99CC)
+
 // $3F4370: [32-bit] Training? Total damage of current combo
 // $3F4374: [32-bit] Training - Damage of most recent attack; only
 // $3F4378: [32-bit] Training - Damage of most recent combo
@@ -2321,7 +2347,7 @@ TwoPlayer = bit0(0x3C6B54) + bit1(0x3C6B54) == 2
 
 AllCharacters = range(1,19)
 //Functions
-
+function FullGallery() = GallerySpecial() + GallerySecret() + GalleryArcade() + GalleryStory()
 //Achievements
 
 //Leaderboards
