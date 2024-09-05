@@ -4,6 +4,9 @@
 // $302B34: [32-bit] Survival - Wins
 // $302B7C: [32-bit] Survival - Time played this attempted (Frames)
 // $302B88: [16-bit] Survival - Current level
+
+SurvivalLevel = word(0x302B88)
+
 // $302B8C: [8-bit] "Here Comes Daredevil" Popup
 //          b0 - Activated
 // $302B8E: [8-bit] Survival Daredevil reached?
@@ -12,7 +15,12 @@
 //          0x32 - Gold Order Sol
 // $302BA0: [8-bit] Type of survival mode
 //          0x00 - Classic; no upgrades
-//          0x01 - Modern; upgrades after daredevil
+//          0x01 - Modern; upgrades after daredevil'
+
+SurvivalType = byte(0x302BA0)
+  ClassicSurvival = 0
+  ModernSurvival = 1
+
 // $302BA4: [32-bit] Survival - Attack Level
 //          0x00 - Lv. 1 | 0x01 - Lv. 2 | 0x02 - Lv. 3 | ... | 0x0e - MAX (Lv. 15)
 // $302BA8: [32-bit] Survival - Defense Level
@@ -109,12 +117,27 @@
 //          0x01 - 60 seconds
 //          0x02 - 99 seconds (Default)
 //          0x03 - Infinite
+
+RoundTimer = byte(0x34E8C0)
+  Sec30 = 0
+  Sec60 = 1
+  Sec99 = 2
+  SecInfinite = 3
+
 // $34E8C1: [8-bit] Game options - Rounds in a match (best of)
 //          0x00 - 1
 //          0x01 - 3 (Defaults)
 //          0x02 - 5
 //          0x03 - 7
 //          0x04 - 9
+
+MatchRound = byte(0x34E8C1)
+  BestOf1 = 0
+  BestOf3 = 1
+  BestOf5 = 2
+  BestOf7 = 3
+  BestOf9 = 4
+
 // $34E8C2: [8-bit] Game options - Current difficulty
 //          0x00 - Beginner
 //          0x01 - Easy
@@ -122,6 +145,15 @@
 //          0x03 - Hard
 //          0x04 - Very Hard
 //          0x05 - Maniac
+
+Difficulty = byte (0x34E8C2)
+  Beginner = 0
+  Easy = 1
+  Normal = 2
+  Hard = 3
+  VeryHard = 4
+  Maniac = 5
+
 // $34E8C7: [8-bit] Display settings - Cockpit font
 //          0x00 - Normal
 //          0x01 - Original
@@ -175,13 +207,27 @@
 //          Bit0 - Unlocked
 // $34E908: [8-bit] Gold/Darkside unlocked - Justice
 //          Bit0 - Unlocked
+
+function TotalDarksideGold() => 
+    sum_of(range(0x34E8D8,34E908,step=2), addr => byte(addr) //might need to divide by address
+
 // $34E90B: [8-bit] Kliff Undersn unlock status
 //          Bit0 - Character unlocked
+
+KliffUnlocked = prev(byte(0x34E90B)) == 0 && byte(0x34E90B) == 1
+
 // $34E90C: [8-bit] Justice unlock status
 //          Bit0 - Character unlocked
+
+JusticeUnlocked = prev(byte(0x34E90C)) == 00 & byte(0x34E90B) == 1
+
 // $34E90E: [8-bit] GG Generation Modes unlocks; different playstyles based on older games
 //          Bit0 - GGX Mode unlocked
 //          Bit1 - GG Mode unlocked
+
+GGXModeUnlocked = prev(bit0(0x34E90E)) == 0 && bit0(0x34E90E) == 1
+GGModeUnlocked = prev(bit1(0x34E90E)) == 0 && bit1(0x34E90E) == 1
+
 // $34E90F: [8-bit] EX Mode unlocked - Sol
 //          Bit0 - Unlocked
 // $34E910: [8-bit] EX Mode unlocked - Ky
@@ -232,6 +278,10 @@
 //          Bit0 - Unlocked
 // $34E927: [8-bit] EX Mode unlocked - Justice
 //          Bit0 - Unlocked
+
+function TotalEXUnlock() => 
+    sum_of(range(0x34E90F,34E927,step=1), addr => byte(addr) //might need to divide by address
+
 // $34FD73: start of vs ranking data
 // $34FFCA: end of vs ranking data
 // $34FFCC: start of ranking data
@@ -1735,6 +1785,10 @@
 //          b0 - Complete
 // $350AEF: [8-bit] Mission 30 - Justice
 //          b0 - Complete
+
+function CharacterMission(character-1) =>
+  sum_of(range(0x350802 + (character*1),0x350AD7 + (character*1),step=25), addr => byte(addr) // might need to divide
+
 // $350AF0: [8-bit] Mission 1 Rank
 //          0x00 - None, 0x01 - GGXX, 0x02 - GGX, 0x03 - GG, 0x04 - S, 0x05 - A, 0x06 - B, 0x07 - C
 // $350AF1: [8-bit] Mission 2 Rank
@@ -1795,6 +1849,10 @@
 //          0x00 - None, 0x01 - GGXX, 0x02 - GGX, 0x03 - GG, 0x04 - S, 0x05 - A, 0x06 - B, 0x07 - C
 // $350B0D: [8-bit] Mission 30 Rank
 //          0x00 - None, 0x01 - GGXX, 0x02 - GGX, 0x03 - GG, 0x04 - S, 0x05 - A, 0x06 - B, 0x07 - C
+
+function MissionProgress() =>
+  sum_of(range(0x350AF0,0x350B0D,step=1), addr => byte(addr)/byte(addr)
+
 // $350B2C: [8-bit] Gallery - Special - Special Illustration 1
 //          Bit0 - Unlocked
 // $350B2D: [8-bit] Gallery - Special - Special Illustration 2
@@ -2058,6 +2116,9 @@
 //          0x17 - Order Sol
 //          0x18 - Kliff
 //          0x19 - Justice
+
+Character1P = byte(0x3C6A18)
+
 // $3C6A1A: [8-bit] Player 2/CPU Character
 //          0x00 - None
 //          0x01 - Sol
@@ -2085,6 +2146,9 @@
 //          0x17 - Order Sol
 //          0x18 - Kliff
 //          0x19 - Justice
+
+Character2P = byte(0x3C6A1A)
+
 // $3C6A9C: [8-bit] Player 1 color
 //          0x0e - Gold
 //          0x13 - Shadow
@@ -2100,6 +2164,10 @@
 //          0x00 - None; no active mode. this changes immediately upon choosing a mode
 //          bit0 - Player 1 active
 //          bit1 - Player 2 active
+
+OnePlayer = bit0(0x3C6B54) + bit1(0x3C6B54) == 1
+TwoPlayer = bit0(0x3C6B54) + bit1(0x3C6B54) == 2
+
 // $3C6B55: [bitflags] Current mode
 //          0x00 - Arcade/M.O.M.; see 0x3C6B55
 //          bit0 - Training (0x01)
@@ -2248,3 +2316,14 @@
 // $1E5B0F4: [16-bit] 1P Animation
 // $1E5B142: [16-bit] HP - Player 2/CPU
 //           0x01a4 - Max HP
+
+//Data
+
+AllCharacters = range(1,19)
+//Functions
+
+//Achievements
+
+//Leaderboards
+
+//RP
