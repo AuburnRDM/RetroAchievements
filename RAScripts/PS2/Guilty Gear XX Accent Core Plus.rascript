@@ -3,24 +3,26 @@
 
 // $302B34: [32-bit] Survival - Wins
 // $302B7C: [32-bit] Survival - Time played this attempted (Frames)
-// $302B88: [16-bit] Survival - Current level
+// $302B88: [16-bit] Survival - Current level; 999 (dec) for Order Sol and flips to 1000 (dec) after winning
 
 SurvivalLevel = word(0x302B88)
 
 // $302B8C: [8-bit] "Here Comes Daredevil" Popup
 //          b0 - Activated
 // $302B8E: [8-bit] Survival Daredevil reached?
+//          0x26 - Gold Axl
 //          0x32 - Gold Order Sol
 // $302B90: [8-bit] Survival Daredevil defeated?
+//          0x26 - Gold Axl
 //          0x32 - Gold Order Sol
 // $302BA0: [8-bit] Type of survival mode
 //          0x00 - Classic; no upgrades
-//          0x01 - Modern; upgrades after daredevil'
+//          0x01 - Modern; upgrades after daredevil
 
 SurvivalType = byte(0x302BA0)
   ClassicSurvival = 0
   ModernSurvival = 1
-
+  
 // $302BA4: [32-bit] Survival - Attack Level
 //          0x00 - Lv. 1 | 0x01 - Lv. 2 | 0x02 - Lv. 3 | ... | 0x0e - MAX (Lv. 15)
 // $302BA8: [32-bit] Survival - Defense Level
@@ -123,7 +125,7 @@ RoundTimer = byte(0x34E8C0)
   Sec60 = 1
   Sec99 = 2
   SecInfinite = 3
-
+  
 // $34E8C1: [8-bit] Game options - Rounds in a match (best of)
 //          0x00 - 1
 //          0x01 - 3 (Defaults)
@@ -137,7 +139,7 @@ MatchRound = byte(0x34E8C1)
   BestOf5 = 2
   BestOf7 = 3
   BestOf9 = 4
-
+  
 // $34E8C2: [8-bit] Game options - Current difficulty
 //          0x00 - Beginner
 //          0x01 - Easy
@@ -153,7 +155,7 @@ Difficulty = byte (0x34E8C2)
   Hard = 3
   VeryHard = 4
   Maniac = 5
-
+  
 // $34E8C7: [8-bit] Display settings - Cockpit font
 //          0x00 - Normal
 //          0x01 - Original
@@ -209,8 +211,8 @@ Difficulty = byte (0x34E8C2)
 //          Bit0 - Unlocked
 
 function TotalDarksideGold() => 
-    sum_of(range(0x34E8D8,34E908,step=2), addr => byte(addr) //might need to divide by address
-
+    sum_of(range(0x34E8D8,0x34E908,step=2), addr => byte(addr)) //might need to divide by address
+    
 // $34E90B: [8-bit] Kliff Undersn unlock status
 //          Bit0 - Character unlocked
 
@@ -219,7 +221,7 @@ KliffUnlocked = prev(byte(0x34E90B)) == 0 && byte(0x34E90B) == 1
 // $34E90C: [8-bit] Justice unlock status
 //          Bit0 - Character unlocked
 
-JusticeUnlocked = prev(byte(0x34E90C)) == 00 & byte(0x34E90B) == 1
+JusticeUnlocked = prev(byte(0x34E90C)) == 0 && byte(0x34E90B) == 1
 
 // $34E90E: [8-bit] GG Generation Modes unlocks; different playstyles based on older games
 //          Bit0 - GGX Mode unlocked
@@ -274,14 +276,14 @@ GGModeUnlocked = prev(bit1(0x34E90E)) == 0 && bit1(0x34E90E) == 1
 //          Bit0 - Unlocked
 // $34E925: [8-bit] EX Mode unlocked - Order Sol
 //          Bit0 - Unlocked
-// $34E926: [8-bit] EX Mode unlocked - Kliff
+// $34E926: [8-bit] EX Mode unlocked - Kliff; doesn't exist
 //          Bit0 - Unlocked
-// $34E927: [8-bit] EX Mode unlocked - Justice
+// $34E927: [8-bit] EX Mode unlocked - Justice; doesn't exist
 //          Bit0 - Unlocked
 
 function TotalEXUnlock() => 
-    sum_of(range(0x34E90F,34E927,step=1), addr => byte(addr) //might need to divide by address
-
+    sum_of(range(0x34E90F,0x34E927,step=1), addr => byte(addr)) //might need to divide by address
+    
 // $34FD73: start of vs ranking data
 // $34FFCA: end of vs ranking data
 // $34FFCC: start of ranking data
@@ -1786,9 +1788,9 @@ function TotalEXUnlock() =>
 // $350AEF: [8-bit] Mission 30 - Justice
 //          b0 - Complete
 
-function CharacterMission(character-1) =>
-  sum_of(range(0x350802 + (character*1),0x350AD7 + (character*1),step=25), addr => byte(addr) // might need to divide
-
+function CharacterMission(character) =>
+  sum_of(range(0x350802 + ((character-1)*1),0x350AD7 + ((character-1)*1),step=25), addr => byte(addr)) // might need to divide
+  
 // $350AF0: [8-bit] Mission 1 Rank
 //          0x00 - None, 0x01 - GGXX, 0x02 - GGX, 0x03 - GG, 0x04 - S, 0x05 - A, 0x06 - B, 0x07 - C
 // $350AF1: [8-bit] Mission 2 Rank
@@ -1851,8 +1853,8 @@ function CharacterMission(character-1) =>
 //          0x00 - None, 0x01 - GGXX, 0x02 - GGX, 0x03 - GG, 0x04 - S, 0x05 - A, 0x06 - B, 0x07 - C
 
 function MissionProgress() =>
-  sum_of(range(0x350AF0,0x350B0D,step=1), addr => byte(addr)/byte(addr)
-
+  sum_of(range(0x350AF0,0x350B0D,step=1), addr => byte(addr)/byte(addr))
+  
 // $350B2C: [8-bit] Gallery - Special - Special Illustration 1
 //          Bit0 - Unlocked
 // $350B2D: [8-bit] Gallery - Special - Special Illustration 2
@@ -1891,8 +1893,10 @@ function MissionProgress() =>
 //          Bit0 - Unlocked
 // $350B3E: [8-bit] Gallery - Special - Special Illustration 19
 //          Bit0 - Unlocked
+
 function GallerySpecial() =>
-  sum_of(range(0x350B2C,0x350B3E,step=1), addr => byte(addr)
+  sum_of(range(0x350B2C,0x350B3E,step=1), addr => byte(addr))
+  
 // $350B3F: [8-bit] Gallery - Secret - Secret Voice 1
 //          Bit0 - Unlocked
 // $350B40: [8-bit] Gallery - Secret - Secret Voice 2
@@ -1907,8 +1911,10 @@ function GallerySpecial() =>
 //          Bit0 - Unlocked
 // $350B45: [8-bit] Gallery - Secret - Secret Voice 7
 //          Bit0 - Unlocked
+
 function GallerySecret() =>
-  sum_of(range(0x350B3F,0x350B45,step=1), addr => byte(addr)
+  sum_of(range(0x350B3F,0x350B45,step=1), addr => byte(addr))
+  
 // $350B70: [8-bit] Gallery - Arcade Mode - Sol
 //          b0 - Unlocked
 // $350B71: [8-bit] Gallery - Arcade Mode - Ky
@@ -2007,8 +2013,8 @@ function GallerySecret() =>
 //          b0 - Unlocked
 
 function GalleryArcade() =>
-  sum_of(range(0x350B70,350B9F,step=1), addr => byte(addr)
-
+  sum_of(range(0x350B70,0x350B9F,step=1), addr => byte(addr))
+  
 // $350BA2: [8-bit] Gallery - Story Mode - Sol
 //          Bit0 - Ending 1 unlocked
 //          Bit1 - Ending 2 unlocked
@@ -2083,8 +2089,8 @@ function GalleryArcade() =>
 //          Bit0 - Ending 1 unlocked
 
 function GalleryStory() => 
-  sum_of(range(0x350BA2,350BBA,step=1), addr => bitcount(addr)
-
+  sum_of(range(0x350BA2,0x350BBA,step=1), addr => bitcount(addr))
+  
 // $350BBB: [8-bit] Display settings - Anti alias
 //          0x00 - Off
 //          0x01 - On
@@ -2168,6 +2174,23 @@ Character2P = byte(0x3C6A1A)
 //          0x0e - Gold
 //          0x13 - Shadow
 // $3C6AD0: [32-bit] Player 1 Score - Arcade/M.O.M./Survival
+// $3C6AD4: [32-bit] Player 2 Score - Arcade/M.O.M./Survival
+// $3C6AFC: [8-bit] Arcade/M.O.M. - P1 Stage wins (for the whole set)
+//          --Arcade--
+//          0x0a - Win for vs I-No/Lose vs Order Sol
+//          0x0b - Win vs Order Sol
+//          
+//          --M.O.M.--
+//          0x15 - Win for vs I-No/Lose vs Order Sol
+//          0x16 - Win vs Order Sol
+// $3C6AFE: [8-bit] Arcade/M.O.M. - P2 Stage wins (for the whole set)
+//          --Arcade--
+//          0x0a - Win for vs I-No/Lose vs Order Sol
+//          0x0b - Win vs Order Sol
+//          
+//          --M.O.M.--
+//          0x15 - Win for vs I-No/Lose vs Order Sol
+//          0x16 - Win vs Order Sol
 // $3C6B14: amount of rounds played
 // $3C6B20: [8-bit] Arcade/M.O.M. status; use if 0x3C6B55 == 0 and 0x3C6b54 > 0
 //          0x00 - Arcade mode
@@ -2179,7 +2202,7 @@ Character2P = byte(0x3C6A1A)
 
 OnePlayer = bit0(0x3C6B54) + bit1(0x3C6B54) == 1
 TwoPlayer = bit0(0x3C6B54) + bit1(0x3C6B54) == 2
-
+InGame = byte(0x3C6B54) > 0
 // $3C6B55: [bitflags] Current mode
 //          0x00 - Arcade/M.O.M.; see 0x3C6B55
 //          bit0 - Training (0x01)
@@ -2271,6 +2294,8 @@ MissionMode = bit7(0x3C6B55) == 1
 //          0x01 - Alien
 
 LondonPainting = byte(0x3E99CC)
+    Bridge = 0
+    Alien = 1
 
 // $3F4370: [32-bit] Training? Total damage of current combo
 // $3F4374: [32-bit] Training - Damage of most recent attack; only
@@ -2307,6 +2332,8 @@ LondonPainting = byte(0x3E99CC)
 //          Bit0 - Pressed
 // $455BA3: [8-bit] Inputs - 1P Square
 //          Bit0 - Pressed
+// $455BA4: [16-bit] Inputs - 1P Right Analog; value is related to stick position
+// $455BA6: [16-bit] Inputs - 1P Left Analog; value is related to stick position
 // $461610: [8-bit] Gallery - Total owned display; only updates when going into gallery
 // $4A225A: X position cursor in menu
 // $4A225E: Y position cursor in menu
@@ -2337,6 +2364,8 @@ LondonPainting = byte(0x3E99CC)
 //          0x17 - Kliff ??
 //          0x18 - Justice ??
 // $4A232C: Selected Character 2P/CPU?
+// $4A81C0: [8-bit] Arcade - Player 1 wins on current stage
+// $4A81C1: [8-bit] Arcade - Player 2/CPU wins on current stage
 // $1E5B01E: [16-bit] HP - Player 1
 //           0x01a4 - Max HP
 // $1E5B0F4: [16-bit] 1P Animation
@@ -2347,7 +2376,7 @@ LondonPainting = byte(0x3E99CC)
 
 AllCharacters = range(1,19)
 //Functions
-function FullGallery() = GallerySpecial() + GallerySecret() + GalleryArcade() + GalleryStory()
+function FullGallery() => GallerySpecial() + GallerySecret() + GalleryArcade() + GalleryStory()
 //Achievements
 
 //Leaderboards
