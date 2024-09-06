@@ -2136,7 +2136,32 @@ function GalleryStory() =>
 //          0x19 - Justice
 
 Character1P = byte(0x3C6A18)
-
+CharacterRP = {
+  1:"Sol",
+  2:"Ky",
+  3:"May",
+  4:"Millia",
+  5:"Axl",
+  6:"Potemkin",
+  7:"Chipp",
+  8:"Eddie",
+  9:"Baiken",
+  10:"Faust",
+  11:"Testament",
+  12:"Jam",
+  13:"Anji",
+  14:"Johnny",
+  15:"Venom",
+  16:"Dizzy",
+  17:"Slayer",
+  18:"I-No",
+  19:"Zappa",
+  20:"Bridget",
+  21:"Robo-Ky",
+  22:"A.B.A.",
+  23:"Order Sol",
+  24:"Kliff",
+  25:"Justice"
 // $3C6A1A: [8-bit] Player 2/CPU Character
 //          0x00 - None
 //          0x01 - Sol
@@ -2174,7 +2199,13 @@ Character2P = byte(0x3C6A1A)
 //          0x0e - Gold
 //          0x13 - Shadow
 // $3C6AD0: [32-bit] Player 1 Score - Arcade/M.O.M./Survival
+
+Score1P = dword(0x3C6AD0)
+
 // $3C6AD4: [32-bit] Player 2 Score - Arcade/M.O.M./Survival
+
+Score2P = dword(0x3C6AD4)
+
 // $3C6AFC: [8-bit] Arcade/M.O.M. - P1 Stage wins (for the whole set)
 //          --Arcade--
 //          0x0a - Win for vs I-No/Lose vs Order Sol
@@ -2183,6 +2214,9 @@ Character2P = byte(0x3C6A1A)
 //          --M.O.M.--
 //          0x15 - Win for vs I-No/Lose vs Order Sol
 //          0x16 - Win vs Order Sol
+
+StageWins1P = byte(0x3C6AFC)
+
 // $3C6AFE: [8-bit] Arcade/M.O.M. - P2 Stage wins (for the whole set)
 //          --Arcade--
 //          0x0a - Win for vs I-No/Lose vs Order Sol
@@ -2191,6 +2225,9 @@ Character2P = byte(0x3C6A1A)
 //          --M.O.M.--
 //          0x15 - Win for vs I-No/Lose vs Order Sol
 //          0x16 - Win vs Order Sol
+
+StageWins2P = byte(0x3C6AFE)
+
 // $3C6B14: amount of rounds played
 // $3C6B20: [8-bit] Arcade/M.O.M. status; use if 0x3C6B55 == 0 and 0x3C6b54 > 0
 //          0x00 - Arcade mode
@@ -2232,24 +2269,53 @@ MissionMode = bit7(0x3C6B55) == 1
 //          0x00 - Normal
 //          0x01 - Gold
 //          0x02 - Darkside
+
+Special1P = byte(0x3C6B78)
+  Gold = 1
+  Darkside = 2
+SpecialRP = {
+  0:"",
+  1:"Gold",
+  2:"Darkside"
+
 // $3C6B7C: [8-bit] Player 2/CPU special mode
 //          0x00 - Normal
 //          0x01 - Gold
 //          0x02 - Darkside
+
+Special1P = byte(0x3C6B7C)
+
 // $3C6B80: [8-bit] Player 1 movelist
 //          0x00 - Normal
 //          0x01 - EX
+
+EXMoves1P = bit0(0x3C6B80) == 1
+
 // $3C6B84: [8-bit] Player 2/CPU movelist
 //          0x00 - Normal
 //          0x01 - EX
+
+EXMoves2P = bit0(0x3C6B84) == 1
+
 // $3C6B88: [8-bit] Player 1 character mode
 //          0x00 - Normal
 //          0x01 - GG
 //          0x02 - GGX
+
+Rules1P = byte(0x3C6B88)
+  GG = 1
+  GGX = 2
+RulesRP = {
+  0:"",
+  1:"GG",
+  2:"GGX"
+
 // $3C6B8C: [8-bit] Player 2/CPU character mode
 //          0x00 - Normal
 //          0x01 - GG
 //          0x02 - GGX
+Rules2P = byte(0x3C6B8C)
+
 // $3C6BA4: [32-bit] potential game file timer?
 // $3C6C10: [16-bit] Tension - Player 1
 //          0x2710 - Max Tension
@@ -2264,6 +2330,7 @@ MissionMode = bit7(0x3C6B55) == 1
 // $3C6D58: [16-bit] Tension - Player 2/CPU
 //          0x2710 - Max Tension
 // $3C6E56: [8-bit] Current combo count; resets to 0x00 when combo window is over
+CurrentCombo = byte(0x3C6E56)
 // $3C6E58: [8-bit] Most recent combo total
 // $3C9000: [8-bit] Most recent Main Menu option selected
 //          0x00 - Arcade
@@ -2365,7 +2432,13 @@ LondonPainting = byte(0x3E99CC)
 //          0x18 - Justice ??
 // $4A232C: Selected Character 2P/CPU?
 // $4A81C0: [8-bit] Arcade - Player 1 wins on current stage
+
+RoundWin1P = byte(0x4A81C0)
+
 // $4A81C1: [8-bit] Arcade - Player 2/CPU wins on current stage
+
+RoundWin2P = byte(0x4A81C1)
+
 // $1E5B01E: [16-bit] HP - Player 1
 //           0x01a4 - Max HP
 // $1E5B0F4: [16-bit] 1P Animation
