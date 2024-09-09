@@ -1,9 +1,15 @@
 // ~Hack~ Super "Sonic Saves the World" World
 // #ID = 18191
 
+// $000019: [8-bit] Power-up
+//          0x00 - None
+//          0x01 - Mushroom
+//          0x02 - Cape
+//          0x03 - Fire
 // $000078: [8-bit] Player sprite status
 //          0x7f - Hidden; used when riding the bone cars in Fossil Fueled
 // $000094: [16-bit] Player's X-position (Left of map is 0x0000)
+//          0x0030 - Start of Daddy's Castle
 //          0x009f - Intro easter egg
 //          0x1720 - Fossil Fueled (screen 0x140); before final car that needs to be activated (use with $78) (and $1493 = 0)
 // $000096: [16-bit] Player's Y-position (Top of map is 0x0000)
