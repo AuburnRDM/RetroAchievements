@@ -45,6 +45,7 @@ GameState = byte(0x100)
 
 function MainMenu() => GameState <= 0x0a
 function Overworld() => GameState <= 0x0e 
+function InLevel() => GameState >= 0x0f
 
 // $00010B: [16-bit] Most recent screen ID loaded (Does not change when entering the overworld until a new level is selected)
 //          0xc7 - Main Menu
@@ -132,7 +133,8 @@ function Overworld() => GameState <= 0x0e
 //          0x19b - Final screen
 
 ScreenID = word(0x10b)
-
+  Bridge = 0xc5
+  SafeWord = 0x181
 // $000DBF: [8-bit] Amount of coins/rings picked up on the current life
 
 Rings = byte(0xDBF)
@@ -272,6 +274,7 @@ BackDoorChallenges = byte(0xF61) + byte(0xF62) + byte(0xF63) + byte(0xF64) + byt
 //          --- Denouement
 //          0x1f - Disinformation Kiosk
 //          0x4d - Daddy's Castle / "Back" "Door" / Full Moon Eclipse (credits)
+StageID = byte(0x13bf)
 // $001426: [8-bit] Message box status; some messages are assigned to 0x01 and others are assigned to 0x02. This may change "Level ID (0x13bf)" temporarily, use "Screen ID (0x10b)"
 //          0x00 - Nothing
 //          0x01 - Message shown on screen: Warning, room 0xef; Good Vibes (first try), room 0x11c; Charles (1), room 0x141; Charles (2), room 0x142; Charles (3), room 0x170; Late Night Terror Club, room 0x107
@@ -304,22 +307,34 @@ Exits = byte(0x1f2e)
 // $001FF0: [8-bit] Moons pt. 1 (stage; screen)
 //          Bit2 - The Unbearable Quickness of Hedgehog (0x15; 0x17)
 //          Bit5 - Fossil Fueled (0x12; 0x12)
-
+QuicknessMoon = bit2(0x1ff0)
+FossilMoon = bit5(0x1ff0)
 // $001FF2: [8-bit] Moons pt. 2 (stage;screen)
 //          Bit0 - Me, Reaping (0x27, 0x1b1)
 //          Bit2 - Terminal Ferocity (0x25, 0x101)
 //          Bit6 - In This House, (0x21, 0x22)
+ReapingMoon = bit0(0x1ff2)
+TerminalMoon = bit2(0x1ff2)
+HouseMoon = bit6(0x1ff2)
 // $001FF4: [8-bit] Moons pt. 3 (stage; screen)
 //          Bit1 - Good Vibes Only (0x36; 0x14a)
 //          Bit7 - For Whomst the Charles Charges (0x10c; 0x141)
+VibesMoon = bit1(0x1ff4)
+CharlesMoon = bit7(0x1ff4)
 // $001FF6: [8-bit] Moons pt. 4 (stage; screen)
 //          Bit0 - Life on Mars (0x47, 0x125)
+MarsMoons = bit0(0x1ff6)
 // $001FF7: [8-bit] Moons pt. 5 (stage; screen)
 //          Bit2 - Daddy's Castle (0x4d; 0x184, prev 0x190-0x197)
+DaddyMoon = bit2(0x1ff7)
 // $001FF8: [8-bit] Moons pt. 6 (stage; screen)
 //          Bit3 - The Letter "P" (0x54; 0x185, prev 0x137)
 //          Bit6 - Float Like a Princess (0x51; 0x1b6, prev 0x1b5)
+PMoon = bit3(0x1ff8)
+PrincessMoon = bit6(0x1ff8)
+
 // $001FF9: moon end
+function AllMoons() => QuicknessMoon + FossilMoon + ReapingMoon + TerminalMoon + HouseMoon + VibesMoon + CharlesMoon + MarsMoon + DaddyMoon + PMoon + PrincessMoon
 // $01B403: [16-bit] Current checkpoint
 //          0x1c5 - Intro - Bridge
 //          0xc3 - Intro - Eclipse
@@ -379,41 +394,130 @@ TotalTimeSeconds = byte(0x20512) + (byte(0x20511) * 60) + (byte(0x20510) * 3600)
 // $020567: [8-bit] Overall game time until Overworld level is entered - Frames
 
 //Data
+
 StageData = {
-    1:{"Name":"The Unbearable Quickness of Hedgehog","ID":0x15,"firstC":0x15,"finalS":0x1c,"moonS":0x17},
-    2:{"Name":"Fossil Fueled","ID":0x12,"firstC":0x12,"finalS":0x140,"moonS":0x12},
-    3:{"Name":"Shells at Dawn","ID":0x02,"firstC":0x02,"finalS":0x1c5},
-    4:{"Name":"Zephy Leaves the Nest","ID":0x29,"firstC":0x105,"finalS":0x106},
-    5:{"Name":"The Letter ''P''","ID":0x54,"firstC":0x130,"finalS":0x13e,"priorS":0x13d,"moonS":0x185,"priorMoon":0x137},
-    6:{"Name":"Your Pal Ted","ID":0x11,"firstC":0x11,"finalS":0x1e},
-    7:{"Name":"Shells at Midday","ID":0x01,"firstC":0x01,"finalS":0x1dc},
-    8:{"Name":"For Whomst the Charles Charges","ID":0x30,"firstC":0x10c,"finalS":0x111,"priorS":0x110,"moonS":0x141},
-    9:{"Name":"Life on Mars","ID":0x47,"firstC":0x123,"finalS":0x126,"moonS":0x125},
-    10:{"Name":"Good Vibes Only","ID":0x36,"firstC":0x112,"finalS":0x14b,"priorS":0x14a,"moonS":0x14a},
-    11:{"Name":"Shells All Night","ID":0x20,"firstC":0x20,"finalS":0x148},
-    12:{"Name":"Late Night Terror Club","ID":0x2b,"firstC":0x107,"finalS":0x10a,"priorS":0x109},
-    13:{"Name":"In This House,","ID":0x21,"firstC":0x21,"finalS":0x22,"priorS":0x21,"moonS":0x22},
+    1:{"Name":"The Unbearable Quickness of Hedgehog","ID":0x15,"endID":0x01,"firstC":0x15,"finalS":0x1c,"moonS":0x17},
+    2:{"Name":"Fossil Fueled","ID":0x12,"endID":0x12,"firstC":0x12,"finalS":0x140,"moonS":0x12},
+    3:{"Name":"Shells at Dawn","ID":0x02,"endID":0x02,"firstC":0x02,"finalS":0x1c5},
+    4:{"Name":"Zephy Leaves the Nest","ID":0x29,"endID":0x29,"firstC":0x105,"finalS":0x106},
+    5:{"Name":"The Letter ''P''","ID":0x54,"endID":0x54,"firstC":0x130,"finalS":0x13e,"priorS":0x13d,"moonS":0x185,"priorMoon":0x137},
+    6:{"Name":"Your Pal Ted","ID":0x11,"endID":0x11,"firstC":0x11,"finalS":0x1e},
+    7:{"Name":"Shells at Midday","ID":0x01,"endID":0x01,"firstC":0x01,"finalS":0x1dc},
+    8:{"Name":"For Whomst the Charles Charges","ID":0x30,"endID":0x30,"firstC":0x10c,"finalS":0x111,"priorS":0x110,"moonS":0x141},
+    9:{"Name":"Life on Mars","ID":0x47,"endID":0x47,"firstC":0x123,"finalS":0x126,"moonS":0x125},
+    10:{"Name":"Good Vibes Only","ID":0x36,"endID":0x36,"firstC":0x112,"finalS":0x14b,"priorS":0x14a,"moonS":0x14a},
+    11:{"Name":"Shells All Night","ID":0x20,"endID":0x20,"firstC":0x20,"finalS":0x148},
+    12:{"Name":"Late Night Terror Club","ID":0x2b,"endID":0x2b,"firstC":0x107,"finalS":0x10a,"priorS":0x109},
+    13:{"Name":"In This House,","ID":0x21,"endID":0x21,"firstC":0x21,"finalS":0x22,"priorS":0x21,"moonS":0x22},
     14:{"Name":"Celeste (2018)","ID":0x26,"endID":0x04,"firstC":0x554,"finalS":0x17b,"priorS":0x179},
-    15:{"Name":"Terminal Ferocity","ID":0x25,"firstC":0x101,"finalS":0x101,"moonS":0x101},
-    16:{"Name":"Mega Mole Fucks","ID":0x10,"firstC":0x10,"finalS":0x14},
-    17:{"Name":"Me, Reaping","ID":0x27,"firstC":0x103,"finalS":0x1b2,"moonS":0x1b1},
-    18:{"Name":"Break the Targets!","ID":0x50,"firstC":0x5a0,"finalS":0x1b0,"priorS":0x1af},
+    15:{"Name":"Terminal Ferocity","ID":0x25,"endID":0x25,"firstC":0x101,"finalS":0x101,"moonS":0x101},
+    16:{"Name":"Mega Mole Fucks","ID":0x10,"endID":0x10,"firstC":0x10,"finalS":0x14},
+    17:{"Name":"Me, Reaping","ID":0x27,"endID":0x27,"firstC":0x103,"finalS":0x1b2,"moonS":0x1b1},
+    18:{"Name":"Break the Targets!","ID":0x50,"endID":0x50,"firstC":0x5a0,"finalS":0x1b0,"priorS":0x1af},
     19:{"Name":"Float Like a Princess","ID":0x51,"endID":0x09,"firstC":0x12d,"finalS":0x1b9,"priorS":0x1b8,"moonS":0x1b6,"priorMoon":0x1b5},
-    20:{"Name":"Dream Within a Dream","ID":0x4c,"firstC":0x128,"finalS":0x128},
-    21:{"Name":"Daddy's Castle","ID":0x4d,"firstC":0x580,"finalS":0x12e,"priorS":0x180},
-    22:{"Name":"''Back'' ''Door''","ID":0x4d,"firstC":0x12e,"moonS":0x184,"priorMoon":0x190-197},
-    23:{"Name":"Full Moon Eclipse","ID":0x4d,"firstC":0x52f}
+    20:{"Name":"Dream Within a Dream","ID":0x4c,"endID":0x4c,"firstC":0x128,"finalS":0x128},
+    21:{"Name":"Daddy's Castle","ID":0x4d,"endID":0x4d,"firstC":0x580,"finalS":0x12e,"priorS":0x180},
+    22:{"Name":"''Back'' ''Door''","ID":0x4d,"endID":0x4d,"firstC":0x12e,"moonS":0x184,"priorMoon":0x190-197},
+    23:{"Name":"Full Moon Eclipse","ID":0x4d,"endID":0x4d,"endID":0x4d,"firstC":0x52f}
 }
 
-
 //Functions and such
+
 LevelComplete = EndTimer > 0
 FossilXCheck = XPos >= 0x1720 && ScreenID == 0x140 && EndTimer == 0
 function BackDoorMoonProtection() => BackDoorChallenges == 8 && BackDoorRooms == 8
+function BackDoorExit() = __ornext(prev(ScreenID) == 0x183 || prev(ScreenID) == 0x184) && ScreenID == 0x12f
 //Achievements
 
+achievement(
+    title="Rebellious",points=1,
+    description="Defy platformer standards on the initial screen for a special message."
+    trigger= ScreenID == Bridge && InLevel() && IntroXCheck
+)
+achievement(
+    title="Where Is This Thing Taking Me!?",points=1,
+    description="Complete floor 14 on the elevator ride. Is this thing ever going to stop?"
+    trigger= prev(ScreenID) == 0xc3 && ScreenID == 0xc2 && InLevel()
+)
+
+achievement(
+    title="Knowledge is Power",points=1,
+    description="Read all of the boxes in Information Kiosk. There is more information to be found on the RA forum of this game to make challenges more accessible--please check it out!"
+    trigger= 1==1 // needs logic for each box
+)
 //Leaderboards
 
+//Full game leaderboards
+//any% speed/death;  100% speed/death in-game. RTA any%, daddy%, 100%
+leaderboard(
+    title="Full Game [Saves Allowed] - Any%",
+    description="Complete the game as fast as you can.",
+    start= StageID == 0x4d && LevelComplete && InLevel(),
+    cancel= always_false(),
+    submit= always_true(),
+    value=TotalTimeFrames, format="FRAMES", //  maybe do minutes
+    lower_is_better=TRUE
+)
+leaderboard(
+    title="Full Game [Saves Allowed] - Any% Deaths",
+    description="Complete the game with as few deaths as you can.",
+    start= StageID == 0x4d && LevelComplete && InLevel(),
+    cancel= always_false(),
+    submit= always_true(),
+    value=TotalDeaths, format="VALUE",
+    lower_is_better=TRUE
+)
+leaderboard(
+    title="Full Game [Saves Allowed] - 100%",
+    description="Complete every exit and collect every moon as fast as you can.",
+    start= InLevel() && (AllMoons() == 11 && prev(Exits) == 0x1a && Exits == 0x1b) ||
+          (Exits == 0x1b && prev(AllMoons()) == 10 && AllMoons() == 11),
+    cancel= always_false(),
+    submit= always_true(),
+    value=TotalTimeFrames, format="FRAMES", //  maybe do minutes
+    lower_is_better=TRUE
+)
+leaderboard(
+    title="Full Game [Saves Allowed] - 100% Deaths",
+    description="Complete every exit and collect every moon with as few deaths as you can.",
+    start= InLevel() && (AllMoons() == 11 && prev(Exits) == 0x1a && Exits == 0x1b) ||
+          (Exits == 0x1b && prev(AllMoons()) == 10 && AllMoons() == 11),
+    cancel= always_false(),
+    submit= always_true(),
+    value=TotalDeaths, format="VALUE",
+    lower_is_better=TRUE
+)
+
+//IL leaderboards
+function Leaderboard(stage) {
+    leaderboard(
+        title=StageData[stage]["Name"],
+        description="Complete " + StageData[stage]["Name"] + " as fast as you can.",
+        start= Stage == StageData[stage]["ID"] && GameStatus == Active && Checkpoint == StageData[stage]["firstC"],
+        cancel= Overworld(),
+        submit= (StageID == StageData[stage]["ID"] || StageID== StageData[stage]["endID"]) && ScreenID == StageData[stage]["finalS"] && LevelComplete,
+        value= measured(always_true()), format="FRAMES",lower_is_better=TRUE
+)
+//all stages except for daddy's castle stages
+for i in range(1,20)
+    Leaderboard(i)
+
+leaderboard(
+        title="Daddy's Castle",
+        description="Complete the first screen of Daddy's Castle as fast as you can.",
+        start= Stage == StageData[21]["ID"] && GameStatus == Active && Checkpoint == StageData[21]["firstC"],
+        cancel= Overworld(),
+        submit= StageID == StageData[21]["ID"] && prev(ScreenID) == 0x180 && ScreenID == 0x12e,
+        value= measured(always_true()), format="FRAMES",lower_is_better=TRUE
+)
+leaderboard(
+        title="''Back'' ''Door''",
+        description="Complete ''Back'' 'Door'' the proper way as fast as you can.",
+        start= Stage == StageData[22]["ID"] && GameStatus == Active && Checkpoint == StageData[22]["firstC"],
+        cancel= Overworld() || ScreenID == SafeWord,
+        submit= StageID == StageData[22]["ID"] && BackDoorExit(),
+        value= measured(always_true()), format="FRAMES",lower_is_better=TRUE
+)
 //RP
 
 
