@@ -5,7 +5,7 @@
 //          0x7f - Hidden; used when riding the bone cars in Fossil Fueled
 // $000094: [16-bit] Player's X-position (Left of map is 0x0000)
 //          0x009f - Intro easter egg
-//          0x1720 - Fossil Fueled (screen 0x140); before final car that needs to be activated (use with $78)
+//          0x1720 - Fossil Fueled (screen 0x140); before final car that needs to be activated (use with $78) (and $1493 = 0)
 // $000096: [16-bit] Player's Y-position (Top of map is 0x0000)
 //          0x120 - Late Night Terror Club; check that Y is less than this value for exit
 // $000100: [8-bit] Game Status
