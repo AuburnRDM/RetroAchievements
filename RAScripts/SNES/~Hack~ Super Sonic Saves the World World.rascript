@@ -448,7 +448,8 @@ achievement(
 //Leaderboards
 
 //Full game leaderboards
-//any% speed/death;  100% speed/death in-game. RTA any%, daddy%, 100%
+//any% speed/death;  100% speed/death in-game. RTA any%, daddy%, 100% 
+//check if InLevel() works with level update
 leaderboard(
     title="Full Game [Saves Allowed] - Any%",
     description="Complete the game as fast as you can.",
@@ -487,6 +488,37 @@ leaderboard(
     value=TotalDeaths, format="VALUE",
     lower_is_better=TRUE
 )
+//RTA LB -- maybe make these submit when you cross the last bar
+
+leaderboard(
+    title="Full Game [RTA/Single Session] - Any%",
+    description="Skip the Intro from the bridge then complete the game as fast as you can.",
+    start= ScreenID == Bridge && Exits == 0 && GameState == Overworld,
+    cancel= always_false(),
+    submit= StageID == 0x4d && LevelComplete,
+    value=measured(always_true()), format="FRAMES", //  maybe do minutes
+    lower_is_better=TRUE
+)
+leaderboard(
+    title="Full Game [RTA/Single Session] - Daddy%",
+    description="Skip the Intro from the bridge then complete the game while completing ''Back'' ''Door'' the proper way as fast as you can.",
+    start= ScreenID == Bridge && Exits == 0 && GameState == Overworld,
+    cancel= always_false(),
+    submit= StageID == 0x4d && LevelComplete && once(BackDoorExit()),
+    value=measured(always_true()), format="FRAMES", //  maybe do minutes
+    lower_is_better=TRUE
+)
+leaderboard(
+    title="Full Game [RTA/Single Session] - 100%",
+    description="Skip the Intro from the bridge then complete every exit and collect every moon as fast as you can.",
+    start= ScreenID == Bridge && Exits == 0 && GameState == Overworld,
+    cancel= MainMenu(),
+    submit= InLevel() && (AllMoons() == 11 && prev(Exits) == 0x1a && Exits == 0x1b) ||
+          (Exits == 0x1b && prev(AllMoons()) == 10 && AllMoons() == 11),
+    value=measured(always_true()), format="FRAMES", //  maybe do minutes
+    lower_is_better=TRUE
+)
+
 
 //IL leaderboards
 function Leaderboard(stage) {
@@ -519,5 +551,7 @@ leaderboard(
         value= measured(always_true()), format="FRAMES",lower_is_better=TRUE
 )
 //RP
-
+rich_presence_conditional_display(MainMenu(),"Sonic is getting ready to work through some things.")
+rich_presence_conditional_display(GameState > 9 && GameState < 15, "Sonic is selecting a track 💿 • 🚩️[{1}/11]",
+rich_presence_display("Sonic is
 
