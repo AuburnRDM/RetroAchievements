@@ -6,14 +6,30 @@
 //          0x01 - Mushroom
 //          0x02 - Cape
 //          0x03 - Fire
+
+PowerUp = byte(0x19)
+
 // $000078: [8-bit] Player sprite status
 //          0x7f - Hidden; used when riding the bone cars in Fossil Fueled
+
+InCar = byte(0x78) == 0x7f
+
 // $000094: [16-bit] Player's X-position (Left of map is 0x0000)
 //          0x0030 - Start of Daddy's Castle
 //          0x009f - Intro easter egg
 //          0x1720 - Fossil Fueled (screen 0x140); before final car that needs to be activated (use with $78) (and $1493 = 0)
+
+XPos = word(0x94)
+
+DaddyXCheck= XPos <= 0x30
+IntroXCheck = XPos <= 0x9f
+
+
 // $000096: [16-bit] Player's Y-position (Top of map is 0x0000)
 //          0x120 - Late Night Terror Club; check that Y is less than this value for exit
+
+YPos= word(0x96)
+
 // $000100: [8-bit] Game Status
 //          0x01 - Dedication
 //          0x07 - Title Screen
@@ -21,6 +37,15 @@
 //          0x0e - Overworld
 //          0x0f - Respawn/In pipe
 //          0x14 - In a level (fully loaded)
+
+GameState = byte(0x100)
+  MainMenu = 0x0a
+  Overworld = 0x0e
+  Active = 0x14
+
+function MainMenu() => GameState <= 0x0a
+function Overworld() => GameState <= 0x0e 
+
 // $00010B: [16-bit] Most recent screen ID loaded (Does not change when entering the overworld until a new level is selected)
 //          0xc7 - Main Menu
 //          --- Intro
@@ -105,17 +130,30 @@
 //          0x12f - Full Moon Eclipse (prev 0x183 or 0x184 if backdoor was complete, 0x181 if safe word)
 //          0x19a - Credits
 //          0x19b - Final screen
+
+ScreenID = word(0x10b)
+
 // $000DBF: [8-bit] Amount of coins/rings picked up on the current life
+
+Rings = byte(0xDBF)
+
 // $000DD5: [8-bit] Method stage is exited
 //          0x00 - No exit ocurring
 //          0x01 - Stage exit via normal exit
 //          0x02 - Stage exit via keyhole
 //          0x80 - Stage exit via Start+Select
+StageExit = byte(0xdd5)
+
+function NormalExit() => prev(StageExit) == 0 && StageExit == 1
+
 // $000F5E: [8-bit] Various events
 //          --- Break the Targets ($13bf = 0x50)
 //          Number of targets broken in Break the Targets!
 //          --- Back Door ($13bf = 0x4d)
 //          Number of challenge rooms entered in current attempt (max: 0x08)
+
+BackDoorRooms = byte(0xf5e)
+
 // $000F5F: [8-bit] Various events
 //          --- Break the Targets ($13bf = 0x50)
 //          Number of targets to break in Break the Targets!
@@ -144,6 +182,9 @@
 //          0x00 - Not entered
 //          0x01 - Currently in/complete
 //          0x02 - Failed
+
+BackDoorChallenges = byte(0xF61) + byte(0xF62) + byte(0xF63) + byte(0xF64) + byte(0xF65) + byte(0xF66) + byte(0xF67) + byte(0xF68) 
+
 // $000F62: [8-bit] Various events
 //          --- Break the Targets ($13bf = 0x50)
 //          Break the Targets! timer state
@@ -238,19 +279,32 @@
 //          0x09 - Loading "Retry" display
 //          0x0a - Retry
 //          0x0e - Retry
+MessageBox = byte(0x1426)
+  Message1 = 1
+  Message2 = 2
 // $001493: [8-bit] End level timer
 //          Value is 0x00 until a goal is touched and the end level fanfare begins; value will tick down each frame until it reaches 0x01 and begin exiting the stage on the next frame
+
+EndTimer = byte(0x1493)
+
 // $00150B: [8-bit] Elon head #1 HP; starts at 0x03 and dies at 0x00
 // $00150C: [8-bit] Elon head #2 HP; starts at 0x03 and dies at 0x00
 // $00150D: [8-bit] Elon head #3 HP; starts at 0x03 and dies at 0x00
+
+Elon1HP = byte(0x150B)
+Elon2HP = byte(0x150C)
+Elon3HP = byte(0x150D)
+
 // $00153C: birdo hp?
 // $001EA4: shells at dawn
 // $001EAC: [8-bit] Overworld flags - I. Only Yesterday
 // $001F2E: [8-bit] Exits cleared on current save (Max: 0x1b); 0x1b displays as '69'
+Exits = byte(0x1f2e)
 // $001FEE: moon start
 // $001FF0: [8-bit] Moons pt. 1 (stage; screen)
 //          Bit2 - The Unbearable Quickness of Hedgehog (0x15; 0x17)
 //          Bit5 - Fossil Fueled (0x12; 0x12)
+
 // $001FF2: [8-bit] Moons pt. 2 (stage;screen)
 //          Bit0 - Me, Reaping (0x27, 0x1b1)
 //          Bit2 - Terminal Ferocity (0x25, 0x101)
@@ -293,21 +347,73 @@
 //          0x583 - Finished gauntlet 5/7
 //          0x184 - Finished gauntlet 7/7 (moon available)
 //          0x52f - Full Moon Eclipse - Start
+
+Checkpoint = word(0x1b403)
+
 // $01B405: [8-bit] Retry status
 //          Bit0 - Retry chosen
 // $020500: [8-bit] Overall File Death Count (Ones place)
+DeathOnes = byte(0x20500)
 // $020501: [8-bit] Overall File Death Count (Tens place)
 // $020502: [8-bit] Overall File Death Count (Hundreds place)
 // $020503: [8-bit] Overall File Death Count (Thousands place)
 // $020504: [8-bit] Overall File Death Count (Ten Thousands place)
 // $020505: [8-bit] Overall File Death Count (One Hundred Thousands place)
+
+Dead = prev(DeathOnes) != DeathOnes
+TotalDeaths = byte(0x20500) + (byte(0x20501) * 10) + (byte(0x20502) * 100) + (byte(0x20503) * 1000) + (byte(0x20504) * 10000) + (byte(0x20505) * 100000)
+
 // $020510: Timers pause on the overworld and when the game is paused; they do not pause when "Retry" is shown after dying. Time is stored between save files--delete the SRAM to start fresh. Initial time does not start until the first level is entered from the overworld
 //          ---
 //          [8-bit] Overall game time - Hours
 // $020511: [8-bit] Overall game time - Minutes
 // $020512: [8-bit] Overall game time - Seconds
 // $020513: [8-bit] Overall game time - Frames
+
+TotalTimeFrames = byte(0x20513) + (byte(0x20512) * 60) + (byte(0x20511) * 3600) + (byte(0x20510) * 216000)
+TotalTimeSeconds = byte(0x20512) + (byte(0x20511) * 60) + (byte(0x20510) * 3600)
+
 // $020564: [8-bit] Overall game time until Overworld level is entered - Hours
 // $020565: [8-bit] Overall game time until Overworld level is entered - Minutes
 // $020566: [8-bit] Overall game time until Overworld level is entered - Seconds
 // $020567: [8-bit] Overall game time until Overworld level is entered - Frames
+
+//Data
+StageData = {
+    1:{"Name":"The Unbearable Quickness of Hedgehog","ID":0x15,"firstC":0x15,"finalS":0x1c,"moonS":0x17},
+    2:{"Name":"Fossil Fueled","ID":0x12,"firstC":0x12,"finalS":0x140,"moonS":0x12},
+    3:{"Name":"Shells at Dawn","ID":0x02,"firstC":0x02,"finalS":0x1c5},
+    4:{"Name":"Zephy Leaves the Nest","ID":0x29,"firstC":0x105,"finalS":0x106},
+    5:{"Name":"The Letter ''P''","ID":0x54,"firstC":0x130,"finalS":0x13e,"priorS":0x13d,"moonS":0x185,"priorMoon":0x137},
+    6:{"Name":"Your Pal Ted","ID":0x11,"firstC":0x11,"finalS":0x1e},
+    7:{"Name":"Shells at Midday","ID":0x01,"firstC":0x01,"finalS":0x1dc},
+    8:{"Name":"For Whomst the Charles Charges","ID":0x30,"firstC":0x10c,"finalS":0x111,"priorS":0x110,"moonS":0x141},
+    9:{"Name":"Life on Mars","ID":0x47,"firstC":0x123,"finalS":0x126,"moonS":0x125},
+    10:{"Name":"Good Vibes Only","ID":0x36,"firstC":0x112,"finalS":0x14b,"priorS":0x14a,"moonS":0x14a},
+    11:{"Name":"Shells All Night","ID":0x20,"firstC":0x20,"finalS":0x148},
+    12:{"Name":"Late Night Terror Club","ID":0x2b,"firstC":0x107,"finalS":0x10a,"priorS":0x109},
+    13:{"Name":"In This House,","ID":0x21,"firstC":0x21,"finalS":0x22,"priorS":0x21,"moonS":0x22},
+    14:{"Name":"Celeste (2018)","ID":0x26,"endID":0x04,"firstC":0x554,"finalS":0x17b,"priorS":0x179},
+    15:{"Name":"Terminal Ferocity","ID":0x25,"firstC":0x101,"finalS":0x101,"moonS":0x101},
+    16:{"Name":"Mega Mole Fucks","ID":0x10,"firstC":0x10,"finalS":0x14},
+    17:{"Name":"Me, Reaping","ID":0x27,"firstC":0x103,"finalS":0x1b2,"moonS":0x1b1},
+    18:{"Name":"Break the Targets!","ID":0x50,"firstC":0x5a0,"finalS":0x1b0,"priorS":0x1af},
+    19:{"Name":"Float Like a Princess","ID":0x51,"endID":0x09,"firstC":0x12d,"finalS":0x1b9,"priorS":0x1b8,"moonS":0x1b6,"priorMoon":0x1b5},
+    20:{"Name":"Dream Within a Dream","ID":0x4c,"firstC":0x128,"finalS":0x128},
+    21:{"Name":"Daddy's Castle","ID":0x4d,"firstC":0x580,"finalS":0x12e,"priorS":0x180},
+    22:{"Name":"''Back'' ''Door''","ID":0x4d,"firstC":0x12e,"moonS":0x184,"priorMoon":0x190-197},
+    23:{"Name":"Full Moon Eclipse","ID":0x4d,"firstC":0x52f}
+}
+
+
+//Functions and such
+LevelComplete = EndTimer > 0
+FossilXCheck = XPos >= 0x1720 && ScreenID == 0x140 && EndTimer == 0
+function BackDoorMoonProtection() => BackDoorChallenges == 8 && BackDoorRooms == 8
+//Achievements
+
+//Leaderboards
+
+//RP
+
+
