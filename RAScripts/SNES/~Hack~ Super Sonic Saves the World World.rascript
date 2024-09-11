@@ -136,6 +136,8 @@ ScreenID = word(0x10b)
   ElonTower = 0x125
   ElonBoss = 0x126
   ElonBossWin = 0x127
+  TerrorMessage = 0x107
+  VibesMessage = 0x11c
   prevBadelineStart = 0x15e
   BadelineStart = 0x15f
   BadelineEnd = 0x167
@@ -490,12 +492,21 @@ achievement(
     trigger= prev(ScreenID) == 0xc3 && ScreenID == 0xc2 && InLevel()
 )
 
-achievement(
+achievement( //todo get the values for the boxes
     title="Knowledge is Power",points=1,
     description="Read all of the boxes in Information Kiosk. There is more information to be found on the RA forum of this game to make challenges more accessible--please check it out!",
-    trigger= ScreenID == 4 // needs logic for each box
+    trigger= ScreenID == 4 && InLevel() && measured(tally(10,
+            once(box1 stuff),
+            once(box2 stuff),
+            once(box3 stuff),
+            once(box4 stuff),
+            once(box5 stuff))) && never(Overworld())
 )
-//get warned about playing levels in order
+achievement(
+    title="Spice Up Your Life",points=1,type="missable",
+    description="Get threatened with the dangers of playing levels in order.",
+    trigger=ScreenID == Warning && InLevel() && prev(Message) == 0 && Message == 1
+)
 
 //World 1
 
@@ -607,7 +618,11 @@ achievement(
     description="Collect the moon in Good Vibes Only.",
     trigger= NormalMoon(10) && prev(VibesMoon) == 0 && VibesMoon == 1
 )
-//hit the first try info box
+achievement(
+    title="Wow, First Try!",points=3,
+    description="Hit a certain information block on the first try in Good Vibes Only.",
+    trigger=ScreenID == VibesMessage && InLevel() && prev(Message) == 0 && Message == 1
+)
 achievement(
     title="A Good Time",points=1,
     description="beat the good vibes within 2m",
@@ -619,7 +634,12 @@ NormalClear(11)
 
 //Late Night Terror Club
 ProtectedClear(12)
-//find the hidden info box
+//find the hidden info box todo
+achievement(
+    title="The Distance",points=3,
+    description="Find the hidden message block in Late Night Terror Club.",
+    trigger=ScreenID == TerrorMessage && InLevel() && prev(Message) == 0 && Message == 1
+)
 
 //Act IV
 achievement(
@@ -715,7 +735,17 @@ achievement(
 )
 
 //Disinformation Kiosk
-
+//all boxes todo
+achievement(
+    title="info",points=1,
+    description="Read all of the message boxes in Disinformation Kiosk.",
+    trigger= ScreenID == DisinformationKiosk && measured(tally(5,
+            once(box1 stuff),
+            once(box2 stuff),
+            once(box3 stuff),
+            once(box4 stuff),
+            once(box5 stuff))) && never(Overworld())
+)
 
 //Daddy's Castle
 achievement(
