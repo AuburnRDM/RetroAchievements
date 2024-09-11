@@ -130,6 +130,8 @@ function InLevel() => GameState >= 0x0f
 
 ScreenID = word(0x10b)
   Bridge = 0xc5
+  prevPrincessCarnival = 0x1b4
+  PrincessCarnival = 0x1b5
   DaddyStart = 0x180
   BackDoorStart = 0x12e
   SafeWord = 0x181
@@ -482,6 +484,7 @@ achievement(
     description="Read all of the boxes in Information Kiosk. There is more information to be found on the RA forum of this game to make challenges more accessible--please check it out!",
     trigger= ScreenID == 4 // needs logic for each box
 )
+//get warned about playing levels in order
 
 //World 1
 //The Unbearable Quickness of Hedgehog
@@ -520,6 +523,7 @@ achievement(
     trigger= StageID == Brain2 && NormalExit()
 )
 //The Letter P
+//finish all of the purple rooms
 ProtectedClear(5)
 achievement(
     title="Writing on the Wall",points=1,
@@ -616,12 +620,23 @@ achievement(
     description="beat the break within 2m",
     trigger= Speedrun(18,7201) && trigger_when(prev(ScreenID) == 0x1af && ScreenID == 0x1b0)
 )
-//Float Like a Princess
+//Float Like a Princess -- adding an extra bit of flavor. maybe a trigger?
+achievement(
+    title="carnival",points=1,
+    description="Find yourself at a carnival in Float Like a Princess.",
+    trigger= StageID == StageData[19]["ID"] && prev(ScreenID) == prevPrincessCarnival && ScreenID == PrincessCarnival
+)
 ProtectedClear(19)
+achievement(
+        title=AchData[19]["clearT"],points=AchData[19]["clearP"],
+        description="Defeat Birdo and complete Float Like a Princess",
+        trigger=__ornext(StageID == StageData[19]["ID"] || StageID== StageData[19]["endID"]) && NormalExit() &&
+        once(InLevel() && prev(ScreenID) == StageData[19]["priorS"] && ScreenID == StageData[19]["finalS"])
+    )
 achievement(
     title="princess moon",points=1,
     description="Collect the moon in Terminal Ferocity.",
-    trigger= NormalMoon(19) && prev(PrincessMoon) == 0 && PrincessMoon == 1
+    trigger= NormalMoon(19) && prev(PrincessMoon) == 0 && PrincessMoon == 1 && prior(ScreenID) == StageData[19]["priorMoon"]
 )
 //Dream Within a Dream
 NormalClear(20)
