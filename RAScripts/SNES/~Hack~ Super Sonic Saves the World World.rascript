@@ -591,9 +591,14 @@ achievement(
 )
 //elon boss challenge
 achievement(
-    title="Systematic Destrucction",points=10,
+    title="Systematic Destruction",points=10,
     description="Defeat each Elon Musk head without damaging another in Life on Mars.",
-    trigger=StageData[9]["ID"] && ScreenID == ElonBoss
+    trigger=StageID == StageData[9]["ID"] && prev(ScreenID) == ElonBoss && trigger_when(ScreenID == ElonBossWin) &&
+            once(StageID == StageData[9]["ID"] && ScreenID == ElonBoss && GameState == Active && Elon1HP == 3 && Elon2HP == 3 && Elon3HP == 3) &&
+            never(ScreenID == ElonBoss && __ornext(Elon2HP == 1 || Elon2HP == 2 || Elon3HP == 1 || Elon3HP == 2) && Elon1HP < prev(Elon1HP)) &&
+            never(ScreenID == ElonBoss && __ornext(Elon1HP == 1 || Elon1HP == 2 || Elon3HP == 1 || Elon3HP == 2) && Elon2HP < prev(Elon2HP)) &&
+            never(ScreenID == ElonBoss && __ornext(Elon1HP == 1 || Elon1HP == 2 || Elon2HP == 1 || Elon2HP == 2) && Elon3HP < prev(Elon3HP)) 
+)
 
 //Good Vibes Only
 NormalClear(10)
