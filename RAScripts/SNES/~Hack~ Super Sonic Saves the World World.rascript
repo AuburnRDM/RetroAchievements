@@ -445,7 +445,28 @@ StageData = {
     22:{"Name":"''Back'' ''Door''","ID":0x4d,"endID":0x4d,"firstC":0x12e,"moonS":0x184,"priorMoon":0x190-197},
     23:{"Name":"Full Moon Eclipse","ID":0x4d,"endID":0x4d,"firstC":0x52f}
 }
-
+AchData = {
+    1:{"clearT":"RIP Sonic","clearP":10,"clearFlav":"a"},
+    2:{"clearT":"Wild Ride","clearP":10,"clearFlav":"b"},
+    3:{"clearT":"When Shells Are On a Bagel","clearP":10,"clearFlav":"c"},
+    4:{"clearT":"Our Little Sonic, All Grown Up","clearP":10,"clearFlav":"d"},
+    5:{"clearT":"Paid Programming","clearP":10,"clearFlav":"e"},
+    6:{"clearT":"ted title","clearP":10,"clearFlav":"f"},
+    7:{"clearT":"You Can Have Shells Any Time","clearP":10,"clearFlav":"g"},
+    8:{"clearT":"All Star","clearP":25,"clearFlav":"h"},
+    9:{"clearT":"Special Delivery","clearP":10,"clearFlav":"i"},
+    10:{"clearT":"We're Having Fun","clearP":25,"clearFlav":"j"},
+    11:{"clearT":"We Own These Streets","clearP":25,"clearFlav":"k"},
+    12:{"clearT":"terror title","clearP":10,"clearFlav":"l"},
+    13:{"clearT":"We Believe","clearP":10,"clearFlav":"m"},
+    14:{"clearT":"Celeste, A Performance","clearP":25,"clearFlav":"n"},
+    15:{"clearT":"terminal title","clearP":10,"clearFlav":"o"},
+    16:{"clearT":"mega mole title","clearP":25,"clearFlav":"p"},
+    17:{"clearT":"reaping title","clearP":25,"clearFlav":"q"},
+    18:{"clearT":"Complete!","clearP":10,"clearFlav":"r"},
+    19:{"clearT":"She Chose Violence","clearP":25,"clearFlav":"s"},
+    20:{"clearT":"dream title","clearP":25,"clearFlav":"t"}
+}
 //Functions and such
 
 LevelComplete = EndTimer > 0
