@@ -411,6 +411,7 @@ TotalDeaths = byte(0x20500) + (byte(0x20501) * 10) + (byte(0x20502) * 100) + (by
 
 TotalTimeFrames = byte(0x20513) + (byte(0x20512) * 60) + (byte(0x20511) * 3600) + (byte(0x20510) * 216000)
 TotalTimeSeconds = byte(0x20512) + (byte(0x20511) * 60) + (byte(0x20510) * 3600)
+TotalTimeMinutes = byte(0x20511) + (byte(0x20510) * 60)
 
 // $020564: [8-bit] Overall game time until Overworld level is entered - Hours
 // $020565: [8-bit] Overall game time until Overworld level is entered - Minutes
@@ -972,7 +973,22 @@ leaderboard(
 )
 //RP
 rich_presence_conditional_display(MainMenu(),"Sonic is getting ready to work through some things.")
-rich_presence_conditional_display(GameState > 9 && GameState < 15, "Sonic is selecting a track 💿 • 🚩️[0/11]")
-rich_presence_display("Sonic is asdfasdf")
+rich_presence_conditional_display(GameState > 9 && GameState < 15, "Sonic is selecting their fate • 💀[{0}] • ⏱️[{1}] • 🚩️[{2}]",
+      rich_presence_value("Digit",TotalDeaths,format="VALUE"),
+      rich_presence_value("Digit",TotalTimeMinutes,format="MINUTES"),
+      rich_presence_value("Digit",Exits,format="VALUE")
+)
+rich_presence_conditional_display(InLevel() && __ornext(Message == 1 || Message == 2), "Sonic is {0} • 💀[{1}] • ⏱️[{2}] • 🚩️[{3}]",
+      rich_presence_lookup("Stage",prior(StageID),StageData[StageID]["Name"]),
+      rich_presence_value("Digit",TotalDeaths,format="VALUE"),
+      rich_presence_value("Digit",TotalTimeMinutes,format="MINUTES"),
+      rich_presence_value("Digit",Exits,format="VALUE")
+)
+rich_presence_display("Sonic is {0} • 💀[{1}] • ⏱️[{2}] • 🚩️[{3}]",
+      rich_presence_lookup("Stage",StageID,StageData[StageID]["Name"]),
+      rich_presence_value("Digit",TotalDeaths,format="VALUE"),
+      rich_presence_value("Digit",TotalTimeMinutes,format="MINUTES"),
+      rich_presence_value("Digit",Exits,format="VALUE")
+)
 
 
