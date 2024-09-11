@@ -130,6 +130,16 @@ function InLevel() => GameState >= 0x0f
 
 ScreenID = word(0x10b)
   Bridge = 0xc5
+  PPurpleEnd = 0x135
+  PBlueStart = 0x136
+  prevElonTower = 0x124
+  ElonTower = 0x125
+  ElonBoss = 0x126
+  ElonBossWin = 0x127
+  prevBadelineStart = 0x15e
+  BadelineStart = 0x15f
+  BadelineEnd = 0x167
+  BadelineEndNext = 0x168
   prevPrincessCarnival = 0x1b4
   PrincessCarnival = 0x1b5
   DaddyStart = 0x180
@@ -440,6 +450,7 @@ FossilXCheck = XPos >= 0x1720 && ScreenID == 0x140 && EndTimer == 0 && GameState
 TerrorYCheck = YPos <= 0x120
 DaddyXCheck= XPos <= 0x30
 IntroXCheck = XPos <= 0x9f
+FullMoonXCheck = XPos >= 0x3838 // find the actual value for passing the goal line
 function BackDoorMoonProtection() => BackDoorChallenges == 8 && BackDoorRooms == 8
 function BackDoorExit() => __ornext(prev(ScreenID) == 0x183 || prev(ScreenID) == 0x184) && ScreenID == 0x12f
 
@@ -487,6 +498,7 @@ achievement(
 //get warned about playing levels in order
 
 //World 1
+
 //The Unbearable Quickness of Hedgehog
 NormalClear(1)
 achievement(
@@ -499,6 +511,7 @@ achievement(
     description="beat quickness within 2m",
     trigger= Speedrun(1,7201) && trigger_when(ScreenID == StageData[1]["finalS"] && LevelComplete)
 )
+
 //Fossil Fueled
 NormalClear(2)
 achievement(
@@ -506,6 +519,7 @@ achievement(
     description="Collect the moon in Fossil Fueled.",
     trigger= NormalMoon(2) && prev(FossilMoon) == 0 && FossilMoon == 1
 )
+
 //Shells at Dawn
 NormalClear(3)
 achievement(
@@ -513,6 +527,7 @@ achievement(
     description="beat shells at dawn within 2m",
     trigger= Speedrun(3,7201) && trigger_when(ScreenID == StageData[3]["finalS"] && LevelComplete)
 )
+
 //Zephy Leaves the Nest
 NormalClear(4)
 
@@ -522,16 +537,23 @@ achievement(
     description="Unlock Zone 2: The City of Freaks.",
     trigger= StageID == Brain2 && NormalExit()
 )
+
 //The Letter P
-//finish all of the purple rooms
+achievement(
+    title="Brought To You By",points=1,
+    description="Clear all of the purple rooms in The Letter ''P''.",
+    trigger= StageID == StageData[5]["ID"] && InLevel() && prev(ScreenID) == PPurpleEnd && ScreenID == PBlueStart
+)
 ProtectedClear(5)
 achievement(
     title="Writing on the Wall",points=1,
     description="Collect the moon in The Letter ''P''.",
     trigger= NormalMoon(5) && prev(PMoon) == 0 && PMoon == 1
 )
+
 //Your Pal Ted
 NormalClear(6)
+
 //Shells at Midday
 NormalClear(7)
 achievement(
@@ -539,6 +561,7 @@ achievement(
     description="beat shells at midday within 2m",
     trigger= Speedrun(7,7201) && trigger_when(ScreenID == StageData[7]["finalS"] && LevelComplete)
 )
+
 //For Whomst the Charles Charges
 ProtectedClear(8)
 achievement(
@@ -546,19 +569,32 @@ achievement(
     description="Collect the moon in For Whomst the Charles Charges.",
     trigger= NormalMoon(8) && prev(CharlesMoon) == 0 && CharlesMoon == 1
 )
+
 //Chapter 3
 achievement(
     title="Hello, Brain3",points=1,type="progression",
     description="Unlock Chapter 3: Wealth & Power.",
     trigger= StageID == Brain3 && NormalExit()
 )
+
 //Life on Mars
+achievement(
+    title="Knock, Knock",points=1,
+    description="Arrive at Elon's Tower in Life on Mars. Of course he won't come down to the lobby.",
+    trigger= StageID == StageData[5]["ID"] && InLevel() && prev(ScreenID) == prevElonTower && ScreenID == ElonTower
+)
 NormalClear(9)
 achievement(
     title="To the Mooon!",points=1,
     description="Collect the moon in Life on Mars.",
     trigger= NormalMoon(9) && prev(MarsMoon) == 0 && MarsMoon == 1
 )
+//elon boss challenge
+achievement(
+    title="Systematic Destrucction",points=10,
+    description="Defeat each Elon Musk head without damaging another in Life on Mars.",
+    trigger=StageData[9]["ID"] && ScreenID == ElonBoss
+
 //Good Vibes Only
 NormalClear(10)
 achievement(
@@ -566,21 +602,27 @@ achievement(
     description="Collect the moon in Good Vibes Only.",
     trigger= NormalMoon(10) && prev(VibesMoon) == 0 && VibesMoon == 1
 )
+//hit the first try info box
 achievement(
     title="A Good Time",points=1,
     description="beat the good vibes within 2m",
     trigger= Speedrun(10,7201) && trigger_when(prev(ScreenID) == 0x14f && ScreenID == 0x149)
 )
+
 //Shells All Night
 NormalClear(11)
+
 //Late Night Terror Club
 ProtectedClear(12)
+//find the hidden info box
+
 //Act IV
 achievement(
     title="Hello, Brain4",points=1,type="progression",
     description="Unlock Act IV: Kaizo Mario World.",
     trigger= StageID == Brain4 && NormalExit()
 )
+
 //In This House,
 ProtectedClear(13)
 achievement(
@@ -588,8 +630,22 @@ achievement(
     description="Collect the moon in In This House,.",
     trigger= NormalMoon(13) && prev(HouseMoon) == 0 && HouseMoon == 1
 )
+
 //Celeste (2018)
+achievement( // double check that this is actually the best part to do this. perhaps should change over when ch 5  is beaten
+    title="reach badeline",points=1,
+    description="Complete Chapter 5 in Celeste (2018).",
+    trigger= StageID == StageData[14]["ID"] && InLevel() && prev(ScreenID) == prevBadelineStart && ScreenID == BadelineStart
+)
 NormalClear(14)
+achievement(
+    title="badeline", points=10,
+    description="Defeat Badeline Celeste in 20 or less deaths in Celeste (2018).",
+    trigger= StageID == StageData[14]["ID"] && trigger_when(prev(ScreenID) == BadelineEnd && ScreenID == BadelineEndNext) &&
+            once(StageID == StageData[14]["ID"] && ScreenID == BadelineStart && GameState == Active) &&
+            unless(21,Dead) && never(Overworld()) && never(ScreenID == prevBadelineStart)
+)
+
 //Terminal Ferocity
 NormalClear(15)
 achievement(
@@ -597,6 +653,7 @@ achievement(
     description="Collect the moon in Terminal Ferocity.",
     trigger= NormalMoon(15) && prev(TerminalMoon) == 0 && TerminalMoon == 1
 )
+
 //Mega Mole Fucks
 NormalClear(16)
 
@@ -606,6 +663,7 @@ achievement(
     description="Unlock Book 5: Comeuppance.",
     trigger= StageID == Brain5 && NormalExit()
 )
+
 //Me, Reaping
 NormalClear(17)
 achievement(
@@ -613,6 +671,7 @@ achievement(
     description="Collect the moon in Terminal Ferocity.",
     trigger= NormalMoon(17) && prev(ReapingMoon) == 0 && ReapingMoon == 1
 )
+
 //Break the Targets!
 NormalClear(18)
 achievement(
@@ -620,11 +679,12 @@ achievement(
     description="beat the break within 2m",
     trigger= Speedrun(18,7201) && trigger_when(prev(ScreenID) == 0x1af && ScreenID == 0x1b0)
 )
+
 //Float Like a Princess -- adding an extra bit of flavor. maybe a trigger?
 achievement(
     title="carnival",points=1,
     description="Find yourself at a carnival in Float Like a Princess.",
-    trigger= StageID == StageData[19]["ID"] && prev(ScreenID) == prevPrincessCarnival && ScreenID == PrincessCarnival
+    trigger= StageID == StageData[19]["ID"] && InLevel() && prev(ScreenID) == prevPrincessCarnival && ScreenID == PrincessCarnival
 )
 ProtectedClear(19)
 achievement(
@@ -632,12 +692,13 @@ achievement(
         description="Defeat Birdo and complete Float Like a Princess",
         trigger=__ornext(StageID == StageData[19]["ID"] || StageID== StageData[19]["endID"]) && NormalExit() &&
         once(InLevel() && prev(ScreenID) == StageData[19]["priorS"] && ScreenID == StageData[19]["finalS"])
-    )
+)
 achievement(
     title="princess moon",points=1,
     description="Collect the moon in Terminal Ferocity.",
     trigger= NormalMoon(19) && prev(PrincessMoon) == 0 && PrincessMoon == 1 && prior(ScreenID) == StageData[19]["priorMoon"]
 )
+
 //Dream Within a Dream
 NormalClear(20)
 
@@ -647,15 +708,25 @@ achievement(
     description="Unlock Denouement: Daddy's Castle.",
     trigger= StageID == Brain6 && NormalExit()
 )
+
 //Disinformation Kiosk
+
+
 //Daddy's Castle
-//Complete the first screen of Daddy's Castle and enter the ''Back'' ''Door''.
 achievement(
     title="daddy's castle",points=1,type="progression",
     description="Complete the first screen of Daddy's Castle and enter the ''Back'' ''Door''",
-    trigger= StageID == DaddysCastle && prev(ScreenID) == DaddyStart && ScreenID == BackDoorStart
+    trigger= StageID == DaddysCastle && InLevel() && prev(ScreenID) == DaddyStart && ScreenID == BackDoorStart
 )
 //Complete the first screen of Daddy's Castle without collecting any power-ups.
+achievement(
+    title="daddy's castle challenge",points=1,
+    description="Complete the first screen of Daddy's Castle and enter the ''Back'' ''Door'' without using power-ups.",
+    trigger= StageID == DaddysCastle && InLevel() && prev(ScreenID) == DaddyStart && trigger_when(ScreenID == BackDoorStart) &&
+            once(StageID == DaddysCastle && ScreenID == DaddyStart && GameState == Active && DaddyXCheck) &&
+            never(Overworld()) && never(Dead) && never(PowerUp != 0)
+)
+
 //Back Door
 achievement(
     title="Pineapple! Pineapple!!",points=1,
@@ -665,19 +736,27 @@ achievement(
 achievement(
     title="Consistency Check",points=25,
     description="Complete the ''Back'' ''Door'' section of Daddy's Castle the proper way.",
-    trigger= StageID == DaddysCastle && BackDoorExit()
+    trigger= StageID == DaddysCastle && InLevel() && BackDoorExit()
 )
 achievement(
     title="No Room Left Behind",points=100,
     description="Collect the moon in Terminal Ferocity.",
     trigger= NormalMoon(22) && prev(DaddyMoon) == 0 && DaddyMoon == 1 && BackDoorMoonProtection()
 )
+
 //Full Moon Eclipse
 achievement(
     title="Saved the World?",points=10,type="win_condition"
     description="Finish the game and save the world?",
     trigger= StageID == DaddysCastle && NormalExit()
 )
+achievement(
+    title="Humble Hedgehog", points=10,
+    description="Complete Full Moon Eclipse without collecting more than 30 rings or coins.",
+    trigger= StageID == DaddysCastle && ScreenID == FullMoon && trigger_when(FullMoonXCheck) &&
+            unless(31,ScreenID == FullMoon && Ring != prev(Ring)) && never(Dead) && never(Overworld())
+)
+
 //100% levels
 achievement(
     title="Nice.",points=10,
@@ -848,7 +927,14 @@ leaderboard(
         submit= StageID == StageData[10]["ID"] && prev(ScreenID) == 0x14f && ScreenID == 0x149,
         value= measured(always_true()), format="FRAMES",lower_is_better=true
 )
-
+leaderboard(
+        title="badeline challenge",
+        description="Defeat Badeline Celeste in Celeste (2018) with as few deaths as you can.",
+        start= StageID == StageData[14]["ID"] && ScreenID == BadelineStart && GameState == Active,
+        cancel= Overworld(),
+        submit= StageID == StageData[14]["ID"] && prev(ScreenID) == BadelineEnd && ScreenID == BadelineEndNext,
+        value= measured(Dead), format="VALUE",lower_is_better=true
+)
 //RP
 rich_presence_conditional_display(MainMenu(),"Sonic is getting ready to work through some things.")
 rich_presence_conditional_display(GameState > 9 && GameState < 15, "Sonic is selecting a track 💿 • 🚩️[0/11]")
