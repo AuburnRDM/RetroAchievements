@@ -130,7 +130,10 @@ function InLevel() => GameState >= 0x0f
 
 ScreenID = word(0x10b)
   Bridge = 0xc5
+  DaddyStart = 0x180
+  BackDoorStart = 0x12e
   SafeWord = 0x181
+  FullMoon = 0x12f
   FinalScreen = 0x19b
   InformationKiosk = 0x104
   DisinformationKiosk = 0x1f
@@ -281,6 +284,7 @@ StageID = byte(0x13bf)
     Brain4 = 0x0d
     Brain5 = 0x0e
     Brain6 = 0x0f
+    DaddysCastle = 0x4d
 // $001426: [8-bit] Message box status; some messages are assigned to 0x01 and others are assigned to 0x02. This may change "Level ID (0x13bf)" temporarily, use "Screen ID (0x10b)"
 //          0x00 - Nothing
 //          0x01 - Message shown on screen: Warning, room 0xef; Good Vibes (first try), room 0x11c; Charles (1), room 0x141; Charles (2), room 0x142; Charles (3), room 0x170; Late Night Terror Club, room 0x107
@@ -444,7 +448,7 @@ function NormalClear(stage) {
         trigger=__ornext(StageID == StageData[stage]["ID"] || StageID== StageData[stage]["endID"]) && NormalExit()
     )
 }
-function ProtectedClear(stage) {
+function ProtectedClear(stage) { //5,8,12,13,14,19
     achievement(
         title=AchData[stage]["clearT"],points=AchData[stage]["clearP"],
         description="Complete " + StageData[stage]["Name"] + ". " + AchData[stage]["clearFlav"],
@@ -452,6 +456,7 @@ function ProtectedClear(stage) {
         once(InLevel() && prev(ScreenID) == StageData[stage]["priorS"] && ScreenID == StageData[stage]["finalS"])
     )
 }
+function NormalMoon(stage) => StageID == StageData[stage]["ID"] && ScreenID == StageData[stage]["moonS"]
 
 function Speedrun(stage,time) =>
         once(StageID == StageData[stage]["ID"] && GameState == Active && Checkpoint == StageData[stage]["firstC"]) &&
@@ -480,19 +485,33 @@ achievement(
 
 //World 1
 //The Unbearable Quickness of Hedgehog
+NormalClear(1)
+achievement(
+    title="Blending In",points=1,
+    description="Collect the moon in The Unbearable Quickness of Hedgehog.",
+    trigger= NormalMoon(1) && prev(QuicknessMoon) == 0 && QuicknessMoon == 1
+)
 achievement(
     title="Rtest",points=1,
     description="beat quickness within 2m",
     trigger= Speedrun(1,7201) && trigger_when(ScreenID == StageData[1]["finalS"] && LevelComplete)
 )
 //Fossil Fueled
+NormalClear(2)
+achievement(
+    title="Secure Your Belongings Before Riding",points=1,
+    description="Collect the moon in Fossil Fueled.",
+    trigger= NormalMoon(2) && prev(FossilMoon) == 0 && FossilMoon == 1
+)
 //Shells at Dawn
+NormalClear(3)
 achievement(
     title="Rtest2",points=1,
     description="beat shells at dawn within 2m",
     trigger= Speedrun(3,7201) && trigger_when(ScreenID == StageData[3]["finalS"] && LevelComplete)
 )
 //Zephy Leaves the Nest
+NormalClear(4)
 
 //Zone 2
 achievement(
@@ -501,15 +520,28 @@ achievement(
     trigger= StageID == Brain2 && NormalExit()
 )
 //The Letter P
+ProtectedClear(5)
+achievement(
+    title="Writing on the Wall",points=1,
+    description="Collect the moon in The Letter ''P''.",
+    trigger= NormalMoon(5) && prev(PMoon) == 0 && PMoon == 1
+)
 //Your Pal Ted
+NormalClear(6)
 //Shells at Midday
+NormalClear(7)
 achievement(
     title="Rtest3",points=1,
     description="beat shells at midday within 2m",
     trigger= Speedrun(7,7201) && trigger_when(ScreenID == StageData[7]["finalS"] && LevelComplete)
 )
 //For Whomst the Charles Charges
-
+ProtectedClear(8)
+achievement(
+    title="Art Connoisseur",points=1,
+    description="Collect the moon in For Whomst the Charles Charges.",
+    trigger= NormalMoon(8) && prev(CharlesMoon) == 0 && CharlesMoon == 1
+)
 //Chapter 3
 achievement(
     title="Hello, Brain3",points=1,type="progression",
@@ -517,15 +549,28 @@ achievement(
     trigger= StageID == Brain3 && NormalExit()
 )
 //Life on Mars
+NormalClear(9)
+achievement(
+    title="To the Mooon!",points=1,
+    description="Collect the moon in Life on Mars.",
+    trigger= NormalMoon(9) && prev(MarsMoon) == 0 && MarsMoon == 1
+)
 //Good Vibes Only
+NormalClear(10)
+achievement(
+    title="good vibes moon",points=1,
+    description="Collect the moon in Good Vibes Only.",
+    trigger= NormalMoon(10) && prev(VibesMoon) == 0 && VibesMoon == 1
+)
 achievement(
     title="A Good Time",points=1,
     description="beat the good vibes within 2m",
     trigger= Speedrun(10,7201) && trigger_when(prev(ScreenID) == 0x14f && ScreenID == 0x149)
 )
 //Shells All Night
+NormalClear(11)
 //Late Night Terror Club
-
+ProtectedClear(12)
 //Act IV
 achievement(
     title="Hello, Brain4",points=1,type="progression",
@@ -533,9 +578,23 @@ achievement(
     trigger= StageID == Brain4 && NormalExit()
 )
 //In This House,
+ProtectedClear(13)
+achievement(
+    title="This is a Safe Space",points=1,
+    description="Collect the moon in In This House,.",
+    trigger= NormalMoon(13) && prev(HouseMoon) == 0 && HouseMoon == 1
+)
 //Celeste (2018)
+NormalClear(14)
 //Terminal Ferocity
+NormalClear(15)
+achievement(
+    title="Level Design Is My Passion",points=1,
+    description="Collect the moon in Terminal Ferocity.",
+    trigger= NormalMoon(15) && prev(TerminalMoon) == 0 && TerminalMoon == 1
+)
 //Mega Mole Fucks
+NormalClear(16)
 
 //Book 5
 achievement(
@@ -544,14 +603,28 @@ achievement(
     trigger= StageID == Brain5 && NormalExit()
 )
 //Me, Reaping
+NormalClear(17)
+achievement(
+    title="reaping moon",points=1,
+    description="Collect the moon in Terminal Ferocity.",
+    trigger= NormalMoon(17) && prev(ReapingMoon) == 0 && ReapingMoon == 1
+)
 //Break the Targets!
+NormalClear(18)
 achievement(
     title="A New Record!",points=1,
     description="beat the break within 2m",
     trigger= Speedrun(18,7201) && trigger_when(prev(ScreenID) == 0x1af && ScreenID == 0x1b0)
 )
 //Float Like a Princess
+ProtectedClear(19)
+achievement(
+    title="princess moon",points=1,
+    description="Collect the moon in Terminal Ferocity.",
+    trigger= NormalMoon(19) && prev(PrincessMoon) == 0 && PrincessMoon == 1
+)
 //Dream Within a Dream
+NormalClear(20)
 
 //Denouement
 achievement(
@@ -561,11 +634,41 @@ achievement(
 )
 //Disinformation Kiosk
 //Daddy's Castle
+//Complete the first screen of Daddy's Castle and enter the ''Back'' ''Door''.
+achievement(
+    title="daddy's castle",points=1,type="progression",
+    description="Complete the first screen of Daddy's Castle and enter the ''Back'' ''Door''",
+    trigger= StageID == DaddysCastle && prev(ScreenID) == DaddyStart && ScreenID == BackDoorStart
+)
+//Complete the first screen of Daddy's Castle without collecting any power-ups.
 //Back Door
+achievement(
+    title="Pineapple! Pineapple!!",points=1,
+    description="Use the safe word and skip the ''Back'' ''Door'' section of Daddy's Castle. Boundaries are important.",
+    trigger= StageID == DaddysCastle && prev(ScreenID) == SafeWord && ScreenID == FullMoon
+)
+achievement(
+    title="Consistency Check",points=25,
+    description="Complete the ''Back'' ''Door'' section of Daddy's Castle the proper way.",
+    trigger= StageID == DaddysCastle && BackDoorExit()
+)
+achievement(
+    title="No Room Left Behind",points=100,
+    description="Collect the moon in Terminal Ferocity.",
+    trigger= NormalMoon(22) && prev(DaddyMoon) == 0 && DaddyMoon == 1 && BackDoorMoonProtection()
+)
 //Full Moon Eclipse
-
+achievement(
+    title="Saved the World?",points=10,type="win_condition"
+    description="Finish the game and save the world?",
+    trigger= StageID == DaddysCastle && NormalExit()
+)
 //100% levels
-
+achievement(
+    title="Nice.",points=10,
+    description="Reach a completed exit count of "69".",
+    trigger= GameState > MainMenu && prev(Exits) == 0x1a && Exits == 0x1b
+)
 
 //Leaderboards
 
