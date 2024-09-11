@@ -991,4 +991,18 @@ rich_presence_display("Sonic is {0} • 💀[{1}] • ⏱️[{2}] • 🚩️[{3
       rich_presence_value("Digit",Exits,format="VALUE")
 )
 
-
+//Cheaterboards -- These will submit if the player reloads a save or leaves the stage on an exit screen (nothing but hit the exit)
+function Cheaterboard(stage) {
+      achievement(
+          title=StageData[stage]["Name"] + " - Old",
+          description="Earn as many points as you can in " + StageData[stage]["Name"]
+          start= __ornext(StageID == StageData[stage]["ID"] || StageID== StageData[stage]["endID"]) && ScreenID == StageData[stage]["finalS"] && LevelComplete &&
+                prior(ScreenID) != StageData[stage]["priorS"],
+          cancel=always_false(),
+          submit=always_true(),
+          value=measured(Exits),format="VALUE"
+    )
+}
+//Run Cheaterboards
+for i in [5,8,10,12,13,18]
+    Cheaterboard(i)
