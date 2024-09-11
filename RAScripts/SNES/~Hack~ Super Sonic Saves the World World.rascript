@@ -21,10 +21,6 @@ InCar = byte(0x78) == 0x7f
 
 XPos = word(0x94)
 
-DaddyXCheck= XPos <= 0x30
-IntroXCheck = XPos <= 0x9f
-
-
 // $000096: [16-bit] Player's Y-position (Top of map is 0x0000)
 //          0x120 - Late Night Terror Club; check that Y is less than this value for exit
 
@@ -135,6 +131,10 @@ function InLevel() => GameState >= 0x0f
 ScreenID = word(0x10b)
   Bridge = 0xc5
   SafeWord = 0x181
+  FinalScreen = 0x19b
+  InformationKiosk = 0x104
+  DisinformationKiosk = 0x1f
+  Warning = 0xef
 // $000DBF: [8-bit] Amount of coins/rings picked up on the current life
 
 Rings = byte(0xDBF)
@@ -275,6 +275,12 @@ BackDoorChallenges = byte(0xF61) + byte(0xF62) + byte(0xF63) + byte(0xF64) + byt
 //          0x1f - Disinformation Kiosk
 //          0x4d - Daddy's Castle / "Back" "Door" / Full Moon Eclipse (credits)
 StageID = byte(0x13bf)
+    Brain1 = 0x0a
+    Brain2 = 0x0b
+    Brain3 = 0x0c
+    Brain4 = 0x0d
+    Brain5 = 0x0e
+    Brain6 = 0x0f
 // $001426: [8-bit] Message box status; some messages are assigned to 0x01 and others are assigned to 0x02. This may change "Level ID (0x13bf)" temporarily, use "Screen ID (0x10b)"
 //          0x00 - Nothing
 //          0x01 - Message shown on screen: Warning, room 0xef; Good Vibes (first try), room 0x11c; Charles (1), room 0x141; Charles (2), room 0x142; Charles (3), room 0x170; Late Night Terror Club, room 0x107
@@ -323,7 +329,7 @@ VibesMoon = bit1(0x1ff4)
 CharlesMoon = bit7(0x1ff4)
 // $001FF6: [8-bit] Moons pt. 4 (stage; screen)
 //          Bit0 - Life on Mars (0x47, 0x125)
-MarsMoons = bit0(0x1ff6)
+MarsMoon = bit0(0x1ff6)
 // $001FF7: [8-bit] Moons pt. 5 (stage; screen)
 //          Bit2 - Daddy's Castle (0x4d; 0x184, prev 0x190-0x197)
 DaddyMoon = bit2(0x1ff7)
@@ -418,75 +424,191 @@ StageData = {
     20:{"Name":"Dream Within a Dream","ID":0x4c,"endID":0x4c,"firstC":0x128,"finalS":0x128},
     21:{"Name":"Daddy's Castle","ID":0x4d,"endID":0x4d,"firstC":0x580,"finalS":0x12e,"priorS":0x180},
     22:{"Name":"''Back'' ''Door''","ID":0x4d,"endID":0x4d,"firstC":0x12e,"moonS":0x184,"priorMoon":0x190-197},
-    23:{"Name":"Full Moon Eclipse","ID":0x4d,"endID":0x4d,"endID":0x4d,"firstC":0x52f}
+    23:{"Name":"Full Moon Eclipse","ID":0x4d,"endID":0x4d,"firstC":0x52f}
 }
 
 //Functions and such
 
 LevelComplete = EndTimer > 0
-FossilXCheck = XPos >= 0x1720 && ScreenID == 0x140 && EndTimer == 0
+FossilXCheck = XPos >= 0x1720 && ScreenID == 0x140 && EndTimer == 0 && GameState == Active
+TerrorYCheck = YPos <= 0x120
+DaddyXCheck= XPos <= 0x30
+IntroXCheck = XPos <= 0x9f
 function BackDoorMoonProtection() => BackDoorChallenges == 8 && BackDoorRooms == 8
-function BackDoorExit() = __ornext(prev(ScreenID) == 0x183 || prev(ScreenID) == 0x184) && ScreenID == 0x12f
+function BackDoorExit() => __ornext(prev(ScreenID) == 0x183 || prev(ScreenID) == 0x184) && ScreenID == 0x12f
+
+function NormalClear(stage) {
+    achievement(
+        title=AchData[stage]["clearT"],points=AchData[stage]["clearP"],
+        description="Complete " + StageData[stage]["Name"] + ". " + AchData[stage]["clearFlav"],
+        trigger=__ornext(StageID == StageData[stage]["ID"] || StageID== StageData[stage]["endID"]) && NormalExit()
+    )
+}
+function ProtectedClear(stage) {
+    achievement(
+        title=AchData[stage]["clearT"],points=AchData[stage]["clearP"],
+        description="Complete " + StageData[stage]["Name"] + ". " + AchData[stage]["clearFlav"],
+        trigger=__ornext(StageID == StageData[stage]["ID"] || StageID== StageData[stage]["endID"]) && NormalExit() &&
+        once(InLevel() && prev(ScreenID) == StageData[stage]["priorS"] && ScreenID == StageData[stage]["finalS"])
+    )
+}
+
+function Speedrun(stage,time) =>
+        once(StageID == StageData[stage]["ID"] && GameState == Active && Checkpoint == StageData[stage]["firstC"]) &&
+        __ornext(StageID == StageData[stage]["ID"] || StageID== StageData[stage]["endID"]) &&
+        unless(repeated(time, once(GameState == Active) && once(Checkpoint == StageData[stage]["firstC"]) && always_true())) && (always_false() || never(Overworld()))
+
 //Achievements
 
+//Intro
 achievement(
     title="Rebellious",points=1,
-    description="Defy platformer standards on the initial screen for a special message."
+    description="Defy platformer standards on the initial screen for a special message.",
     trigger= ScreenID == Bridge && InLevel() && IntroXCheck
 )
 achievement(
     title="Where Is This Thing Taking Me!?",points=1,
-    description="Complete floor 14 on the elevator ride. Is this thing ever going to stop?"
+    description="Complete floor 14 on the elevator ride. Is this thing ever going to stop?",
     trigger= prev(ScreenID) == 0xc3 && ScreenID == 0xc2 && InLevel()
 )
 
 achievement(
     title="Knowledge is Power",points=1,
-    description="Read all of the boxes in Information Kiosk. There is more information to be found on the RA forum of this game to make challenges more accessible--please check it out!"
-    trigger= 1==1 // needs logic for each box
+    description="Read all of the boxes in Information Kiosk. There is more information to be found on the RA forum of this game to make challenges more accessible--please check it out!",
+    trigger= ScreenID == 4 // needs logic for each box
 )
+
+//World 1
+//The Unbearable Quickness of Hedgehog
+achievement(
+    title="Rtest",points=1,
+    description="beat quickness within 2m",
+    trigger= Speedrun(1,7201) && trigger_when(ScreenID == StageData[1]["finalS"] && LevelComplete)
+)
+//Fossil Fueled
+//Shells at Dawn
+achievement(
+    title="Rtest2",points=1,
+    description="beat shells at dawn within 2m",
+    trigger= Speedrun(3,7201) && trigger_when(ScreenID == StageData[3]["finalS"] && LevelComplete)
+)
+//Zephy Leaves the Nest
+
+//Zone 2
+achievement(
+    title="Hello, Brain",points=1,type="progression",
+    description="Unlock Zone 2: The City of Freaks.",
+    trigger= StageID == Brain2 && NormalExit()
+)
+//The Letter P
+//Your Pal Ted
+//Shells at Midday
+achievement(
+    title="Rtest3",points=1,
+    description="beat shells at midday within 2m",
+    trigger= Speedrun(7,7201) && trigger_when(ScreenID == StageData[7]["finalS"] && LevelComplete)
+)
+//For Whomst the Charles Charges
+
+//Chapter 3
+achievement(
+    title="Hello, Brain3",points=1,type="progression",
+    description="Unlock Chapter 3: Wealth & Power.",
+    trigger= StageID == Brain3 && NormalExit()
+)
+//Life on Mars
+//Good Vibes Only
+achievement(
+    title="A Good Time",points=1,
+    description="beat the good vibes within 2m",
+    trigger= Speedrun(10,7201) && trigger_when(prev(ScreenID) == 0x14f && ScreenID == 0x149)
+)
+//Shells All Night
+//Late Night Terror Club
+
+//Act IV
+achievement(
+    title="Hello, Brain4",points=1,type="progression",
+    description="Unlock Act IV: Kaizo Mario World.",
+    trigger= StageID == Brain4 && NormalExit()
+)
+//In This House,
+//Celeste (2018)
+//Terminal Ferocity
+//Mega Mole Fucks
+
+//Book 5
+achievement(
+    title="Hello, Brain5",points=1,type="progression",
+    description="Unlock Book 5: Comeuppance.",
+    trigger= StageID == Brain5 && NormalExit()
+)
+//Me, Reaping
+//Break the Targets!
+achievement(
+    title="A New Record!",points=1,
+    description="beat the break within 2m",
+    trigger= Speedrun(18,7201) && trigger_when(prev(ScreenID) == 0x1af && ScreenID == 0x1b0)
+)
+//Float Like a Princess
+//Dream Within a Dream
+
+//Denouement
+achievement(
+    title="Hello, Brain6",points=1,type="progression",
+    description="Unlock Denouement: Daddy's Castle.",
+    trigger= StageID == Brain6 && NormalExit()
+)
+//Disinformation Kiosk
+//Daddy's Castle
+//Back Door
+//Full Moon Eclipse
+
+//100% levels
+
+
 //Leaderboards
 
 //Full game leaderboards
 //any% speed/death;  100% speed/death in-game. RTA any%, daddy%, 100% 
-//check if InLevel() works with level update
+//consider bit7(0x1eef) == 0 for any% with saves to stop it from triggering every time it's beaten
 leaderboard(
     title="Full Game [Saves Allowed] - Any%",
     description="Complete the game as fast as you can.",
-    start= StageID == 0x4d && LevelComplete && InLevel(),
+    start= StageID == 0x4d && LevelComplete && ScreenID == FinalScreen,
     cancel= always_false(),
     submit= always_true(),
     value=TotalTimeFrames, format="FRAMES", //  maybe do minutes
-    lower_is_better=TRUE
+    lower_is_better=true
 )
 leaderboard(
     title="Full Game [Saves Allowed] - Any% Deaths",
     description="Complete the game with as few deaths as you can.",
-    start= StageID == 0x4d && LevelComplete && InLevel(),
+    start=StageID == 0x4d && LevelComplete && ScreenID == FinalScreen,
     cancel= always_false(),
     submit= always_true(),
     value=TotalDeaths, format="VALUE",
-    lower_is_better=TRUE
+    lower_is_better=true
 )
 leaderboard(
     title="Full Game [Saves Allowed] - 100%",
     description="Complete every exit and collect every moon as fast as you can.",
-    start= InLevel() && (AllMoons() == 11 && prev(Exits) == 0x1a && Exits == 0x1b) ||
+    start=(AllMoons() == 11 && prev(Exits) == 0x1a && Exits == 0x1b) ||
           (Exits == 0x1b && prev(AllMoons()) == 10 && AllMoons() == 11),
     cancel= always_false(),
     submit= always_true(),
     value=TotalTimeFrames, format="FRAMES", //  maybe do minutes
-    lower_is_better=TRUE
+    lower_is_better=true
 )
 leaderboard(
     title="Full Game [Saves Allowed] - 100% Deaths",
     description="Complete every exit and collect every moon with as few deaths as you can.",
-    start= InLevel() && (AllMoons() == 11 && prev(Exits) == 0x1a && Exits == 0x1b) ||
+    start=(AllMoons() == 11 && prev(Exits) == 0x1a && Exits == 0x1b) ||
           (Exits == 0x1b && prev(AllMoons()) == 10 && AllMoons() == 11),
     cancel= always_false(),
     submit= always_true(),
     value=TotalDeaths, format="VALUE",
-    lower_is_better=TRUE
+    lower_is_better=true
 )
 //RTA LB -- maybe make these submit when you cross the last bar
 
@@ -495,9 +617,9 @@ leaderboard(
     description="Skip the Intro from the bridge then complete the game as fast as you can.",
     start= ScreenID == Bridge && Exits == 0 && GameState == Overworld,
     cancel= always_false(),
-    submit= StageID == 0x4d && LevelComplete,
-    value=measured(always_true()), format="FRAMES", //  maybe do minutes
-    lower_is_better=TRUE
+    submit= StageID == 0x4d && LevelComplete && ScreenID == FinalScreen,
+    value=measured(always_true()), format="FRAMES", 
+    lower_is_better=true
 )
 leaderboard(
     title="Full Game [RTA/Single Session] - Daddy%",
@@ -505,18 +627,18 @@ leaderboard(
     start= ScreenID == Bridge && Exits == 0 && GameState == Overworld,
     cancel= always_false(),
     submit= StageID == 0x4d && LevelComplete && once(BackDoorExit()),
-    value=measured(always_true()), format="FRAMES", //  maybe do minutes
-    lower_is_better=TRUE
+    value=measured(always_true()), format="FRAMES",
+    lower_is_better=true
 )
 leaderboard(
     title="Full Game [RTA/Single Session] - 100%",
     description="Skip the Intro from the bridge then complete every exit and collect every moon as fast as you can.",
     start= ScreenID == Bridge && Exits == 0 && GameState == Overworld,
     cancel= MainMenu(),
-    submit= InLevel() && (AllMoons() == 11 && prev(Exits) == 0x1a && Exits == 0x1b) ||
+    submit=(AllMoons() == 11 && prev(Exits) == 0x1a && Exits == 0x1b) ||
           (Exits == 0x1b && prev(AllMoons()) == 10 && AllMoons() == 11),
-    value=measured(always_true()), format="FRAMES", //  maybe do minutes
-    lower_is_better=TRUE
+    value=measured(always_true()), format="FRAMES",
+    lower_is_better=true
 )
 
 
@@ -525,33 +647,93 @@ function Leaderboard(stage) {
     leaderboard(
         title=StageData[stage]["Name"],
         description="Complete " + StageData[stage]["Name"] + " as fast as you can.",
-        start= Stage == StageData[stage]["ID"] && GameStatus == Active && Checkpoint == StageData[stage]["firstC"],
+        start= StageID == StageData[stage]["ID"] && GameState == Active && Checkpoint == StageData[stage]["firstC"],
         cancel= Overworld(),
-        submit= (StageID == StageData[stage]["ID"] || StageID== StageData[stage]["endID"]) && ScreenID == StageData[stage]["finalS"] && LevelComplete,
-        value= measured(always_true()), format="FRAMES",lower_is_better=TRUE
+        submit= __ornext(StageID == StageData[stage]["ID"] || StageID== StageData[stage]["endID"]) && ScreenID == StageData[stage]["finalS"] && LevelComplete,
+        value= measured(always_true()), format="FRAMES",lower_is_better=true
+    )
+}
+//Broken up simply to keep things in order as 2,12,14,18 need custom checks
+//The Unbearable Quickness of Hedgehog
+Leaderboard(1)
+//Fossil Fueled
+leaderboard(
+        title=StageData[2]["Name"],
+        description="Complete " + StageData[2]["Name"] + " as fast as you can.",
+        start= StageID == StageData[2]["ID"] && GameState == Active && Checkpoint == StageData[2]["firstC"],
+        cancel= Overworld(),
+        submit= __ornext(StageID == StageData[2]["ID"] || StageID== StageData[2]["endID"]) && ScreenID == StageData[2]["finalS"] && LevelComplete && 
+                once(FossilXCheck) && never(Overworld()),
+        value= measured(always_true()), format="FRAMES",lower_is_better=true
 )
-//all stages except for daddy's castle stages
-for i in range(1,20)
+//Shells at Dawn through Shells All Night
+for i in range(3,11)
     Leaderboard(i)
-
+//Late Night Terror Club
+leaderboard(
+        title=StageData[12]["Name"],
+        description="Complete " + StageData[12]["Name"] + " as fast as you can.",
+        start= StageID == StageData[12]["ID"] && GameState == Active && Checkpoint == StageData[12]["firstC"],
+        cancel= Overworld(),
+        submit= __ornext(StageID == StageData[12]["ID"] || StageID== StageData[12]["endID"]) && ScreenID == StageData[12]["finalS"] && LevelComplete && TerrorYCheck,
+        value= measured(always_true()), format="FRAMES",lower_is_better=true
+)
+//In This House, 
+Leaderboard(13)
+//Celeste (2018)
+leaderboard(
+        title=StageData[14]["Name"],
+        description="Complete " + StageData[14]["Name"] + " as fast as you can.",
+        start= StageID == StageData[14]["ID"] && GameState == Active && Checkpoint == StageData[14]["firstC"],
+        cancel= Overworld(),
+        submit= __ornext(StageID == StageData[14]["ID"] || StageID== StageData[14]["endID"]) && prev(ScreenID) == 0x179 && ScreenID == 0x17b,
+        value= measured(always_true()), format="FRAMES",lower_is_better=true
+)
+//Terminal Ferocity through Me, Reaping
+for i in range(15,17)
+    Leaderboard(i)
+//Break the Targets!
+leaderboard(
+        title=StageData[18]["Name"],
+        description="Complete " + StageData[18]["Name"] + " as fast as you can.",
+        start= StageID == StageData[18]["ID"] && GameState == Active && Checkpoint == StageData[18]["firstC"],
+        cancel= Overworld(),
+        submit= __ornext(StageID == StageData[18]["ID"] || StageID== StageData[18]["endID"]) && prev(ScreenID) == 0x1af && ScreenID == 0x1b0,
+        value= measured(always_true()), format="FRAMES",lower_is_better=true
+)
+//Float Like a Princes and Dream Within a Dream
+for i in range(19,20)
+    Leaderboard(i)
+//Daddy's Castle levels
 leaderboard(
         title="Daddy's Castle",
         description="Complete the first screen of Daddy's Castle as fast as you can.",
-        start= Stage == StageData[21]["ID"] && GameStatus == Active && Checkpoint == StageData[21]["firstC"],
+        start= StageID == StageData[21]["ID"] && GameState == Active && Checkpoint == StageData[21]["firstC"],
         cancel= Overworld(),
         submit= StageID == StageData[21]["ID"] && prev(ScreenID) == 0x180 && ScreenID == 0x12e,
-        value= measured(always_true()), format="FRAMES",lower_is_better=TRUE
+        value= measured(always_true()), format="FRAMES",lower_is_better=true
 )
 leaderboard(
         title="''Back'' ''Door''",
         description="Complete ''Back'' 'Door'' the proper way as fast as you can.",
-        start= Stage == StageData[22]["ID"] && GameStatus == Active && Checkpoint == StageData[22]["firstC"],
-        cancel= Overworld() || ScreenID == SafeWord,
+        start= StageID == StageData[22]["ID"] && GameState == Active && Checkpoint == StageData[22]["firstC"],
+        cancel= __ornext(Overworld() || ScreenID == SafeWord),
         submit= StageID == StageData[22]["ID"] && BackDoorExit(),
-        value= measured(always_true()), format="FRAMES",lower_is_better=TRUE
+        value= measured(always_true()), format="FRAMES",lower_is_better=true
 )
+//leaderboard for Good Vibes challenge
+leaderboard(
+        title="A Good Time",
+        description="Complete the good vibes of Good Vibes Only as fast as you can.",
+        start= StageID == StageData[10]["ID"] && GameState == Active && Checkpoint == StageData[10]["firstC"],
+        cancel= Overworld(),
+        submit= StageID == StageData[10]["ID"] && prev(ScreenID) == 0x14f && ScreenID == 0x149,
+        value= measured(always_true()), format="FRAMES",lower_is_better=true
+)
+
 //RP
 rich_presence_conditional_display(MainMenu(),"Sonic is getting ready to work through some things.")
-rich_presence_conditional_display(GameState > 9 && GameState < 15, "Sonic is selecting a track 💿 • 🚩️[{1}/11]",
-rich_presence_display("Sonic is
+rich_presence_conditional_display(GameState > 9 && GameState < 15, "Sonic is selecting a track 💿 • 🚩️[0/11]")
+rich_presence_display("Sonic is asdfasdf")
+
 
