@@ -2453,17 +2453,89 @@ AllCharacters = range(1,19)
 function FullGallery() => GallerySpecial() + GallerySecret() + GalleryArcade() + GalleryStory()
 
 //Achievements
+//Story mode
 
+//Arcade Mode
+//Arcade normal+ no darkside/gold
+
+//EX moveset Arcade normal+ no darkside/gold
+
+//Any arcade maniac no darkside/gold no gg
+
+//standard arcade defeat holy order sol on normal and maniac
+
+//EX arcademode normal/maniac
+
+//ex arcade mode defeat holy order sol normal/maniac
+
+//gold arcade mode normal/maniac
+
+//gold arcade defeat holy order sol any? normal+?
+
+//beat arcade with anybody on GG mode and GGX mode
+//finish arcade on GG with only instant kills normal+
+
+//MOM Mode
+//MOM normal/maniac - no darksside/gold no justice/kliff
+
+//MOM order sol defeat - no darkside/gold no justice/kliff - normal+? maniac too? any?
+
+//MOM scoremilestones, 1m, 2.5m, 5m
+
+//Survival Mode
+//first daredevil
+
+//level 100/200/300/400/500/600/700/800/900/1000 (no justice/kliff?)
+
+//no passive abilities
+
+//no time warp
+
+//classic survival milestones
+
+
+//Mission Mode
 //Character missions
+achievement(
+        title="mission 10", points=5,
+        description="Complete 10 different missions in Mission mode.",
+        trigger= InGame && MissionMode && prev(MissionProgress()) == 9 && MissionProgress == 10
+)
+achievement(
+        title="mission 20", points=10,
+        description="Complete 20 different missions in Mission mode.",
+        trigger= InGame && MissionMode && prev(MissionProgress()) == 19 && MissionProgress == 20
+)
+achievement(
+        title="mission 30", points=10,
+        description="Complete 30 different missions in Mission mode.",
+        trigger= InGame && MissionMode && prev(MissionProgress()) == 29 && MissionProgress == 30
+)
 function CharacterMissionAch(character) {
         achievement(
             title=AchData[character]["missionT"], points=AchData[character]["missionP"],
             description="Clear all 30 missions with " + AchData[character]["Name"] + ".",
-            trigger= InGame && CharacterMission(character)
+            trigger= InGame && MissionMode && prev(CharacterMission(character)) == 29 && CharacterMission(character) == 30
         )
 }
 for i in AllCharacters
   CharacterMissionAch(i)
+
+//VS Challenges
+//3v3 team stuff
+//gold maniac mirror matches
+
+//Training mode and moveset challenge
+//3 combos for each character
+//technically arcademode, but win a match in arcade with every overdrive and instant kill for each character
+
+
+//Easter Eggs and misc
+//holy order sol manual instant kill
+//alien picture in London
+//load a reload version of a stage
+//taunt after round ends to do a rakusyo
+
 
 //Leaderboards
 
