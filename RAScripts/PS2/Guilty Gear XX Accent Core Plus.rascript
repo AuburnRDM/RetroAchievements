@@ -12,9 +12,15 @@ SurvivalLevel = word(0x302B88)
 // $302B8E: [8-bit] Survival Daredevil reached?
 //          0x26 - Gold Axl
 //          0x32 - Gold Order Sol
+
+DaredevilReached = byte(0x302B8E)
+
 // $302B90: [8-bit] Survival Daredevil defeated?
 //          0x26 - Gold Axl
 //          0x32 - Gold Order Sol
+
+DaredevilDefeated = byte(0x302B90)
+
 // $302BA0: [8-bit] Type of survival mode
 //          0x00 - Classic; no upgrades
 //          0x01 - Modern; upgrades after daredevil
@@ -2134,7 +2140,7 @@ function GalleryStory() =>
 //          0x17 - Order Sol
 //          0x18 - Kliff
 //          0x19 - Justice
-
+Kliff = 0x18
 Character1P = byte(0x3C6A18)
 CharacterRP = {
   1:"Sol",
@@ -2239,6 +2245,8 @@ StageWins2P = byte(0x3C6AFE)
 //          bit1 - Player 2 active
 
 OnePlayer = bit0(0x3C6B54) + bit1(0x3C6B54) == 1
+  LeftPlayer = OnePlayer && bit0(0x3C6B54) == 1
+  RightPlayer = OnePlayer && bit1(0x3C6B54) == 1
 TwoPlayer = bit0(0x3C6B54) + bit1(0x3C6B54) == 2
 InGame = byte(0x3C6B54) > 0
 // $3C6B55: [bitflags] Current mode
@@ -2484,9 +2492,26 @@ function FullGallery() => GallerySpecial() + GallerySecret() + GalleryArcade() +
 
 //Survival Mode
 //first daredevil
+achievement(
+        title="first daredevil",points=3,
+        description="Defeat the first Daredevil challenger in Survival mode. [No Kliff/Justice]",
+        trigger= InGame && SurvivalMode && prev(DaredevilDefeated) == 0 && DaredevilDefeated == 1 &&
+                ((LeftPlayer && Character1P < Kliff) || (RightPlayer && Character2P < Kliff)) 
+)
 
 //level 100/200/300/400/500/600/700/800/900/1000 (no justice/kliff?)
-
+function SurvivalProgressionAch(round) {
+        achievement(
+                title=SurvivalData[round]["progT"],points=SurvivalData[round]["progP"],
+                description="Defeat the Daredevil challenger on floor " + round + SurvivalData[round]["desc"] + "Survival mode. [No Kliff/Justice]",
+                triigger= InGame && SurvivalMode && 
+                prev(DaredevilDefeated) == SurvivalData[round]["daredevil"] -1  && 
+                DaredevilDefeated == SurvivalData[round]["daredevil"] &&
+                ((LeftPlayer && Character1P < Kliff) || (RightPlayer && Character2P < Kliff))
+        )
+}
+for i in [100,200,300,400,500,600,700,800,900,999]
+  SurvivalProgressionAch(i)
 //no passive abilities
 
 //no time warp
@@ -2520,6 +2545,42 @@ function CharacterMissionAch(character) {
 }
 for i in AllCharacters
   CharacterMissionAch(i)
+
+//Gallery and Unlocks
+
+//Gallery milestones 50/100/155 
+//needs to be verified that the time release unlocks are only available through being in content
+achievement(
+        title="gallery1",points=10,
+        description="Obtain 50 pieces of work in the gallery.",
+        trigger = InGame && prev(FullGallery()) == 49 && FullGallery() == 50
+)
+achievement(
+        title="gallery2",points=10,
+        description="Obtain 100 pieces of work in the gallery.",
+        trigger = InGame && prev(FullGallery()) == 99 && FullGallery() == 100
+)
+achievement(
+        title="gallery3",points=25,
+        description="Obtain all 155 pieces of work in the gallery.",
+        trigger = InGame && prev(FullGallery()) == 154 && FullGallery() == 155
+)
+//Unlock all darkside/gold
+achievement(
+        title="Show Your True Colors",points=10,
+        description="Unlock Darkside and Gold colors for every character.",
+        trigger= InGame && prev(TotalDarksideGold()) != 25 && TotalDarksideGold() == 25
+)
+//Unlock all EX
+achievement(
+        title="Show Me Your Moves",points=10,
+        description="Unlock the EX moveset for every applicable character. (Kliff and Justice do not have EX moves)",
+        trigger= InGame && prev(TotalEXUnlock()) != 23 && TotalEXUnlock() == 23
+)
+//Unlock all stages
+
+//Clear arcade/story with each char (1 each)
+
 
 //VS Challenges
 //3v3 team stuff
