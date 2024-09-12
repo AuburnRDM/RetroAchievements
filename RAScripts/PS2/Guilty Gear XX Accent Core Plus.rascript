@@ -2162,6 +2162,7 @@ CharacterRP = {
   23:"Order Sol",
   24:"Kliff",
   25:"Justice"
+}
 // $3C6A1A: [8-bit] Player 2/CPU Character
 //          0x00 - None
 //          0x01 - Sol
@@ -2446,11 +2447,23 @@ RoundWin2P = byte(0x4A81C1)
 //           0x01a4 - Max HP
 
 //Data
-
+NoBannedCharacters = range(1,17)
 AllCharacters = range(1,19)
 //Functions
 function FullGallery() => GallerySpecial() + GallerySecret() + GalleryArcade() + GalleryStory()
+
 //Achievements
+
+//Character missions
+function CharacterMissionAch(character) {
+        achievement(
+            title=AchData[character]["missionT"], points=AchData[character]["missionP"],
+            description="Clear all 30 missions with " + AchData[character]["Name"] + ".",
+            trigger= InGame && CharacterMission(character)
+        )
+}
+for i in AllCharacters
+  CharacterMissionAch(i)
 
 //Leaderboards
 
