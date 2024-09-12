@@ -418,10 +418,37 @@ TotalTimeMinutes = byte(0x20511) + (byte(0x20510) * 60)
 // $020566: [8-bit] Overall game time until Overworld level is entered - Seconds
 // $020567: [8-bit] Overall game time until Overworld level is entered - Frames
 
+//RP Library
+StageRP = {
+    0x15:"The Unbearable Quickness of Hedgehog",
+    0x12:"Fossil Fueled",
+    0x2:"Shells at Dawn",
+    0x29:"Zephy Leaves the Nest",
+    0x54:"The Letter ''P''",
+    0x11:"Your Pal Ted",
+    0x1:"Shells at Midday",
+    0x30:"For Whomst the Charles Charges",
+    0x47:"Life on Mars",
+    0x36:"Good Vibes Only",
+    0x20:"Shells All Night",
+    0x2b:"Late Night Terror Club",
+    0x21:"In This House,",
+    0x26:"Celeste (2018)",
+    0x04:"Celeste (2018)",
+    0x25:"Terminal Ferocity",
+    0x10:"Mega Mole Fucks",
+    0x27:"Me, Reaping",
+    0x50:"Break the Targets!",
+    0x51:"Float Like a Princess",
+    0x9:"Float Like a Princess",
+    0x4c:"Dream Within a Dream",
+    0x4d:"Daddy's Castle"
+}
+
 //Data
 
 StageData = {
-    1:{"Name":"The Unbearable Quickness of Hedgehog","ID":0x15,"endID":0x01,"firstC":0x15,"finalS":0x1c,"moonS":0x17},
+    1:{"Name":"The Unbearable Quickness of Hedgehog","ID":0x15,"endID":0x15,"firstC":0x15,"finalS":0x1c,"moonS":0x17},
     2:{"Name":"Fossil Fueled","ID":0x12,"endID":0x12,"firstC":0x12,"finalS":0x140,"moonS":0x12},
     3:{"Name":"Shells at Dawn","ID":0x02,"endID":0x02,"firstC":0x02,"finalS":0x1c5},
     4:{"Name":"Zephy Leaves the Nest","ID":0x29,"endID":0x29,"firstC":0x105,"finalS":0x106},
@@ -522,13 +549,13 @@ achievement( //todo get the values for the boxes
             once(MessageBox == 1 && StageID == 0x27), once(MessageBox == 2 && StageID == 0x27),
             once(MessageBox == 1 && StageID == 0x25), once(MessageBox == 2 && StageID == 0x26),
             once(MessageBox == 2 && StageID == 0x24), once(MessageBox == 2 && StageID == 0x25),
-            once(MessageBox == 1 && StageID == 0x28), once(MessageBox == 1 && StageID == 0x23),)) && 
+            once(MessageBox == 1 && StageID == 0x28), once(MessageBox == 1 && StageID == 0x23))) && 
             never(Overworld())
 )
 achievement(
     title="Spice Up Your Life",points=1,type="missable",
     description="Get threatened with the dangers of playing levels in order.",
-    trigger=ScreenID == Warning && InLevel() && prev(Message) == 0 && Message == 1
+    trigger=ScreenID == Warning && InLevel() && prev(MessageBox) == 0 && MessageBox == 1
 )
 
 //World 1
@@ -644,7 +671,7 @@ achievement(
 achievement(
     title="Wow, First Try!",points=3,
     description="Hit a certain information block on the first try in Good Vibes Only.",
-    trigger=ScreenID == VibesMessage && InLevel() && prev(Message) == 0 && Message == 1
+    trigger=ScreenID == VibesMessage && InLevel() && prev(MessageBox) == 0 && MessageBox == 1
 )
 achievement(
     title="A Good Time",points=1,
@@ -661,7 +688,7 @@ ProtectedClear(12)
 achievement(
     title="The Distance",points=3,
     description="Find the hidden message block in Late Night Terror Club.",
-    trigger=ScreenID == TerrorMessage && InLevel() && prev(Message) == 0 && Message == 1
+    trigger=ScreenID == TerrorMessage && InLevel() && prev(MessageBox) == 0 && MessageBox == 1
 )
 
 //Act IV
@@ -691,7 +718,7 @@ achievement(
     description="Defeat Badeline Celeste in 20 or less deaths in Celeste (2018).",
     trigger= StageID == StageData[14]["ID"] && trigger_when(prev(ScreenID) == BadelineEnd && ScreenID == BadelineEndNext) &&
             once(StageID == StageData[14]["ID"] && ScreenID == BadelineStart && GameState == Active) &&
-            unless(21,Dead) && never(Overworld()) && never(ScreenID == prevBadelineStart)
+            unless(tally(21,Dead)) && never(Overworld()) && never(ScreenID == prevBadelineStart)
 )
 
 //Terminal Ferocity
@@ -803,7 +830,7 @@ achievement(
 
 //Full Moon Eclipse
 achievement(
-    title="Saved the World?",points=10,type="win_condition"
+    title="Saved the World?",points=10,type="win_condition",
     description="Finish the game and save the world?",
     trigger= StageID == DaddysCastle && NormalExit()
 )
@@ -811,13 +838,13 @@ achievement(
     title="Humble Hedgehog", points=10,
     description="Complete Full Moon Eclipse without collecting more than 30 rings or coins.",
     trigger= StageID == DaddysCastle && ScreenID == FullMoon && trigger_when(FullMoonXCheck) &&
-            unless(31,ScreenID == FullMoon && Ring != prev(Ring)) && never(Dead) && never(Overworld())
+            unless(tally(31,ScreenID == FullMoon && Rings != prev(Rings))) && never(Dead) && never(Overworld())
 )
 
 //100% levels
 achievement(
     title="Nice.",points=10,
-    description="Reach a completed exit count of "69".",
+    description="Reach a completed exit count of ''69''.",
     trigger= GameState > MainMenu && prev(Exits) == 0x1a && Exits == 0x1b
 )
 
@@ -985,38 +1012,38 @@ leaderboard(
         value= measured(always_true()), format="FRAMES",lower_is_better=true
 )
 leaderboard(
-        title="badeline challenge",
+        title="Badeline Challenge",
         description="Defeat Badeline Celeste in Celeste (2018) with as few deaths as you can.",
         start= StageID == StageData[14]["ID"] && ScreenID == BadelineStart && GameState == Active,
         cancel= Overworld(),
         submit= StageID == StageData[14]["ID"] && prev(ScreenID) == BadelineEnd && ScreenID == BadelineEndNext,
-        value= measured(Dead), format="VALUE",lower_is_better=true
+        value= Dead, format="VALUE",lower_is_better=true
 )
 //RP
 rich_presence_conditional_display(MainMenu(),"Sonic is getting ready to work through some things.")
 rich_presence_conditional_display(GameState > 9 && GameState < 15, "Sonic is selecting their fate • 💀[{0}] • ⏱️[{1}] • 🚩️[{2}]",
       rich_presence_value("Digit",TotalDeaths,format="VALUE"),
-      rich_presence_value("Digit",TotalTimeMinutes,format="MINUTES"),
+      rich_presence_value("Minutes",TotalTimeMinutes,format="MINUTES"),
       rich_presence_value("Digit",Exits,format="VALUE")
 )
-rich_presence_conditional_display(InLevel() && __ornext(Message == 1 || Message == 2), "Sonic is {0} • 💀[{1}] • ⏱️[{2}] • 🚩️[{3}]",
-      rich_presence_lookup("Stage",prior(StageID),StageData[StageID]["Name"]),
+rich_presence_conditional_display(InLevel() && __ornext(MessageBox == 1 || MessageBox == 2), "Sonic is {0} • 💀[{1}] • ⏱️[{2}] • 🚩️[{3}]",
+      rich_presence_lookup("Stage",prior(StageID),StageRP),
       rich_presence_value("Digit",TotalDeaths,format="VALUE"),
-      rich_presence_value("Digit",TotalTimeMinutes,format="MINUTES"),
+      rich_presence_value("Minutes",TotalTimeMinutes,format="MINUTES"),
       rich_presence_value("Digit",Exits,format="VALUE")
 )
 rich_presence_display("Sonic is {0} • 💀[{1}] • ⏱️[{2}] • 🚩️[{3}]",
-      rich_presence_lookup("Stage",StageID,StageData[StageID]["Name"]),
+      rich_presence_lookup("Stage",StageID,StageRP),
       rich_presence_value("Digit",TotalDeaths,format="VALUE"),
-      rich_presence_value("Digit",TotalTimeMinutes,format="MINUTES"),
+      rich_presence_value("Minutes",TotalTimeMinutes,format="MINUTES"),
       rich_presence_value("Digit",Exits,format="VALUE")
 )
 
 //Cheaterboards -- These will submit if the player reloads a save or leaves the stage on an exit screen (nothing but hit the exit)
 function Cheaterboard(stage) {
-      achievement(
+      leaderboard(
           title=StageData[stage]["Name"] + " - Old",
-          description="Earn as many points as you can in " + StageData[stage]["Name"]
+          description="Earn as many points as you can in " + StageData[stage]["Name"],
           start= __ornext(StageID == StageData[stage]["ID"] || StageID== StageData[stage]["endID"]) && ScreenID == StageData[stage]["finalS"] && LevelComplete &&
                 prior(ScreenID) != StageData[stage]["priorS"],
           cancel=always_false(),
