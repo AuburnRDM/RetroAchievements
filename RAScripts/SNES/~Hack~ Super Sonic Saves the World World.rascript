@@ -517,12 +517,13 @@ achievement(
 achievement( //todo get the values for the boxes
     title="Knowledge is Power",points=1,
     description="Read all of the boxes in Information Kiosk. There is more information to be found on the RA forum of this game to make challenges more accessible--please check it out!",
-    trigger= ScreenID == 4 && InLevel() && measured(tally(10,
-            once(box1 stuff),
-            once(box2 stuff),
-            once(box3 stuff),
-            once(box4 stuff),
-            once(box5 stuff))) && never(Overworld())
+    trigger= ScreenID == InformationKiosk && InLevel() && measured(tally(10,
+            once(MessageBox == 2 && StageID == 0x23), once(MessageBox == 1 && StageID == 0x2a),
+            once(MessageBox == 1 && StageID == 0x27), once(MessageBox == 2 && StageID == 0x27),
+            once(MessageBox == 1 && StageID == 0x25), once(MessageBox == 2 && StageID == 0x26),
+            once(MessageBox == 2 && StageID == 0x24), once(MessageBox == 2 && StageID == 0x25),
+            once(MessageBox == 1 && StageID == 0x28), once(MessageBox == 1 && StageID == 0x23),)) && 
+            never(Overworld())
 )
 achievement(
     title="Spice Up Your Life",points=1,type="missable",
@@ -761,12 +762,11 @@ achievement(
 achievement(
     title="info",points=1,
     description="Read all of the message boxes in Disinformation Kiosk.",
-    trigger= ScreenID == DisinformationKiosk && measured(tally(5,
-            once(box1 stuff),
-            once(box2 stuff),
-            once(box3 stuff),
-            once(box4 stuff),
-            once(box5 stuff))) && never(Overworld())
+    trigger= ScreenID == DisinformationKiosk && measured(tally(7,
+            once(MessageBox == 1 && StageID == 0x4d), once(MessageBox == 2 && StageID == 0x49),
+            once(MessageBox == 2 && StageID == 0x4a), once(MessageBox == 1 && StageID == 0x4b),
+            once(MessageBox == 2 && StageID == 0x4b), once(MessageBox == 1 && StageID == 0x4c),
+            once(MessageBox == 1 && StageID == 0x23))) && never(Overworld())
 )
 
 //Daddy's Castle
