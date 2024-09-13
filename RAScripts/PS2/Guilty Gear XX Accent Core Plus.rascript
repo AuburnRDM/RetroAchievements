@@ -2469,6 +2469,109 @@ RoundWin2P = byte(0x4A81C1)
 //           0x01a4 - Max HP
 
 //Data
+
+CharData = {
+    1:{"Name":"Sol Badguy","storyT":"storySol Badguy","storyP":10,"arcadeT":"arcadeSol Badguy","arcadeP":5,"exT":"EXarcadeSol Badguy","exP":5,"maniacT":"maniacSol Badguy","maniacP":10},
+    2:{"Name":"Ky Kiske","storyT":"storyKy Kiske","storyP":10,"arcadeT":"arcadeKy Kiske","arcadeP":5,"exT":"EXarcadeKy Kiske","exP":5,"maniacT":"maniacKy Kiske","maniacP":10},
+    3:{"Name":"May","storyT":"storyMay","storyP":10,"arcadeT":"arcadeMay","arcadeP":5,"exT":"EXarcadeMay","exP":5,"maniacT":"maniacMay","maniacP":10},
+    4:{"Name":"Millia Rage","storyT":"storyMillia Rage","storyP":10,"arcadeT":"arcadeMillia Rage","arcadeP":5,"exT":"EXarcadeMillia Rage","exP":5,"maniacT":"maniacMillia Rage","maniacP":10},
+    5:{"Name":"Axl Low","storyT":"storyAxl Low","storyP":10,"arcadeT":"arcadeAxl Low","arcadeP":5,"exT":"EXarcadeAxl Low","exP":5,"maniacT":"maniacAxl Low","maniacP":10},
+    6:{"Name":"Potemkin","storyT":"storyPotemkin","storyP":10,"arcadeT":"arcadePotemkin","arcadeP":5,"exT":"EXarcadePotemkin","exP":5,"maniacT":"maniacPotemkin","maniacP":10},
+    7:{"Name":"Chipp Zanuff","storyT":"storyChipp Zanuff","storyP":10,"arcadeT":"arcadeChipp Zanuff","arcadeP":5,"exT":"EXarcadeChipp Zanuff","exP":5,"maniacT":"maniacChipp Zanuff","maniacP":10},
+    8:{"Name":"Eddie","storyT":"storyEddie","storyP":10,"arcadeT":"arcadeEddie","arcadeP":5,"exT":"EXarcadeEddie","exP":5,"maniacT":"maniacEddie","maniacP":10},
+    9:{"Name":"Baiken","storyT":"storyBaiken","storyP":10,"arcadeT":"arcadeBaiken","arcadeP":5,"exT":"EXarcadeBaiken","exP":5,"maniacT":"maniacBaiken","maniacP":10},
+    10:{"Name":"Faust","storyT":"storyFaust","storyP":10,"arcadeT":"arcadeFaust","arcadeP":5,"exT":"EXarcadeFaust","exP":5,"maniacT":"maniacFaust","maniacP":10},
+    11:{"Name":"Testament","storyT":"storyTestament","storyP":10,"arcadeT":"arcadeTestament","arcadeP":5,"exT":"EXarcadeTestament","exP":5,"maniacT":"maniacTestament","maniacP":10},
+    12:{"Name":"Jam Kuradoberi","storyT":"storyJam Kuradoberi","storyP":10,"arcadeT":"arcadeJam Kuradoberi","arcadeP":5,"exT":"EXarcadeJam Kuradoberi","exP":5,"maniacT":"maniacJam Kuradoberi","maniacP":10},
+    13:{"Name":"Anji Mito","storyT":"storyAnji Mito","storyP":10,"arcadeT":"arcadeAnji Mito","arcadeP":5,"exT":"EXarcadeAnji Mito","exP":5,"maniacT":"maniacAnji Mito","maniacP":10},
+    14:{"Name":"Johnny","storyT":"storyJohnny","storyP":10,"arcadeT":"arcadeJohnny","arcadeP":5,"exT":"EXarcadeJohnny","exP":5,"maniacT":"maniacJohnny","maniacP":10},
+    15:{"Name":"Venom","storyT":"storyVenom","storyP":10,"arcadeT":"arcadeVenom","arcadeP":5,"exT":"EXarcadeVenom","exP":5,"maniacT":"maniacVenom","maniacP":10},
+    16:{"Name":"Dizzy","storyT":"storyDizzy","storyP":10,"arcadeT":"arcadeDizzy","arcadeP":5,"exT":"EXarcadeDizzy","exP":5,"maniacT":"maniacDizzy","maniacP":10},
+    17:{"Name":"Slayer","storyT":"storySlayer","storyP":10,"arcadeT":"arcadeSlayer","arcadeP":5,"exT":"EXarcadeSlayer","exP":5,"maniacT":"maniacSlayer","maniacP":10},
+    18:{"Name":"I-No","storyT":"storyI-No","storyP":10,"arcadeT":"arcadeI-No","arcadeP":5,"exT":"EXarcadeI-No","exP":5,"maniacT":"maniacI-No","maniacP":10},
+    19:{"Name":"Zappa","storyT":"storyZappa","storyP":10,"arcadeT":"arcadeZappa","arcadeP":5,"exT":"EXarcadeZappa","exP":5,"maniacT":"maniacZappa","maniacP":10},
+    20:{"Name":"Bridget","storyT":"storyBridget","storyP":10,"arcadeT":"arcadeBridget","arcadeP":5,"exT":"EXarcadeBridget","exP":5,"maniacT":"maniacBridget","maniacP":10},
+    21:{"Name":"Robo-Ky","storyT":"storyRobo-Ky","storyP":10,"arcadeT":"arcadeRobo-Ky","arcadeP":5,"exT":"EXarcadeRobo-Ky","exP":5,"maniacT":"maniacRobo-Ky","maniacP":10},
+    22:{"Name":"A.B.A.","storyT":"storyA.B.A.","storyP":10,"arcadeT":"arcadeA.B.A.","arcadeP":5,"exT":"EXarcadeA.B.A.","exP":5,"maniacT":"maniacA.B.A.","maniacP":10},
+    23:{"Name":"Order Sol","storyT":"storyOrder Sol","storyP":10,"arcadeT":"arcadeOrder Sol","arcadeP":5,"exT":"EXarcadeOrder Sol","exP":5,"maniacT":"maniacOrder Sol","maniacP":10},
+    24:{"Name":"Kliff Undersn","storyT":"storyKliff Undersn","storyP":5,"arcadeT":"arcadeKliff Undersn","arcadeP":5,"exT":"EXarcadeKliff Undersn","exP":5,"maniacT":"maniacKliff Undersn","maniacP":10},
+    25:{"Name":"Justice","storyT":"storyJustice","storyP":5,"arcadeT":"arcadeJustice","arcadeP":5,"exT":"EXarcadeJustice","exP":5,"maniacT":"maniacJustice","maniacP":10}
+}
+
+CharData2 = {
+    1:{"missionT":"missionSol Badguy","missionP":25,"skillsT":"skillsSol Badguy","skillsP":3,"mirrorT":"mirrorSol Badguy","mirrorP":5},
+    2:{"missionT":"missionKy Kiske","missionP":25,"skillsT":"skillsKy Kiske","skillsP":3,"mirrorT":"mirrorKy Kiske","mirrorP":5},
+    3:{"missionT":"missionMay","missionP":25,"skillsT":"skillsMay","skillsP":3,"mirrorT":"mirrorMay","mirrorP":5},
+    4:{"missionT":"missionMillia Rage","missionP":25,"skillsT":"skillsMillia Rage","skillsP":3,"mirrorT":"mirrorMillia Rage","mirrorP":5},
+    5:{"missionT":"missionAxl Low","missionP":25,"skillsT":"skillsAxl Low","skillsP":3,"mirrorT":"mirrorAxl Low","mirrorP":5},
+    6:{"missionT":"missionPotemkin","missionP":25,"skillsT":"skillsPotemkin","skillsP":3,"mirrorT":"mirrorPotemkin","mirrorP":5},
+    7:{"missionT":"missionChipp Zanuff","missionP":25,"skillsT":"skillsChipp Zanuff","skillsP":3,"mirrorT":"mirrorChipp Zanuff","mirrorP":5},
+    8:{"missionT":"missionEddie","missionP":25,"skillsT":"skillsEddie","skillsP":3,"mirrorT":"mirrorEddie","mirrorP":5},
+    9:{"missionT":"missionBaiken","missionP":25,"skillsT":"skillsBaiken","skillsP":3,"mirrorT":"mirrorBaiken","mirrorP":5},
+    10:{"missionT":"missionFaust","missionP":25,"skillsT":"skillsFaust","skillsP":3,"mirrorT":"mirrorFaust","mirrorP":5},
+    11:{"missionT":"missionTestament","missionP":25,"skillsT":"skillsTestament","skillsP":3,"mirrorT":"mirrorTestament","mirrorP":5},
+    12:{"missionT":"missionJam Kuradoberi","missionP":25,"skillsT":"skillsJam Kuradoberi","skillsP":3,"mirrorT":"mirrorJam Kuradoberi","mirrorP":5},
+    13:{"missionT":"missionAnji Mito","missionP":25,"skillsT":"skillsAnji Mito","skillsP":3,"mirrorT":"mirrorAnji Mito","mirrorP":5},
+    14:{"missionT":"missionJohnny","missionP":25,"skillsT":"skillsJohnny","skillsP":3,"mirrorT":"mirrorJohnny","mirrorP":5},
+    15:{"missionT":"missionVenom","missionP":25,"skillsT":"skillsVenom","skillsP":3,"mirrorT":"mirrorVenom","mirrorP":5},
+    16:{"missionT":"missionDizzy","missionP":25,"skillsT":"skillsDizzy","skillsP":3,"mirrorT":"mirrorDizzy","mirrorP":5},
+    17:{"missionT":"missionSlayer","missionP":25,"skillsT":"skillsSlayer","skillsP":3,"mirrorT":"mirrorSlayer","mirrorP":5},
+    18:{"missionT":"missionI-No","missionP":25,"skillsT":"skillsI-No","skillsP":3,"mirrorT":"mirrorI-No","mirrorP":5},
+    19:{"missionT":"missionZappa","missionP":25,"skillsT":"skillsZappa","skillsP":3,"mirrorT":"mirrorZappa","mirrorP":5},
+    20:{"missionT":"missionBridget","missionP":25,"skillsT":"skillsBridget","skillsP":3,"mirrorT":"mirrorBridget","mirrorP":5},
+    21:{"missionT":"missionRobo-Ky","missionP":25,"skillsT":"skillsRobo-Ky","skillsP":3,"mirrorT":"mirrorRobo-Ky","mirrorP":5},
+    22:{"missionT":"missionA.B.A.","missionP":25,"skillsT":"skillsA.B.A.","skillsP":3,"mirrorT":"mirrorA.B.A.","mirrorP":5},
+    23:{"missionT":"missionOrder Sol","missionP":25,"skillsT":"skillsOrder Sol","skillsP":3,"mirrorT":"mirrorOrder Sol","mirrorP":5},
+    24:{"missionT":"missionKliff Undersn","missionP":10,"skillsT":"skillsKliff Undersn","skillsP":3,"mirrorT":"mirrorKliff Undersn","mirrorP":5},
+    25:{"missionT":"missionJustice","missionP":10,"skillsT":"skillsJustice","skillsP":3,"mirrorT":"mirrorJustice","mirrorP":5}
+}
+
+SurvivalData = {
+    100:{"progT":"any 100","progP":10,"daredevil":0x34,"desc":"in "),
+    200:{"progT":"any 200","progP":10,"daredevil":,"desc":"in "),
+    300:{"progT":"any 300","progP":10,"daredevil":,"desc":"in "),
+    400:{"progT":"any 400","progP":10,"daredevil":,"desc":"in "),
+    500:{"progT":"any 500","progP":10,"daredevil":,"desc":"in "),
+    600:{"progT":"any 600","progP":25,"daredevil":,"desc":"in "),
+    700:{"progT":"any 700","progP":25,"daredevil":,"desc":"in "),
+    800:{"progT":"any 800","progP":25,"daredevil":,"desc":"in "),
+    900:{"progT":"any 900","progP":25,"daredevil":,"desc":"in "),
+    999:{"progT":"any 999","progP":50,"daredevil":,"desc":"and complete ")
+}
+
+MissionData = {
+    1:{"ggxxT":"mission 1","ggxxP":3},
+    2:{"ggxxT":"mission 2","ggxxP":3},
+    3:{"ggxxT":"mission 3","ggxxP":3},
+    4:{"ggxxT":"mission 4","ggxxP":3},
+    5:{"ggxxT":"mission 5","ggxxP":3},
+    6:{"ggxxT":"mission 6","ggxxP":3},
+    7:{"ggxxT":"mission 7","ggxxP":3},
+    8:{"ggxxT":"mission 8","ggxxP":3},
+    9:{"ggxxT":"mission 9","ggxxP":3},
+    10:{"ggxxT":"mission 10","ggxxP":3},
+    11:{"ggxxT":"mission 11","ggxxP":4},
+    12:{"ggxxT":"mission 12","ggxxP":5},
+    13:{"ggxxT":"mission 13","ggxxP":5},
+    14:{"ggxxT":"mission 14","ggxxP":5},
+    15:{"ggxxT":"mission 15","ggxxP":5},
+    16:{"ggxxT":"mission 16","ggxxP":5},
+    17:{"ggxxT":"mission 17","ggxxP":5},
+    18:{"ggxxT":"mission 18","ggxxP":5},
+    19:{"ggxxT":"mission 19","ggxxP":5},
+    20:{"ggxxT":"mission 20","ggxxP":5},
+    21:{"ggxxT":"mission 21","ggxxP":5},
+    22:{"ggxxT":"mission 22","ggxxP":5},
+    23:{"ggxxT":"mission 23","ggxxP":5},
+    24:{"ggxxT":"mission 24","ggxxP":10},
+    25:{"ggxxT":"mission 25","ggxxP":10},
+    26:{"ggxxT":"mission 26","ggxxP":10},
+    27:{"ggxxT":"mission 27","ggxxP":10},
+    28:{"ggxxT":"mission 28","ggxxP":10},
+    29:{"ggxxT":"mission 29","ggxxP":10},
+    30:{"ggxxT":"mission 30","ggxxP":10}
+}
+
 NoBannedCharacters = range(1,0x17)
 AllCharacters = range(1,0x19)
 //Functions
