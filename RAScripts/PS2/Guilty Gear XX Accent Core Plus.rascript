@@ -2020,7 +2020,7 @@ function GallerySecret() =>
 
 function GalleryArcade() =>
   sum_of(range(0x350B70,0x350B9F,step=1), addr => byte(addr))
-  
+
 // $350BA2: [8-bit] Gallery - Story Mode - Sol
 //          Bit0 - Ending 1 unlocked
 //          Bit1 - Ending 2 unlocked
@@ -2094,8 +2094,14 @@ function GalleryArcade() =>
 // $350BBA: [8-bit] Gallery - Story Mode - Justice
 //          Bit0 - Ending 1 unlocked
 
+function CharacterStory(character) => bitcount(0x350BA2 + (character - 1))
+
+function StoryCheck() =>
+  sum_of(range(0x350BA2,0x350BBA,step=1), addr => byte(addr)/byte(addr))
+
 function GalleryStory() => 
   sum_of(range(0x350BA2,0x350BBA,step=1), addr => bitcount(addr))
+
   
 // $350BBB: [8-bit] Display settings - Anti alias
 //          0x00 - Off
@@ -2455,13 +2461,36 @@ RoundWin2P = byte(0x4A81C1)
 //           0x01a4 - Max HP
 
 //Data
-NoBannedCharacters = range(1,17)
-AllCharacters = range(1,19)
+NoBannedCharacters = range(1,0x17)
+AllCharacters = range(1,0x19)
 //Functions
 function FullGallery() => GallerySpecial() + GallerySecret() + GalleryArcade() + GalleryStory()
 
 //Achievements
 //Story mode
+//maybe add subsequent clears
+function CharacterStoryAch(character) {
+        achievement(
+                title=CharData[character]["storyT"], points=CharData[character]["storyP"],
+                description="Reach both endings as " + CharData[character]["Name"] + " in Story mode.",
+                title= InGame && StoryMode && prev(CharacterStory(character)) == 1 && 
+                      CharacterStory(character) == 2
+        )
+}
+function CharacterSingleStoryAch(character) {
+        achievement(
+                title=CharData[character]["storyT"], points=CharData[character]["storyP"],
+                description="Reach the ending as " + CharData[character]["Name"] + " in Story mode.",
+                title= InGame && StoryMode && prev(CharacterStory(character)) == 0 && 
+                      CharacterStory(character) == 1
+        )
+}
+//Sol through A.B.A. story
+for i in range(1,0x16)
+  CharacterStoryAch(i)
+//Holy Order Sol through Justice story
+for i in range(0x17,0x19)
+  CharacterSingleStoryAch(i)
 
 //Arcade Mode
 //Arcade normal+ no darkside/gold
@@ -2580,7 +2609,11 @@ achievement(
 //Unlock all stages
 
 //Clear arcade/story with each char (1 each)
-
+achievement(
+        title="Storied Fighter",points=10,type="progression",
+        description="Complete Story mode with every character at least once.",
+        trigger= InGame && prev(StoryCheck()) == 24 && StoryCheck() == 25
+)
 
 //VS Challenges
 //3v3 team stuff
@@ -2601,3 +2634,4 @@ achievement(
 //Leaderboards
 
 //RP
+//maybe include playtime for previous save detection
