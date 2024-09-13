@@ -2608,15 +2608,41 @@ for i in range(0x17,0x19)
 
 //Arcade Mode
 //Arcade normal+ no darkside/gold
-function NormaArcade(character) {
+function NormalArcade(character) {
         achievement(
                 title=CharData[character]["arcadeT"], points=CharData[character]["arcadeP],
-                description= Complete Arcade mode using only + CharData[character]["Name] +". [Normal+ | Default Settings | No Gold/Darkside/GG]",
-                trigger= InGame && ArcadeMode && never(TwoPlayer) && 
-                        (once(LeftPlayer && Character1P == character && !EXMoves1P && StageWins1P == 0 && never(Character1P != Character1P) &&
-                        
+                description= "Complete Arcade mode using only " + CharData[character]["Name] +". [Normal+ | Default Settings | No Gold/Darkside/GG]",
+                trigger= InGame && ArcadeMode && never(TwoPlayer) && Difficulty >= Normal && MatchRound >= BestOf3 && 
+                        ((once(LeftPlayer && Character1P == character && !EXMoves1P && StageWins1P == 0 && never(prev(Character1P) != Character1P) &&
+                        never(EXMoves1P)) && ArcadeClear1P()) ||
+                        (once(RightPlayer && Character2P == character && !EXMoves2P && StageWins2P == 0 && never(prev(Character2P) != Character1P) &&
+                        never(EXMoves2P)) && ArcadeClear1P()))
+        )
+}
 
+function EXArcade(character) {
+        achievement(
+                title=CharData[character]["arcadeT"], points=CharData[character]["arcadeP],
+                description= "Complete Arcade mode using only EX " + CharData[character]["Name] +". [Normal+ | Default Settings | No Gold/Darkside/GG]",
+                trigger= InGame && ArcadeMode && never(TwoPlayer) && Difficulty >= Normal && MatchRound >= BestOf3 && 
+                        ((once(LeftPlayer && Character1P == character && EXMoves1P && StageWins1P == 0 && never(prev(Character1P) != Character1P) &&
+                        never(!EXMoves1P)) && ArcadeClear1P()) ||
+                        (once(RightPlayer && Character2P == character && EXMoves2P && StageWins2P == 0 && never(prev(Character2P) != Character1P) &&
+                        never(!EXMoves2P)) && ArcadeClear1P()))
+        )
+}
 
+function ManiacArcade(character) {
+        achievement(
+                title=CharData[character]["maniacT"], points=CharData[character]["arcadeP],
+                description= "Complete Arcade mode using only " + CharData[character]["Name] +". [Maniac | Default Settings | No Gold/Darkside/GG]",
+                trigger= InGame && ArcadeMode && never(TwoPlayer) && Difficulty == Maniac && MatchRound >= BestOf3 &&
+                        ((once(LeftPlayer && Character1P == character && StageWins1P == 0 && never(prev(Character1P) != Character1P)) &&
+                        ArcadeClear1P()) ||
+                        (once(RightPlayer && Character2P == character && StageWins2P == 0 && never(prev(Character2P) != Character1P)) &&
+                        ArcadeClear1P()))
+        )
+}
 
 //EX moveset Arcade normal+ no darkside/gold
 
