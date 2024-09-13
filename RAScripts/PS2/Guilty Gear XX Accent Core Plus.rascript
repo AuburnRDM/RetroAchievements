@@ -1860,7 +1860,15 @@ function CharacterMission(character) =>
 
 function MissionProgress() =>
   sum_of(range(0x350AF0,0x350B0D,step=1), addr => byte(addr)/byte(addr))
-  
+
+function MissionGGXX(mission) => prev(byte(0x350AF0 + (mission -1))) != 1 && byte(0x350AF0 + (mission -1)) == 1
+
+function MissionGGXXRange(mission) =>
+  tally_of(range(0x350AF0 + (mission-1),0x350AF4 + (mission -1)), addr > once(byte(addr) == 1))
+function prevMissionGGXXRange(mission) =>
+  tally_of(range(0x350AF0 + (mission-1),0x350AF4 + (mission -1)), addr > once(prev(byte(addr)) == 1))
+
+
 // $350B2C: [8-bit] Gallery - Special - Special Illustration 1
 //          Bit0 - Unlocked
 // $350B2D: [8-bit] Gallery - Special - Special Illustration 2
