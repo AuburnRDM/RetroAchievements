@@ -2246,9 +2246,9 @@ StageWins1P = byte(0x3C6AFC)
 //          --M.O.M.--
 //          0x15 - Win for vs I-No/Lose vs Order Sol
 //          0x16 - Win vs Order Sol
-
+INo1PWin = prev(StageWins1P) == 0x9 && StageWins1p == 0x0a // needs something to prevent when order sol is next
 StageWins2P = byte(0x3C6AFE)
-
+INo2PWin = prev(StageWins2P) == 0x9 && StageWins2p == 0x0a // needs something to prevent when order sol is next
 // $3C6B14: amount of rounds played
 // $3C6B20: [8-bit] Arcade/M.O.M. status; use if 0x3C6B55 == 0 and 0x3C6b54 > 0
 //          0x00 - Arcade mode
@@ -2576,6 +2576,9 @@ NoBannedCharacters = range(1,0x17)
 AllCharacters = range(1,0x19)
 //Functions
 function FullGallery() => GallerySpecial() + GallerySecret() + GalleryArcade() + GalleryStory()
+function ArcadeClear1P() =>
+function ArcadeClear2P() =>
+
 
 //Achievements
 //Story mode
@@ -2610,7 +2613,7 @@ function NormaArcade(character) {
                 title=CharData[character]["arcadeT"], points=CharData[character]["arcadeP],
                 description= Complete Arcade mode using only + CharData[character]["Name] +". [Normal+ | Default Settings | No Gold/Darkside/GG]",
                 trigger= InGame && ArcadeMode && never(TwoPlayer) && 
-                        (once(LeftPlayer && Character1P == character && StageWins1P == 0 && never(Character1P != Character1P) &&
+                        (once(LeftPlayer && Character1P == character && !EXMoves1P && StageWins1P == 0 && never(Character1P != Character1P) &&
                         
 
 
