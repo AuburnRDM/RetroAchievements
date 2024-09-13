@@ -2306,7 +2306,7 @@ SpecialRP = {
 //          0x01 - Gold
 //          0x02 - Darkside
 
-Special1P = byte(0x3C6B7C)
+Special2P = byte(0x3C6B7C)
 
 // $3C6B80: [8-bit] Player 1 movelist
 //          0x00 - Normal
@@ -2605,6 +2605,15 @@ for i in range(0x17,0x19)
 
 //Arcade Mode
 //Arcade normal+ no darkside/gold
+function NormaArcade(character) {
+        achievement(
+                title=CharData[character]["arcadeT"], points=CharData[character]["arcadeP],
+                description= Complete Arcade mode using only + CharData[character]["Name] +". [Normal+ | Default Settings | No Gold/Darkside/GG]",
+                trigger= InGame && ArcadeMode && never(TwoPlayer) && 
+                        (once(LeftPlayer && Character1P == character && StageWins1P == 0 && never(Character1P != Character1P) &&
+                        
+
+
 
 //EX moveset Arcade normal+ no darkside/gold
 
