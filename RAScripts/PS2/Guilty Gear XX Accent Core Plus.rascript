@@ -2313,7 +2313,6 @@ SpecialRP = {
 //          0x02 - Darkside
 
 Special2P = byte(0x3C6B7C)
-
 // $3C6B80: [8-bit] Player 1 movelist
 //          0x00 - Normal
 //          0x01 - EX
@@ -2699,6 +2698,15 @@ achievement(
 //gold arcade defeat holy order sol any? normal+?
 
 //beat arcade with anybody on GG mode and GGX mode
+achievement(
+                title="ggx arcade title", points=5,
+                description= "Complete Arcade mode with a GGX moveset. [Normal+ | Default Settings | No Gold/Darkside]",
+                trigger= InGame && ArcadeMode && never(TwoPlayer) && Difficulty >= Normal && MatchRound >= BestOf3 &&
+                        ((once(LeftPlayer && Character1P == character && StageWins1P == 0 && 
+                        never(prev(Character1P) != Character1P)) && ArcadeClear1P()) ||
+                        (once(RightPlayer && Character2P == character && StageWins2P == 0 && 
+                        never(prev(Character2P) != Character1P)) && ArcadeClear1P()))
+)
 //finish arcade on GG with only instant kills normal+
 
 //MOM Mode
