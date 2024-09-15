@@ -26,8 +26,8 @@ DaredevilDefeated = byte(0x302B90)
 //          0x01 - Modern; upgrades after daredevil
 
 SurvivalType = byte(0x302BA0)
-  ClassicSurvival = 0
-  ModernSurvival = 1
+ClassicSurvival = SurvivalType == 0
+ModernSurvival = SurvivalType == 1
   
 // $302BA4: [32-bit] Survival - Attack Level
 //          0x00 - Lv. 1 | 0x01 - Lv. 2 | 0x02 - Lv. 3 | ... | 0x0e - MAX (Lv. 15)
@@ -2532,16 +2532,16 @@ CharData2 = {
 }
 
 SurvivalData = {
-    100:{"progT":"any 100","progP":10,"daredevil":0x34,"desc":"in "),
-    200:{"progT":"any 200","progP":10,"daredevil":,"desc":"in "),
-    300:{"progT":"any 300","progP":10,"daredevil":,"desc":"in "),
-    400:{"progT":"any 400","progP":10,"daredevil":,"desc":"in "),
-    500:{"progT":"any 500","progP":10,"daredevil":,"desc":"in "),
-    600:{"progT":"any 600","progP":25,"daredevil":,"desc":"in "),
-    700:{"progT":"any 700","progP":25,"daredevil":,"desc":"in "),
-    800:{"progT":"any 800","progP":25,"daredevil":,"desc":"in "),
-    900:{"progT":"any 900","progP":25,"daredevil":,"desc":"in "),
-    999:{"progT":"any 999","progP":50,"daredevil":,"desc":"and complete ")
+    100:{"progT":"any 100","progP":10,"classicT":"classic 100","classicP":10,"daredevil":0x34,"desc":"in "),
+    200:{"progT":"any 200","progP":10,"classicT":"classic 200","classicP":10,"daredevil":,"desc":"in "),
+    300:{"progT":"any 300","progP":10,"classicT":"classic 300","classicP":10,"daredevil":,"desc":"in "),
+    400:{"progT":"any 400","progP":10,"classicT":"classic 400","classicP":10,"daredevil":,"desc":"in "),
+    500:{"progT":"any 500","progP":10,"classicT":"classic 500","classicP":10,"daredevil":,"desc":"in "),
+    600:{"progT":"any 600","progP":25,"classicT":"classic 600","classicP":25,"daredevil":,"desc":"in "),
+    700:{"progT":"any 700","progP":25,"classicT":"classic 700","classicP":25,"daredevil":,"desc":"in "),
+    800:{"progT":"any 800","progP":25,"classicT":"classic 800","classicP":25,"daredevil":,"desc":"in "),
+    900:{"progT":"any 900","progP":25,"classicT":"classic 900","classicP":25,"daredevil":,"desc":"in "),
+    999:{"progT":"any 999","progP":50,"classicT":"classic 1000","classicP":50,"daredevil":,"desc":"and complete ")
 }
 
 MissionData = {
@@ -2612,6 +2612,7 @@ for i in range(0x17,0x19)
   CharacterSingleStoryAch(i)
 
 //Arcade Mode
+//these need no gold/darkside/gg/kliff/justice protection
 //Arcade normal+ no darkside/gold
 function NormalArcade(character) {
         achievement(
@@ -2698,15 +2699,7 @@ achievement(
 //gold arcade defeat holy order sol any? normal+?
 
 //beat arcade with anybody on GG mode and GGX mode
-achievement(
-                title="ggx arcade title", points=5,
-                description= "Complete Arcade mode with a GGX moveset. [Normal+ | Default Settings | No Gold/Darkside]",
-                trigger= InGame && ArcadeMode && never(TwoPlayer) && Difficulty >= Normal && MatchRound >= BestOf3 &&
-                        ((once(LeftPlayer && Character1P == character && StageWins1P == 0 && 
-                        never(prev(Character1P) != Character1P)) && ArcadeClear1P()) ||
-                        (once(RightPlayer && Character2P == character && StageWins2P == 0 && 
-                        never(prev(Character2P) != Character1P)) && ArcadeClear1P()))
-)
+
 //finish arcade on GG with only instant kills normal+
 
 //MOM Mode
@@ -2730,7 +2723,7 @@ function SurvivalProgressionAch(round) {
         achievement(
                 title=SurvivalData[round]["progT"],points=SurvivalData[round]["progP"],
                 description="Defeat the Daredevil challenger on floor " + round + SurvivalData[round]["desc"] + "Survival mode. [No Kliff/Justice]",
-                triigger= InGame && SurvivalMode && 
+                trigger= InGame && SurvivalMode && ModernSurvival &&
                 prev(DaredevilDefeated) == SurvivalData[round]["daredevil"] -1  && 
                 DaredevilDefeated == SurvivalData[round]["daredevil"] &&
                 ((LeftPlayer && Character1P < Kliff) || (RightPlayer && Character2P < Kliff))
@@ -2741,9 +2734,28 @@ for i in [100,200,300,400,500,600,700,800,900,999]
 //no passive abilities
 
 //no time warp
-
-//classic survival milestones
-
+achievement(
+                title="no time warp",points=25,
+                description="Complete Survival mode without using a Time Warp. [No Kliff/Justice]",
+                trigger= InGame && SurvivalMode && ModernSurvival &&
+                prev(DaredevilDefeated) == SurvivalData[999]["daredevil"] -1  && 
+                DaredevilDefeated == SurvivalData[999]["daredevil"] &&
+                ((LeftPlayer && Character1P < Kliff) || (RightPlayer && Character2P < Kliff))
+        )
+//classic survival milestones 100/200/300/400/500/600/700/800/900/999
+//allow any char for now
+function SurvivalClassicAch(round) {
+        achievement(
+                title=SurvivalData[round]["progT"],points=SurvivalData[round]["progP"],
+                description="Defeat the Daredevil challenger on floor " + round + SurvivalData[round]["desc"] + "Classic Survival mode.",
+                trigger= InGame && SurvivalMode && ClassicSurvival &&
+                prev(DaredevilDefeated) == SurvivalData[round]["daredevil"] -1  && 
+                DaredevilDefeated == SurvivalData[round]["daredevil"] //&&
+                //((LeftPlayer && Character1P < Kliff) || (RightPlayer && Character2P < Kliff))
+        )
+}
+for i in [100,200,300,400,500,600,700,800,900,999]
+  SurvivalClassicAch(i)
 
 //Mission Mode
 //Completion milestones
