@@ -2286,8 +2286,14 @@ MissionMode = bit7(0x3C6B55) == 1
 //          bit2 - Active
 // $3C6B70: [8-bit] Arcade/M.O.M modifier - Gold; this affects all opponents
 //          b0 - Gold opponents activated
+
+GoldArcade = bit0(0x3C6B70) == 1
+
 // $3C6B74: [8-bit] Arcade/M.O.M modifier - EX; this affects all opponents
 //          b0 - EX opponents activated
+
+EXArcade = bit0(0x3C6B74) == 1
+
 // $3C6B78: [8-bit] Player 1 special mode
 //          0x00 - Normal
 //          0x01 - Gold
@@ -2644,18 +2650,52 @@ function ManiacArcade(character) {
         )
 }
 
-//EX moveset Arcade normal+ no darkside/gold
-
-//Any arcade maniac no darkside/gold no gg
-
 //standard arcade defeat holy order sol on normal and maniac
 
-//EX arcademode normal/maniac
+//EX arcademode normal
+achievement(
+                title="EX arcade title", points=5,
+                description= "Complete EX Arcade mode. [Normal+ | Default Settings | No Gold/Darkside/GG]",
+                trigger= InGame && ArcadeMode && EXArcade && never(TwoPlayer) && Difficulty >= Normal && MatchRound >= BestOf3 &&
+                        ((once(LeftPlayer && Character1P == character && StageWins1P == 0 && 
+                        never(prev(Character1P) != Character1P)) && ArcadeClear1P()) ||
+                        (once(RightPlayer && Character2P == character && StageWins2P == 0 && 
+                        never(prev(Character2P) != Character1P)) && ArcadeClear1P()))
+)
+//EX arcademode maniac
+achievement(
+                title="EX arcade maniac title", points=10,
+                description= "Complete EX Arcade mode. [Maniac | Default Settings | No Gold/Darkside/GG]",
+                trigger= InGame && ArcadeMode && EXArcade && never(TwoPlayer) && Difficulty == Maniac && MatchRound >= BestOf3 &&
+                        ((once(LeftPlayer && Character1P == character && StageWins1P == 0 && 
+                        never(prev(Character1P) != Character1P)) && ArcadeClear1P()) ||
+                        (once(RightPlayer && Character2P == character && StageWins2P == 0 && 
+                        never(prev(Character2P) != Character1P)) && ArcadeClear1P()))
+)
+
 
 //ex arcade mode defeat holy order sol normal/maniac
 
-//gold arcade mode normal/maniac
-
+//gold arcade mode normal
+achievement(
+                title="gold arcade title", points=5,
+                description= "Complete Gold Arcade mode. [Normal+ | Default Settings | No Gold/Darkside/GG]",
+                trigger= InGame && ArcadeMode && GoldArcade && never(TwoPlayer) && Difficulty >= Normal && MatchRound >= BestOf3 &&
+                        ((once(LeftPlayer && Character1P == character && StageWins1P == 0 && 
+                        never(prev(Character1P) != Character1P)) && ArcadeClear1P()) ||
+                        (once(RightPlayer && Character2P == character && StageWins2P == 0 && 
+                        never(prev(Character2P) != Character1P)) && ArcadeClear1P()))
+)
+//gold arcade mode maniac
+achievement(
+                title="gold arcade maniac title", points=10,
+                description= "Complete Gold Arcade mode. [Maniac | Default Settings | No Gold/Darkside/GG]",
+                trigger= InGame && ArcadeMode && GoldArcade && never(TwoPlayer) && Difficulty == Maniac && MatchRound >= BestOf3 &&
+                        ((once(LeftPlayer && Character1P == character && StageWins1P == 0 && 
+                        never(prev(Character1P) != Character1P)) && ArcadeClear1P()) ||
+                        (once(RightPlayer && Character2P == character && StageWins2P == 0 && 
+                        never(prev(Character2P) != Character1P)) && ArcadeClear1P()))
+)
 //gold arcade defeat holy order sol any? normal+?
 
 //beat arcade with anybody on GG mode and GGX mode
@@ -2698,7 +2738,7 @@ for i in [100,200,300,400,500,600,700,800,900,999]
 
 
 //Mission Mode
-//Character missions
+//Completion milestones
 achievement(
         title="mission 10", points=5,
         description="Complete 10 different missions in Mission mode.",
@@ -2714,6 +2754,19 @@ achievement(
         description="Complete 30 different missions in Mission mode.",
         trigger= InGame && MissionMode && prev(MissionProgress()) == 29 && MissionProgress == 30
 )
+//GGXX ranks
+function GGXXAch(mission) {
+        achievement(
+                title=MissionData[mission]["ggxxT"], points= MissionData[mission]["ggxxP"],
+                description= "Clear Mission " + mission + " with a GGXX rating for the first time.",
+                trigger= InGame && MissionMode && MissionGGXX(mission)
+        )
+}
+for i in range(1,30)
+  GGXXAch(i)
+
+
+//Character clears
 function CharacterMissionAch(character) {
         achievement(
             title=AchData[character]["missionT"], points=AchData[character]["missionP"],
