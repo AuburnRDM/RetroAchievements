@@ -719,7 +719,7 @@ achievement(
     description="Defeat Badeline Celeste in 20 or less deaths in Celeste (2018).",
     trigger= StageID == StageData[14]["ID"] && trigger_when(prev(ScreenID) == BadelineEnd && ScreenID == BadelineEndNext) &&
             once(StageID == StageData[14]["ID"] && ScreenID == BadelineStart && GameState == Active) &&
-            unless(tally(21,Dead)) && never(Overworld()) && never(ScreenID == prevBadelineStart)
+            unless(tally(21,Dead)) && never(Overworld()) && never(ScreenID == CelesteChapter6)
 )
 
 //Terminal Ferocity
