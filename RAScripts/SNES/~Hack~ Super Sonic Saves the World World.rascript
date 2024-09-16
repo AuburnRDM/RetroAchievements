@@ -138,7 +138,8 @@ ScreenID = word(0x10b)
   ElonBossWin = 0x127
   TerrorMessage = 0x107
   VibesMessage = 0x11c
-  prevBadelineStart = 0x15e
+  CelesteBrinstar = 0x15d //chapter 5 before reflection
+  CelesteChapter6 = 0x15e //right before badeline encounter
   BadelineStart = 0x15f
   BadelineEnd = 0x167
   BadelineEndNext = 0x168
@@ -710,7 +711,7 @@ achievement(
 achievement( // double check that this is actually the best part to do this. perhaps should change over when ch 5  is beaten
     title="reach badeline",points=10,
     description="Complete Chapter 5 in Celeste (2018).",
-    trigger= StageID == StageData[14]["ID"] && InLevel() && prev(ScreenID) == prevBadelineStart && ScreenID == BadelineStart
+    trigger= StageID == StageData[14]["ID"] && InLevel() && prev(ScreenID) == CelesteBrinstar && ScreenID == CelesteChapter6
 )
 NormalClear(14)
 achievement(
