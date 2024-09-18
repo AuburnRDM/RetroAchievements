@@ -839,7 +839,7 @@ achievement(
     title="Humble Hedgehog", points=10,
     description="Complete Full Moon Eclipse without collecting more than 30 rings or coins.",
     trigger= StageID == DaddysCastle && ScreenID == FullMoon && trigger_when(FullMoonXCheck) &&
-            unless(tally(31,ScreenID == FullMoon && Rings != prev(Rings))) && never(Dead) && never(Overworld())
+            unless(tally(31,ScreenID == FullMoon && Rings != prev(Rings)) && never(Dead) && never(Overworld()))
 )
 
 //100% levels
