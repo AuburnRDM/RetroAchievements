@@ -780,7 +780,7 @@ NormalClear(20)
 
 //Denouement
 achievement(
-    title="Hello, Brain6",points=10,type="progression",
+    title="The End is Nigh",points=10,type="progression",
     description="Unlock Denouement: Daddy's Castle.",
     trigger= StageID == Brain6 && NormalExit()
 )
@@ -800,7 +800,7 @@ achievement(
 //Daddy's Castle
 achievement(
     title="daddy's castle",points=10,type="progression",
-    description="Complete the first screen of Daddy's Castle and enter the ''Back'' ''Door''",
+    description="Complete the first screen of Daddy's Castle and enter the ''Back'' ''Door''. I swear it's not what it sounds like.",
     trigger= StageID == DaddysCastle && InLevel() && prev(ScreenID) == DaddyStart && ScreenID == BackDoorStart
 )
 //Complete the first screen of Daddy's Castle without collecting any power-ups.
@@ -820,12 +820,12 @@ achievement(
 )
 achievement(
     title="Consistency Check",points=50,
-    description="Complete the ''Back'' ''Door'' section of Daddy's Castle the proper way.",
+    description="Complete the ''Back'' ''Door'' section of Daddy's Castle the proper way. Maybe it's a little like how it sounds.",
     trigger= StageID == DaddysCastle && InLevel() && BackDoorExit()
 )
 achievement(
     title="No Room Left Behind",points=100,
-    description="Collect the moon in Terminal Ferocity.",
+    description="Collect the moon in the ''Back'' ''Door'' section of Daddy's Castle.",
     trigger= NormalMoon(22) && prev(DaddyMoon) == 0 && DaddyMoon == 1 && BackDoorMoonProtection()
 )
 
