@@ -1052,6 +1052,14 @@ function Cheaterboard(stage) {
           value=measured(Exits),format="VALUE"
     )
 }
+leaderboard(
+        title="Daddy's Castle Moon - Old",
+        description="Collect the Daddy's Castle moon as fast as you can.",
+        start=NormalMoon(22) && prev(DaddyMoon) == 0 && DaddyMoon == 1 && !BackDoorMoonProtection()
+        cancel=always_false(),
+        submit=always_true(),
+        value=measured(Exits),format="VALUE
+)
 //Run Cheaterboards
 for i in [5,8,10,12,13,18]
     Cheaterboard(i)
