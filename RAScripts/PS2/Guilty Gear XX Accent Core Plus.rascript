@@ -68,6 +68,7 @@ ModernSurvival = SurvivalType == 1
 //          0x1c - Mays Fist
 //          0x1d - Vampire Form
 //          0x1e - Sheer Heart Attack
+SurvivalAbility1 = dword(0x302BC4)
 // $302BC8: [32-bit] Survival - Ability 2
 //          0x00 - None
 //          0x0a - Life Recovery
@@ -91,6 +92,7 @@ ModernSurvival = SurvivalType == 1
 //          0x1c - Mays Fist
 //          0x1d - Vampire Form
 //          0x1e - Sheer Heart Attack
+SurvivalAbility2 = dword(0x302BC8)
 // $302BCC: [32-bit] Survival - Ability 3
 //          0x00 - None
 //          0x0a - Life Recovery
@@ -114,6 +116,7 @@ ModernSurvival = SurvivalType == 1
 //          0x1c - Mays Fist
 //          0x1d - Vampire Form
 //          0x1e - Sheer Heart Attack
+SurvivalAbility3 = dword(0x302BCC)
 // $31583D: current stage?
 // $34E8B0: [32-bit] Display settings - Position H;
 // $34E8B4: [32-bit] Display settings - Position V;
