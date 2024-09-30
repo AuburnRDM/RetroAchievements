@@ -52,6 +52,7 @@ BeanPositionExercise = byte(0x8ECB6A)
 //          Bit0 - Paused
 // $8ED496: [Mean Bean Machine (GG)]
 //          [16-bit] Number of beans freed
+BeansCleared = word(0x8ED496)
 // $8ED4C0: [Mean Bean Machine (GG)]
 //          [32-bit] Player Score
 
@@ -353,16 +354,44 @@ for i in range(1,13)
 leaderboard(
         title="Scenario - Score",
         description="Score as many points as you can in Scenario mode.",
-        start=Protection() && InGame && Mode == Scenario && Dead,
+        start=Protection() && InGame && Mode == Scenario && ((Dead) || (Stage == 13 && EnemyDead)),
         cancel=always_false(),
         submit=always_true(),
         value=Score,
         format="VALUE",lower_is_better=false
 )
 //points in exercise mode
-//beans in exercise mode
+leaderboard(
+        title="Exercise - Score",
+        description="Score as many points as you can in Exercise mode.",
+        start=Protection() && InGame && Mode == Exercise && Dead,
+        cancel=always_false(),
+        submit=always_true(),
+        value=Score,
+        format="VALUE",lower_is_better=false
+)
+//beans in exercise mode - bean counter
+leaderboard(
+        title="Exercise - Beans",
+        description="Clear as many beans as you can in Exercise mode.",
+        start=Protection() && InGame && Mode == Exercise && Dead,
+        cancel=always_false(),
+        submit=always_true(),
+        value=BeansCleared,
+        format="VALUE",lower_is_better=false
+)
 //beans in exercise mode on hard without rotating
-
+leaderboard(
+        title="Exercise - Beans",
+        description="Clear as many beans as you can in Exercise mode.",
+        start=Protection() && InGame && Mode == Exercise && prev(BeanPositionExercise) != BeanPositionExercise &&
+                once(Mode == Exercise && InGame && BeansCleared == 0 && never(MainMenu)),
+        cancel=always_false(),
+        submit=always_true(),
+        value=BeansCleared,
+        format="VALUE",lower_is_better=false
+)
 //RP
 
+rich_presence_conditional_display(!Protection(),"Mean Bean Machine (GG) • File loaded and achievements are locked")
 
