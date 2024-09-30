@@ -39,6 +39,9 @@
 //          0x01 - 90 degrees (horizontal)
 //          0x02 - 180 degrees (vertical)
 //          0x03 - 270 degrees (horizontal)
+
+BeanPositionExercise = byte(0x8ECB6A)
+
 // $8ECBEA: [Mean Bean Machine (GG)]
 //          [8-bit] Bean orientation in Scenario mode
 //          0x00 - 0 degrees (vertical)
@@ -51,23 +54,40 @@
 //          [16-bit] Number of beans freed
 // $8ED4C0: [Mean Bean Machine (GG)]
 //          [32-bit] Player Score
+
+Score = dword(0xb8ED4C0)
+
 // $8EDA0A: [Mean Bean Machine (GG)]
 //          [16-bit] Bonus points awarded at the end of a round in Scenario mode
+
+BonusPoints = word(0x8EDA0A)
+
 // $8EDC01: [Mean Bean Machine (GG)]
 //          [8-bit] Game Mode
 //          0x00 - Scenario
 //          0x01 - Gear 2 Gear
 //          0x02 - Exercise
 //          0x03 - Puzzle
+
+Mode = byte(0x8EDC01)
+        Scenario = 0
+        VS = 1
+        Exercise = 2
+        Puzzle = 3
+
 // $8EDC05: [Mean Bean Machine (GG)]
 //          [8-bit] In-game status
 //          0x00 - In-game
 //          0x01 - On menus
+
+
 // $8EDC06: [Mean Bean Machine (GG)]
 //          [8-bit] Exercise Mode - Starting level
 //          b0 - Level 1 (Easy)
 //          b1 - Level 3 (Normal)
 //          b2 - Level 5 (Hard)
+
+
 // $8EDC0C: [Mean Bean Machine (GG)]
 //          [8-bit] Puzzle Mode - Main Menu / Continue
 //          ---Main Menu
@@ -95,6 +115,9 @@
 //          0x0b - Dragon Breath
 //          0x0c - Scratch
 //          0x0d - Dr. Robotnik
+
+Stage = byte(0x8EDC10)
+
 // $8EDC1F: [Mean Bean Machine (GG)]
 //          [8-bit] Number of beans on the player side
 // $8EDC21: [Mean Bean Machine (GG)]
@@ -103,13 +126,23 @@
 //          [8-bit] Enemy portrait
 //          0x00 - Normal
 //          0x01 - Dead
+
+EnemyState = byte(0x8EDC24)
+EnemyDead = prev(EnemyState) == 0 && EnemyState == 1
+
 // $8EDC58: [Mean Bean Machine (GG)]
 //          [16-bit] Stage timer; seconds
+
+StageTimer = word(0x8EDC58)
+
 // $8EDC5A: [Mean Bean Machine (GG)]
 //          [8-bit] Stage timer; frames
 // $8EDCC7: [Mean Bean Machine (GG)]
 //          [8-bit] Match status
 //          Bit0 - In match
+
+InMatch = bit0(0x8EDCC7) == 1
+
 // $8EE301: acdtual mean beans placed by both side not counting trash
 // $8EE30B: [Mean Bean Machine (GG)]
 //          [8-bit] Current puzzle; starts at 0x00
@@ -179,11 +212,15 @@
 //           Load Game Exit - 0x11
 //           Save File overwrite - 0x12
 //           Overwrite done - 0x13
+PS2GGState = byte(0x1EC7C4C)
+        Loading = 5
 // $1FDA5F0: [Sonic Mega Collection Plus] [8-bits] (original note by Lewis50248)
 //           Screen Indicator
 //           0x03 = In a Genesis Game
 //           0x04 = In a Game Gear Game
 //           0x05 = In a multiplayer Game Gear game (2 instances)
+CollectionState = byte(0x1FDA5F0)
+        InGG = 4
 // $1FDA628: [Sonic Mega Collection Plus] [8-bits]
 //           Game Indicator
 //           0x00 = Sonic the Hedgehog (Genesis)
@@ -206,3 +243,53 @@
 //           0x11 = Sonic Chaos
 //           0x12 = Sonic Blast
 //           0x13 = Dr. Robotnik's Mean Bean Machine (Game Gear)
+Game = byte(0x1FDA628)
+        MeanBean = 0x13
+//Data
+Data = {
+    1:{"name":"Arms","title":"Look Ma, No Arms","points":2},
+    2:{"name":"Frankly","title":"Frankenstein's Robot","points":2},
+    3:{"name":"Humpty","title":"Eggslayer","points":2},
+    4:{"name":"Coconuts","title":"Orange You Glad They Didn't Call Him Bananas?","points":2},
+    5:{"name":"Davy Sprocket","title":"King of the Robot Frontier","points":2},
+    6:{"name":"Skweel","title":"Like a Piggy","points":3},
+    7:{"name":"Dynamight","title":"No Might About It","points":3},
+    8:{"name":"Grounder","title":"You're Grounded","points":3},
+    9:{"name":"Spike","title":"Do Not Touch","points":3},
+    10:{"name":"Sir Ffuzzy-Logic","title":"Ol' Ffuzzy-Fface","points":5},
+    11:{"name":"Dragon Breath","title":"Flamin' Hot","points":5},
+    12:{"name":"Scratch","title":"Tis but a Scratch","points":5},
+    13:{"name":"Dr. Robotnik","title":"Mean Bean","points":10}
+}
+
+//Functions and such
+MeanBeanGG = CollectionState == InGG && Game == MeanBean
+
+//needs to define MainMenu
+Protection() => MeanBeanGG && disable_when(once(Game == MeanBean && PS2GGState == Loading), until= Game == MeanBean && MainMenu)
+
+//InMatch, Stage, StageTimer, Mode, Score, BonusPoints, BeanPositionExercise, EnemyDead
+
+function ProgressionAch(stage) {
+        achievement(
+                title=Data[stage]["title"],points=Data[stage]["points"],type="Progression",
+                description="Defeat " + Data[stage]["name"] + " on stage " + stage + ".",
+                trigger=Protection() && InGame && Mode == Scenario && Stage == stage && EnemyDead
+        )
+}
+
+//Achievements
+//All but last boss progression
+for i in range(1,12)
+        ProgressionAch(i)
+achievement(
+        title=Data[13]["title"],points=Data[13]["points"],type="Progression",
+        description="Defeat " + Data[13]["name"] + " on stage 13.",
+        trigger=Protection() && InGame && Mode == Scenario && Stage == 13 && EnemyDead
+)
+
+//Leaderboards
+
+//RP
+
+
