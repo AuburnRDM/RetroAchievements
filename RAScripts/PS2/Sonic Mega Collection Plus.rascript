@@ -324,7 +324,7 @@ achievement(
 //Leaderboards
 //Clear the entire scenario as fast as you can
 leaderboard(
-        title="Bean of Speed,
+        title="Bean of Speed",
         description="Complete Scenario mode as fast as you can.",
         start=Protection() && once(Stage == 1 && InGame) && Mode == Scenario,
         cancel=MainMenu,
