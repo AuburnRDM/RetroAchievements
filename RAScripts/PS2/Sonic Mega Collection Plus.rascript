@@ -133,10 +133,13 @@ EnemyDead = prev(EnemyState) == 0 && EnemyState == 1
 // $8EDC58: [Mean Bean Machine (GG)]
 //          [16-bit] Stage timer; seconds
 
-StageTimer = word(0x8EDC58)
+StageSeconds = word(0x8EDC58)
 
 // $8EDC5A: [Mean Bean Machine (GG)]
 //          [8-bit] Stage timer; frames
+StageFrames = byte(0x8EDC5A)
+
+StageTime = (StageSeconds * 60) + StageFrames
 // $8EDCC7: [Mean Bean Machine (GG)]
 //          [8-bit] Match status
 //          Bit0 - In match
@@ -262,6 +265,8 @@ Data = {
     13:{"name":"Dr. Robotnik","title":"Mean Bean","points":10}
 }
 
+//need MainMenu, Dead, and InGame checks defined
+
 //Functions and such
 MeanBeanGG = CollectionState == InGG && Game == MeanBean
 
@@ -288,7 +293,75 @@ achievement(
         trigger=Protection() && InGame && Mode == Scenario && Stage == 13 && EnemyDead
 )
 
+//1CC
+achievement(
+        title="Meanest Bean",points=25,
+        description="Complete Scenario Mode without getting a Game Over or using any passwords.",
+        trigger=Protection() && InGame && Mode == Scenario && trigger_when(Stage == 13 && EnemyDead) &&
+                once(Stage == 1 && InGame) && never(MainMenu) && never(Dead)
+
+//Speedrun 1-4  (80), 5-8 (70), 9-12 (60)
+//Speedrun robotnik 45
+
+//Exercise Mode
+//100k points, eh
+//500k points
+//1mil points
+
+//250 beans no rotating
+//1000 beans
+
+//Combo
+//5x combo no puzzle mode
+//10x combo no puzzle  mode
+
+//Puzzle
+//1-10, 11-20, 21-30
+
+//sound test?
+
 //Leaderboards
+//Clear the entire scenario as fast as you can
+leaderboard(
+        title="Bean of Speed,
+        description="Complete Scenario mode as fast as you can.",
+        start=Protection() && once(Stage == 1 && InGame) && Mode == Scenario,
+        cancel=MainMenu,
+        submit=Stage == 13 && EnemyDead,
+        value=always_true(),
+        format="FRAMES",lower_is_better=true
+)
+        
+//robot speedruns
+function SpeedLeaderboard(stage) {
+        leaderboard(
+                title=Data[stage]["name"] + " - Speed",
+                description="Defeat " + Data[stage]["name"] + " on stage " + stage + " as fast as you can.",
+                start=Protection() && InGame && Mode == Scenario && Stage == stage && EnemyDead,
+                cancel=always_false(),
+                submit=always_true(),
+                value=StageTime,
+                format="FRAMES",lower_is_better=true
+        )
+}
+
+for i in range(1,13)
+        SpeedLeaderboard(i)
+
+
+//points in scenario mode
+leaderboard(
+        title="Scenario - Score",
+        description="Score as many points as you can in Scenario mode.",
+        start=Protection() && InGame && Mode == Scenario && Dead,
+        cancel=always_false(),
+        submit=always_true(),
+        value=Score,
+        format="VALUE",lower_is_better=false
+)
+//points in exercise mode
+//beans in exercise mode
+//beans in exercise mode on hard without rotating
 
 //RP
 
