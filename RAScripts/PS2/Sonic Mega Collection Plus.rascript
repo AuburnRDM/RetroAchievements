@@ -150,9 +150,11 @@ InMatch = bit0(0x8EDCC7) == 1
 // $8EE301: acdtual mean beans placed by both side not counting trash
 // $8EE30B: [Mean Bean Machine (GG)]
 //          [8-bit] Current puzzle; starts at 0x00
+CurrentPuzzle = byte(0x8EE30B) + 1
 // $8EE30C: [Mean Bean Machine (GG)]
 //          [8-bit] Puzzle cleared
 //          Bit0 flips from 0 > 1 when a puzzle is completed
+PuzzleClear = prev(bit0(0x8EE30C)) == 0 && bit0(0x8EE30C) == 1
 // $8EE30F: [Mean Bean Machine (GG)]
 //          [8-bit] Password entry value 1; 0xff - none
 // $8EE310: [Mean Bean Machine (GG)]
@@ -266,15 +268,26 @@ Data = {
     13:{"name":"Dr. Robotnik","title":"Mean Bean","points":10}
 }
 
-//need MainMenu, Dead, and InGame checks defined
+//need MainMenu, Dead, and InGame checks defined, needs Combo defined
 
 //Functions and such
+
 MeanBeanGG = CollectionState == InGG && Game == MeanBean
-
-//needs to define MainMenu
 Protection() => MeanBeanGG && disable_when(once(Game == MeanBean && PS2GGState == Loading), until= Game == MeanBean && MainMenu)
-
-//InMatch, Stage, StageTimer, Mode, Score, BonusPoints, BeanPositionExercise, EnemyDead
+function PuzzleBlock(start) =>
+        measured(tally(10,
+                once(CurrentPuzzle == start && PuzzleClear),
+                once(CurrentPuzzle == start+1 && PuzzleClear),
+                once(CurrentPuzzle == start+2 && PuzzleClear),
+                once(CurrentPuzzle == start+3 && PuzzleClear),
+                once(CurrentPuzzle == start+4 && PuzzleClear),
+                once(CurrentPuzzle == start+5 && PuzzleClear),
+                once(CurrentPuzzle == start+6 && PuzzleClear),
+                once(CurrentPuzzle == start+7 && PuzzleClear),
+                once(CurrentPuzzle == start+8 && PuzzleClear),
+                once(CurrentPuzzle == start+9 && PuzzleClear))) &&
+        never(MainMenu)
+//InMatch, Stage, StageTimer, Mode, Score, BonusPoints, BeanPositionExercise, EnemyDead, CurrentPuzzle, PuzzleClear
 
 function ProgressionAch(stage) {
         achievement(
@@ -302,22 +315,99 @@ achievement(
                 once(Stage == 1 && InGame) && never(MainMenu) && never(Dead)
 
 //Speedrun 1-4  (80), 5-8 (70), 9-12 (60)
+achievement(
+        title="Grunt Robot Rush", points=10,
+        description="Complete stages 1-4 within a cumulative 360 seconds of battle.",
+        trigger=Protection() && InGame && Mode == Scenario && trigger_when(Stage == 4 && EnemyDead) &&
+                once(Stage == 1 && InGame) && never(MainMenu) &&
+                never(InMatch && tally(361, prev(StageSeconds) != StageSeconds))
+)
+
+achievement(
+        title="Seasoned Robot Rush", points=10,
+        description="Complete stages 5-8 within a cumulative 300 seconds of battle.",
+        trigger=Protection() && InGame && Mode == Scenario && trigger_when(Stage == 8 && EnemyDead) &&
+                once(Stage == 5 && InGame) && never(MainMenu) &&
+                never(InMatch && tally(301, prev(StageSeconds) != StageSeconds))
+)
+achievement(
+        title="Senior Robot Rush", points=25,
+        description="Complete stages 9-12 within a cumulative 240 seconds of battle.",
+        trigger=Protection() && InGame && Mode == Scenario && trigger_when(Stage == 12 && EnemyDead) &&
+                once(Stage == 9 && InGame) && never(MainMenu) &&
+                never(InMatch && tally(241, prev(StageSeconds) != StageSeconds))
+)
+achievement(
+        title="Robotnik Rush", points=10,
+        description="Defeat Dr. Robotnik on stage 13 within 45 seconds.",
+        trigger=Protection() && InGame && Mode == Scenario && Stage == 4 && trigger_when(EnemyDead) && StageSeconds <= 45
+)
+
 //Speedrun robotnik 45
 
 //Exercise Mode
 //100k points, eh
 //500k points
+achievement(
+        title="Quickened Pulse",points=10,
+        description="Score 500,000 points in Exercise Mode.",
+        trigger= Protection() && InGame && Mode == Exercise && prev(Score) < 500000 && Score >= 500000
+)
+
 //1mil points
-
-//250 beans no rotating
+achievement(
+        title="Racing Heart",points=10,
+        description="Score 1,000,000 points in Exercise Mode.",
+        trigger= Protection() && InGame && Mode == Exercise && prev(Score) < 1000000 && Score >= 1000000
+)
 //1000 beans
-
+achievement(
+        title="Get Those Beans Moving",points=10,
+        description="Clear 1,000 beans in Exercise Mode.",
+        trigger= Protection() && InGame && Mode == Exercise && prev(BeansCleared) < 1000 && BeansCleared >= 1000
+)
+//250 beans no rotating
+achievement(
+        title="Get Those Beans Moving",points=10,
+        description="Clear 1,000 beans in Exercise Mode.",
+        trigger= Protection() && InGame && Mode == Exercise && prev(BeansCleared) < 250 && trigger_when(BeansCleared >= 250) &&
+                once(InGame && Mode == Exercise && BeansCleared == 0 && 
+                never(prev(BeanPositionExercise) != BeanPositionExercise) &&
+                never(!InGame))
+)
 //Combo
-//5x combo no puzzle mode
-//10x combo no puzzle  mode
+//5x and 10x combo no puzzle mode
+achievement(
+        title="Stairway to Heaven",points=5,
+        description="Achieve a 5x combo in any non-puzzle mode.",
+        trigger= Protection() && InGame && Mode != Puzzle && prev(Combo) < 5 && Combo >= 5
+)
+achievement(
+        title="Killer Combo",points=10,
+        description="Achieve a 10x combo in any non-puzzle mode.",
+        trigger= Protection() && InGame && Mode != Puzzle && prev(Combo) < 10 && Combo >= 10
+)
 
 //Puzzle
 //1-10, 11-20, 21-30
+achievement(
+        title="Beans at Work",points=5,
+        description="Clear puzzles 1-10 without returning to the main menu.",
+        trigger= Protection() && InGame && Mode == Puzzle && 
+                PuzzleBlock(1)
+)
+achievement(
+        title="Bright Bean",points=10,
+        description="Clear puzzles 11-20 without returning to the main menu.",
+        trigger= Protection() && InGame && Mode == Puzzle && 
+                PuzzleBlock(11)
+)
+achievement(
+        title="Bean Genius",points=10,
+        description="Clear puzzles 21-30 without returning to the main menu.",
+        trigger= Protection() && InGame && Mode == Puzzle && 
+                PuzzleBlock(21)
+)
 
 //sound test?
 
@@ -336,7 +426,7 @@ leaderboard(
 //robot speedruns
 function SpeedLeaderboard(stage) {
         leaderboard(
-                title=Data[stage]["name"] + " - Speed",
+                title=Data[stage]["name"] + " Rush",
                 description="Defeat " + Data[stage]["name"] + " on stage " + stage + " as fast as you can.",
                 start=Protection() && InGame && Mode == Scenario && Stage == stage && EnemyDead,
                 cancel=always_false(),
