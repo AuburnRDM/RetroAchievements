@@ -569,8 +569,8 @@ achievement(
     trigger= NormalMoon(1) && prev(QuicknessMoon) == 0 && QuicknessMoon == 1
 )
 achievement(
-    title="Rtest",points=10,
-    description="beat quickness within 2m",
+    title="Unbearably Quick",points=10,
+    description="Rush through The Unbearable Quickness of Hedgehog within 2 minutes.",
     trigger= Speedrun(1,7201) && trigger_when(ScreenID == StageData[1]["finalS"] && LevelComplete)
 )
 
@@ -585,9 +585,9 @@ achievement(
 //Shells at Dawn
 NormalClear(3)
 achievement(
-    title="Rtest2",points=10,
-    description="beat shells at dawn within 2m",
-    trigger= Speedrun(3,7201) && trigger_when(ScreenID == StageData[3]["finalS"] && LevelComplete)
+    title="Get Up and Go",points=10,
+    description="Rush through Shells at Dawn within 2 minutes and 15 seconds.",
+    trigger= Speedrun(3,8101) && trigger_when(ScreenID == StageData[3]["finalS"] && LevelComplete)
 )
 
 //Zephy Leaves the Nest
@@ -619,9 +619,9 @@ NormalClear(6)
 //Shells at Midday
 NormalClear(7)
 achievement(
-    title="Rtest3",points=10,
-    description="beat shells at midday within 2m",
-    trigger= Speedrun(7,7201) && trigger_when(ScreenID == StageData[7]["finalS"] && LevelComplete)
+    title="Rush Hour",points=10,
+    description="Rush through Shells at Midday within 7 minutes.",
+    trigger= Speedrun(7,25201) && trigger_when(ScreenID == StageData[7]["finalS"] && LevelComplete)
 )
 
 //For Whomst the Charles Charges
@@ -676,8 +676,8 @@ achievement(
 )
 achievement(
     title="A Good Time",points=10,
-    description="beat the good vibes within 2m",
-    trigger= Speedrun(10,7201) && trigger_when(prev(ScreenID) == 0x14f && ScreenID == 0x149)
+    description="Rush through the good vibes of Good Vibes Only within 6 minutes.",
+    trigger= Speedrun(10,21601) && trigger_when(prev(ScreenID) == 0x14f && ScreenID == 0x149)
 )
 
 //Shells All Night
@@ -715,8 +715,8 @@ achievement( // double check that this is actually the best part to do this. per
 )
 NormalClear(14)
 achievement(
-    title="badeline", points=10,
-    description="Defeat Badeline Celeste in 20 or less deaths in Celeste (2018).",
+    title="Goomba Stomping", points=10,
+    description="Defeat Badeline Celeste in Celeste (2018) with 20 or less deaths.",
     trigger= StageID == StageData[14]["ID"] && trigger_when(prev(ScreenID) == BadelineEnd && ScreenID == BadelineEndNext) &&
             once(StageID == StageData[14]["ID"] && ScreenID == BadelineStart && GameState == Active) &&
             unless(tally(21,Dead)) && never(Overworld()) && never(ScreenID == CelesteChapter6)
@@ -752,8 +752,8 @@ achievement(
 NormalClear(18)
 achievement(
     title="A New Record!",points=25,
-    description="beat the break within 2m",
-    trigger= Speedrun(18,7201) && trigger_when(prev(ScreenID) == 0x1af && ScreenID == 0x1b0)
+    description="Break all of the targets within 7 minutes.",
+    trigger= Speedrun(18,25201) && trigger_when(prev(ScreenID) == 0x1af && ScreenID == 0x1b0)
 )
 
 //Float Like a Princess -- adding an extra bit of flavor. maybe a trigger?
@@ -805,8 +805,8 @@ achievement(
 )
 //Complete the first screen of Daddy's Castle without collecting any power-ups.
 achievement(
-    title="daddy's castle challenge",points=25,
-    description="Complete the first screen of Daddy's Castle and enter the ''Back'' ''Door'' without using power-ups.",
+    title="Feeling Small",points=25,
+    description="Complete the first screen of Daddy's Castle and enter the ''Back'' ''Door'' without collecting power-ups.",
     trigger= StageID == DaddysCastle && InLevel() && prev(ScreenID) == DaddyStart && trigger_when(ScreenID == BackDoorStart) &&
             once(StageID == DaddysCastle && ScreenID == DaddyStart && GameState == Active && DaddyXCheck) &&
             never(Overworld()) && never(Dead) && never(PowerUp != 0)
@@ -819,12 +819,12 @@ achievement(
     trigger= StageID == DaddysCastle && prev(ScreenID) == SafeWord && ScreenID == FullMoon
 )
 achievement(
-    title="Consistency Check",points=50,
+    title="Daddy's Little Hedgehog",points=50,
     description="Complete the ''Back'' ''Door'' section of Daddy's Castle the proper way. Maybe it's a little like how it sounds.",
     trigger= StageID == DaddysCastle && InLevel() && BackDoorExit()
 )
 achievement(
-    title="No Room Left Behind",points=100,
+    title="Practice Makes Perfect",points=100,
     description="Collect the moon in the ''Back'' ''Door'' section of Daddy's Castle.",
     trigger= NormalMoon(22) && prev(DaddyMoon) == 0 && DaddyMoon == 1 && BackDoorMoonProtection()
 )
