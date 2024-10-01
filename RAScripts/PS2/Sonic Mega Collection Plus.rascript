@@ -274,6 +274,7 @@ Data = {
 
 MeanBeanGG = CollectionState == InGG && Game == MeanBean
 Protection() => MeanBeanGG && disable_when(once(Game == MeanBean && PS2GGState == Loading), until= Game == MeanBean && MainMenu)
+RPProtection() => once(Game == MeanBean && PS2GGState == Loading && never(MainMenu))
 function PuzzleBlock(start) =>
         measured(tally(10,
                 once(CurrentPuzzle == start && PuzzleClear),
@@ -483,5 +484,9 @@ leaderboard(
 )
 //RP
 
-rich_presence_conditional_display(!Protection(),"Mean Bean Machine (GG) • File loaded and achievements are locked")
+rich_presence_conditional_display(MeanBeanGG && RPProtection(),"Mean Bean Machine (GG) • File loaded and achievements are locked")
+rich_presence_conditional_display(MeanBeanGG && Mode == Scenario,"
+rich_presence_conditional_display(MeanBeanGG && Mode == Exercise,"
+rich_presence_conditional_display(MeanBeanGG && Mode == Puzzle,"
+rich_presence_conditional_display(MeanBeanGG,"Playing Mean Bean Machine (GG)"
 
