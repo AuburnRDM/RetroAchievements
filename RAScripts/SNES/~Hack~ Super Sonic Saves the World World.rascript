@@ -1058,7 +1058,7 @@ leaderboard(
         start=NormalMoon(22) && prev(DaddyMoon) == 0 && DaddyMoon == 1 && !BackDoorMoonProtection()
         cancel=always_false(),
         submit=always_true(),
-        value=measured(Exits),format="VALUE
+        value=measured(Exits),format="VALUE"
 )
 //Run Cheaterboards
 for i in [5,8,10,12,13,18]
