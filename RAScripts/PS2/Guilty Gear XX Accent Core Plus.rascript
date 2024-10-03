@@ -2625,7 +2625,7 @@ function NormalArcade(character) {
                         ((once(LeftPlayer && Character1P == character && !EXMoves1P && StageWins1P == 0 &&
                         never(prev(Character1P) != Character1P) && never(EXMoves1P)) && ArcadeClear1P()) ||
                         (once(RightPlayer && Character2P == character && !EXMoves2P && StageWins2P == 0 &&
-                        never(prev(Character2P) != Character1P) && never(EXMoves2P)) && ArcadeClear1P()))
+                        never(prev(Character2P) != Character1P) && never(EXMoves2P)) && ArcadeClear2P()))
         )
 }
 
@@ -2637,7 +2637,7 @@ function EXArcade(character) {
                         ((once(LeftPlayer && Character1P == character && EXMoves1P && StageWins1P == 0 && 
                         never(prev(Character1P) != Character1P) && never(!EXMoves1P)) && ArcadeClear1P()) ||
                         (once(RightPlayer && Character2P == character && EXMoves2P && StageWins2P == 0 && 
-                        never(prev(Character2P) != Character1P) && never(!EXMoves2P)) && ArcadeClear1P()))
+                        never(prev(Character2P) != Character1P) && never(!EXMoves2P)) && ArcadeClear2P()))
         )
 }
 
@@ -2649,7 +2649,7 @@ function ManiacArcade(character) {
                         ((once(LeftPlayer && Character1P == character && StageWins1P == 0 && 
                         never(prev(Character1P) != Character1P)) && ArcadeClear1P()) ||
                         (once(RightPlayer && Character2P == character && StageWins2P == 0 && 
-                        never(prev(Character2P) != Character1P)) && ArcadeClear1P()))
+                        never(prev(Character2P) != Character1P)) && ArcadeClear2P()))
         )
 }
 
@@ -2663,7 +2663,7 @@ achievement(
                         ((once(LeftPlayer && Character1P == character && StageWins1P == 0 && 
                         never(prev(Character1P) != Character1P)) && ArcadeClear1P()) ||
                         (once(RightPlayer && Character2P == character && StageWins2P == 0 && 
-                        never(prev(Character2P) != Character1P)) && ArcadeClear1P()))
+                        never(prev(Character2P) != Character1P)) && ArcadeClear2P()))
 )
 //EX arcademode maniac
 achievement(
@@ -2673,7 +2673,7 @@ achievement(
                         ((once(LeftPlayer && Character1P == character && StageWins1P == 0 && 
                         never(prev(Character1P) != Character1P)) && ArcadeClear1P()) ||
                         (once(RightPlayer && Character2P == character && StageWins2P == 0 && 
-                        never(prev(Character2P) != Character1P)) && ArcadeClear1P()))
+                        never(prev(Character2P) != Character1P)) && ArcadeClear2P()))
 )
 
 
@@ -2687,7 +2687,7 @@ achievement(
                         ((once(LeftPlayer && Character1P == character && StageWins1P == 0 && 
                         never(prev(Character1P) != Character1P)) && ArcadeClear1P()) ||
                         (once(RightPlayer && Character2P == character && StageWins2P == 0 && 
-                        never(prev(Character2P) != Character1P)) && ArcadeClear1P()))
+                        never(prev(Character2P) != Character1P)) && ArcadeClear2P()))
 )
 //gold arcade mode maniac
 achievement(
@@ -2697,7 +2697,7 @@ achievement(
                         ((once(LeftPlayer && Character1P == character && StageWins1P == 0 && 
                         never(prev(Character1P) != Character1P)) && ArcadeClear1P()) ||
                         (once(RightPlayer && Character2P == character && StageWins2P == 0 && 
-                        never(prev(Character2P) != Character1P)) && ArcadeClear1P()))
+                        never(prev(Character2P) != Character1P)) && ArcadeClear2P()))
 )
 //gold arcade defeat holy order sol any? normal+?
 
