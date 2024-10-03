@@ -369,8 +369,8 @@ achievement(
 )
 //250 beans no rotating
 achievement(
-        title="Get Those Beans Moving",points=10,
-        description="Clear 1,000 beans in Exercise Mode.",
+        title="Stiff Joints",points=10,
+        description="Clear 250 beans in Exercise Mode on hard without rotating.",
         trigger= Protection() && InGame && Mode == Exercise && prev(BeansCleared) < 250 && trigger_when(BeansCleared >= 250) &&
                 once(InGame && Mode == Exercise && BeansCleared == 0 && 
                 never(prev(BeanPositionExercise) != BeanPositionExercise) &&
