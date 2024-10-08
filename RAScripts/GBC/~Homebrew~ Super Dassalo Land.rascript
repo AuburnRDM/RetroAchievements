@@ -268,7 +268,7 @@ achievement(
 achievement(
         title="Fraud",points=1,
         description="Somehow find a way to die in 1-1.",
-        trigger= InLevel && Stage == 1 && Dead
+        trigger= InLevel && Stage == 1 && Dead && StageTime != 0xFFFF
 )
 //Reach Kewpie in 3-2 without collecting any beers with 125 seconds or more left on the clock.
 achievement(
