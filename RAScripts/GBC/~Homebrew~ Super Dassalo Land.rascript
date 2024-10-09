@@ -347,6 +347,9 @@ function StageSpeedLB(stage) {
                 format="VALUE", lower_is_better=false
         )
 }
+//All speed leaderboards
+for i in [1,2,3,4,5,6,8,9,10,11]
+    StageSpeedLB(i)
 function StageScoreLB(stage) {
         leaderboard(
                 title=StageRP[stage] + " Score",
@@ -358,5 +361,9 @@ function StageScoreLB(stage) {
                 format="VALUE", lower_is_better=false
         )
 }
+//All score leaderboards
+for i in [1,2,3,5,6,8,9,10,11]
+    StageScoreLB(i)
+
 //RP
 //Tommy is {0} • Stars: {1}/12 • S-Ranks: {2}/12 • Total Score: {3}
