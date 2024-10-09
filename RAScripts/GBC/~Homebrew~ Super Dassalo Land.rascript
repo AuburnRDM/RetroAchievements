@@ -161,8 +161,8 @@ GameTime = word(0xCC22)
 //need to define LevelComplete, InLevel, and MainMenu
 //Functions and such
 RankArray = [Ramen1Rank,Ramen2Rank,Ramen3Rank,RamenBossRank,Scrolling1Rank,Scrolling2Rank,ScrollingBossRank,Blackout1Rank,Blackout2Rank,Blackout3Rank,BlackoutBossRank]
-function AllSRank(target) => tally_of(RankArray,target,addr => once(byte(addr) == 4))
-function prevAllSRank(target) => tally_of(RankArray,target,addr => once(prev(byte(addr)) == 4))
+function AllSRank(target) => tally_of(RankArray,target,addr => once(addr == 4)) // maybe add the byte back
+function prevAllSRank(target) => tally_of(RankArray,target,addr => once(prev(addr) == 4))
 LevelStart = 
 //Achievements
 //Complete every stage in Ramen Springs
@@ -173,9 +173,9 @@ achievement(
 )
 //Coin RS
 achievement(
-        title="ramen cake",points=3,
-        description="Collect every fish cake in Ramen Springs.",
-        trigger= !MainMenu && prev(RamenCake) == 2 && RamenCake == 3
+        title="Believe It",points=3,
+        description="Earn every fish cake collection star in Ramen Springs.",
+        trigger= !MainMenu && prev(RamenCake) == 2 && measured(RamenCake == 3)
 )
 //S RS
 achievement(
@@ -208,8 +208,8 @@ achievement(
 //Coin SS
 achievement(
         title="ss cake",points=3,
-        description="Collect every fish cake in Scrolling Skies.",
-        trigger= !MainMenu && prev(ScrollingCake) == 1 && ScrollingCake == 2
+        description="Earn every fish cake collection star in Scrolling Skies.",
+        trigger= !MainMenu && prev(ScrollingCake) == 1 && measured(ScrollingCake == 2)
 )
 //S SS
 achievement(
@@ -239,8 +239,8 @@ achievement(
 //Coin BHQ
 achievement(
         title="blackout cake",points=3,
-        description="Collect every fish cake in Blackout HQ.",
-        trigger= !MainMenu && prev(BlackoutCake) == 1 && BlackoutCake == 2
+        description="Earn every fish cake collection star in Blackout HQ.",
+        trigger= !MainMenu && prev(BlackoutCake) == 1 && measured(BlackoutCake == 2)
 )
 //S BHQ
 achievement(
