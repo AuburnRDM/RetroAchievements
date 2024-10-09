@@ -174,7 +174,7 @@ achievement(
 //Coin RS
 achievement(
         title="ramen cake",points=3,
-        description="Collect every fish cake and earn the stars in Ramen Springs.",
+        description="Collect every fish cake in Ramen Springs.",
         trigger= !MainMenu && prev(RamenCake) == 2 && RamenCake == 3
 )
 //S RS
@@ -208,7 +208,7 @@ achievement(
 //Coin SS
 achievement(
         title="ss cake",points=3,
-        description="Collect every fish cake and earn the stars in Scrolling Skies.",
+        description="Collect every fish cake in Scrolling Skies.",
         trigger= !MainMenu && prev(ScrollingCake) == 1 && ScrollingCake == 2
 )
 //S SS
@@ -239,7 +239,7 @@ achievement(
 //Coin BHQ
 achievement(
         title="blackout cake",points=3,
-        description="Collect every fish cake and earn the stars in Blackout HQ.",
+        description="Collect every fish cake in Blackout HQ.",
         trigger= !MainMenu && prev(BlackoutCake) == 1 && BlackoutCake == 2
 )
 //S BHQ
