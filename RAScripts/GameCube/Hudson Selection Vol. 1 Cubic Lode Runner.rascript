@@ -338,6 +338,7 @@
 // $14E11A: [16-bit BE] Number of gold left to collect before the goal ladder appears
 // $14E11B: [8-bit] Piles of Gold
 // $17C8B0: [32-bit BE] Number of blocks deleted in the current stage
+BlocksDeleted = dword_be(0x17C8B0)
 // $17C8B4: [32-bit BE] Fruit picked up in current stage
 //          0xffffffff - None
 //          0x00 - Apple (100 points)
@@ -348,6 +349,7 @@
 //          0x05 - Cherry (1500 points)
 //          0x06 - Strawberry (2000 points)
 //          0x07 - Peach (2500 points)
+CurrentFruit = dword_be(0x
 // $17C8B8: [32-bit BE] Score earned from killing enemies in the current stage
 // $17C8BC: [32-bit BE] Score earned from coins in the current stage
 // $17C8C0: [32-bit BE] Score earned from all sources in the current stage; use this for overall score submission and RP
@@ -360,6 +362,7 @@
 //          0x8000018b | [8-bit] Player X-position; starts at 0x00 on the left layer
 //          0x8000018d | [8-bit] Player Z-position; starts at 0x00 on the bottom layer
 //          0x8000018d | [8-bit] Player Y-position; starts at 0x00 on the back layer
+EnemyKills = byte(dword_be(0x3C6528) + 0x8000011b)
 // $3C65EF: pause in edit
 // $3E90EF: pause state 1
 // $3E915B: speed
