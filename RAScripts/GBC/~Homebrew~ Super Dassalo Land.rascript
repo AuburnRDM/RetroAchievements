@@ -76,7 +76,7 @@ ScrollingCake = bit4(0xCBBC) + bit5(0xCBBC)
 //        Bit1 - Blackout HQ 3-3
 //        Bit2 - Blackout HQ 3-Boss
 BlackoutStar = bit7(0xCBBC) == 1 && bit0(0xCBBD) == 1 && bit1(0xCBBD) == 1 && prev(bit2(0xCBBD)) == 0 && bit2(0xCBBD) == 1
-BlackoutCake = bit7(0xCBBC) + bit0(0xCBBD) + bit1(0xCBBD)
+BlackoutCake = bit7(0xCBBC) + bit0(0xCBBD)
 // $CBBE: [8-bit] Rank - Ramen Springs 1-3
 //        0x00 - None | 0x01 - C | 0x02 - B | 0x03 - A | 0x04 - S
 // $CBC0: [8-bit] Stages completed pt. 1
