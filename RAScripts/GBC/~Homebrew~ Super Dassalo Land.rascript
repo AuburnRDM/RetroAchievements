@@ -40,18 +40,18 @@ LevelStart = prev(byte(0xCBAE)) == 0 && byte(0xCBAE) == 1
 //        0x0d - Scrolling Skies Stage Door
 Stage = byte(0xCBB2)
 StageRP = {
-    0:"Tutorial",
+    0:"learning the ropes in the Tutorial",
     1:"Ramen Springs 1-1",
     2:"Ramen Springs 1-2",
-    3:"Ramen Springs 1-3",
-    4:"Ramen Springs Boss",
-    5:"Scrolling Skies 2-1",
-    6:"Scrolling Skies 2-2",
-    7:"Scrolling Skies Boss",
+    3:"climbing noodles in Ramen Springs 1-3",
+    4:"running from the Ramen Springs Boss",
+    5:"getting distracted in Scrolling Skies 2-1",
+    6:"getting lost in Scrolling Skies 2-2",
+    7:"swiping his credit card at the Scrolling Skies Boss",
     8:"Blackout HQ 3-1",
     9:"Blackout HQ 3-2",
-    0xa:"Blackout HQ 3-3",
-    0xb:"Blackout HQ Boss",
+    0xa:"feeling a bit bloated in Blackout HQ 3-3",
+    0xb:"facing off against the Blackout HQ Boss",
     0xc:"on stage at the Ramen Springs",
     0xd:"on stage at the Scrolling Skies"
 }
