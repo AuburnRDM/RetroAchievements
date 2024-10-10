@@ -1053,6 +1053,14 @@ function Cheaterboard(stage) {
     )
 }
 leaderboard(
+        title="''Back'' ''Door'' - Old",
+        description="Earn as many points as you can in ''Back'' ''Door''.",
+        start=Stage == DaddysCastle && BackDoorExit() && BackDoorRooms < 8,
+        cancel=always_false(),
+        submit=always_true(),
+        value=measured(Exits),format="VALUE"
+)
+leaderboard(
         title="Daddy's Castle Moon - Old",
         description="Collect the Daddy's Castle moon as fast as you can.",
         start=NormalMoon(22) && prev(DaddyMoon) == 0 && DaddyMoon == 1 && !BackDoorMoonProtection()
