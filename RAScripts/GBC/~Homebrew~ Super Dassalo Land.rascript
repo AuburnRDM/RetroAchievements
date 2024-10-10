@@ -2,6 +2,8 @@
 // #ID = 30719
 
 // $C0B2: [16-bit] Player x-position; lower is left
+XPos = word(0xC0B2)
+    BlackoutChallenge = 111
 // $C0B4: [16-bit] Player y-position; lower is up
 // $C11B: [8-bit] Position of letter sprite; prev 0x07 && 0x08
 ScoreTallied = prev(byte(0xC11B) == 7 && byte(0xC11B) == 8
@@ -53,7 +55,20 @@ StageRP = {
     0xc:"on stage at the Ramen Springs",
     0xd:"on stage at the Scrolling Skies"
 }
-    
+StageData = {
+    0:{"Name":"Tutorial"},
+    1:{"Name":"Ramen Springs 1-1"},
+    2:{"Name":"Ramen Springs 1-2"},
+    3:{"Name":"Ramen Springs 1-3"},
+    4:{"Name":"Ramen Springs Boss"},
+    5:{"Name":"Scrolling Skies 2-1"},
+    6:{"Name":"Scrolling Skies 2-2"},
+    7:{"Name":"Scrolling Skies Boss"},
+    8:{"Name":"Blackout HQ 3-1"},
+    9:{"Name":"Blackout HQ 3-2"},
+    0xa:{"Name":"Blackout HQ 3-3"},
+    0xb:{"Name":"Blackout HQ Boss"}
+}
 // $CBBA: [8-bit] Settings - Cutscenes
 //        0x00 - On
 //        0x01 - Skip
@@ -274,7 +289,8 @@ achievement(
 achievement(
         title="Some Kind of Speedrunner", points=3,
         description="Reach Kewpie in 3-2 without collecting any beers with 125 seconds or more left on the clock.",
-        trigger= InLevel && Stage == 9 && StageTime <= 125 && trigger_when(LevelComplete)
+        trigger= InLevel && Stage == 9 && StageTime <= 125 && trigger_when(XPos > BlackoutChallenge && TextBox < 0x88)
+)
 
 //Complete 3-3 without taking damage.
 achievement(
