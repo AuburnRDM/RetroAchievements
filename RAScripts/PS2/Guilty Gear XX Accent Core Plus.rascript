@@ -2590,8 +2590,11 @@ NoBannedCharacters = range(1,0x17)
 AllCharacters = range(1,0x19)
 //Functions
 function FullGallery() => GallerySpecial() + GallerySecret() + GalleryArcade() + GalleryStory()
+
 function ArcadeClear1P() =>
 function ArcadeClear2P() =>
+function MatchWon1P() =>
+function MatchWon2P() =>
 
 //define Stage, RoundStart, Rakusyo
 
@@ -2879,8 +2882,8 @@ function ManiacMirrorAch(character) =>
                 description="Defeat a gold " + CharData[character]["Name"] + " as a normal " + CharData[character]["Name"] + " in VS. CPU mode. [Maniac | Default Settings | No Gold/Darkside/GG]",
                 trigger= InGame && VSCPU && Difficulty == Maniac && DefaultSettings() && 
                         Character1P == character && Character2P == character &&
-                                ((LeftPlayer && Special1P == 0 && Special2P == Gold) ||
-                                (RightPlayer && Special1P == Gold && Special2P == 0))
+                                ((LeftPlayer && Special1P == 0 && Special2P == Gold && MatchWon1P()) ||
+                                (RightPlayer && Special1P == Gold && Special2P == 0 && MatchWon2P()))
 )
 
 //Mirror matches
