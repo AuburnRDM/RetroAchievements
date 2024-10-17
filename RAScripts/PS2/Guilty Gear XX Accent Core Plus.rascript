@@ -148,7 +148,9 @@ MatchRound = byte(0x34E8C1)
   BestOf5 = 2
   BestOf7 = 3
   BestOf9 = 4
-  
+
+function DefaultSettings() => RoundTimerSetting == Sec99 && MatchRound >= 1
+
 // $34E8C2: [8-bit] Game options - Current difficulty
 //          0x00 - Beginner
 //          0x01 - Easy
@@ -2590,7 +2592,7 @@ function FullGallery() => GallerySpecial() + GallerySecret() + GalleryArcade() +
 function ArcadeClear1P() =>
 function ArcadeClear2P() =>
 
-//define Stage, RoundStart
+//define Stage, RoundStart, Rakusyo
 
 
 //Achievements
@@ -2626,7 +2628,7 @@ function NormalArcade(character) {
         achievement(
                 title=CharData[character]["arcadeT"], points=CharData[character]["arcadeP],
                 description= "Complete Arcade mode using only " + CharData[character]["Name] +". [Normal+ | Default Settings | No Gold/Darkside/GG]",
-                trigger= InGame && ArcadeMode && never(TwoPlayer) && Difficulty >= Normal && MatchRound >= BestOf3 && 
+                trigger= InGame && ArcadeMode && never(TwoPlayer) && Difficulty >= Normal && DefaultSettings() && 
                         ((once(LeftPlayer && Character1P == character && !EXMoves1P && StageWins1P == 0 &&
                         never(prev(Character1P) != Character1P) && never(EXMoves1P)) && ArcadeClear1P()) ||
                         (once(RightPlayer && Character2P == character && !EXMoves2P && StageWins2P == 0 &&
@@ -2638,7 +2640,7 @@ function EXArcade(character) {
         achievement(
                 title=CharData[character]["arcadeT"], points=CharData[character]["arcadeP],
                 description= "Complete Arcade mode using only EX " + CharData[character]["Name] +". [Normal+ | Default Settings | No Gold/Darkside/GG]",
-                trigger= InGame && ArcadeMode && never(TwoPlayer) && Difficulty >= Normal && MatchRound >= BestOf3 && 
+                trigger= InGame && ArcadeMode && never(TwoPlayer) && Difficulty >= Normal && DefaultSettings() && 
                         ((once(LeftPlayer && Character1P == character && EXMoves1P && StageWins1P == 0 && 
                         never(prev(Character1P) != Character1P) && never(!EXMoves1P)) && ArcadeClear1P()) ||
                         (once(RightPlayer && Character2P == character && EXMoves2P && StageWins2P == 0 && 
@@ -2650,7 +2652,7 @@ function ManiacArcade(character) {
         achievement(
                 title=CharData[character]["maniacT"], points=CharData[character]["arcadeP],
                 description= "Complete Arcade mode using only " + CharData[character]["Name] +". [Maniac | Default Settings | No Gold/Darkside/GG]",
-                trigger= InGame && ArcadeMode && never(TwoPlayer) && Difficulty == Maniac && MatchRound >= BestOf3 &&
+                trigger= InGame && ArcadeMode && never(TwoPlayer) && Difficulty == Maniac && DefaultSettings() &&
                         ((once(LeftPlayer && Character1P == character && StageWins1P == 0 && 
                         never(prev(Character1P) != Character1P)) && ArcadeClear1P()) ||
                         (once(RightPlayer && Character2P == character && StageWins2P == 0 && 
@@ -2664,7 +2666,7 @@ function ManiacArcade(character) {
 achievement(
                 title="EX arcade title", points=5,
                 description= "Complete EX Arcade mode. [Normal+ | Default Settings | No Gold/Darkside/GG]",
-                trigger= InGame && ArcadeMode && EXArcade && never(TwoPlayer) && Difficulty >= Normal && MatchRound >= BestOf3 &&
+                trigger= InGame && ArcadeMode && EXArcade && never(TwoPlayer) && Difficulty >= Normal && DefaultSettings() &&
                         ((once(LeftPlayer && Character1P == character && StageWins1P == 0 && 
                         never(prev(Character1P) != Character1P)) && ArcadeClear1P()) ||
                         (once(RightPlayer && Character2P == character && StageWins2P == 0 && 
@@ -2674,7 +2676,7 @@ achievement(
 achievement(
                 title="EX arcade maniac title", points=10,
                 description= "Complete EX Arcade mode. [Maniac | Default Settings | No Gold/Darkside/GG]",
-                trigger= InGame && ArcadeMode && EXArcade && never(TwoPlayer) && Difficulty == Maniac && MatchRound >= BestOf3 &&
+                trigger= InGame && ArcadeMode && EXArcade && never(TwoPlayer) && Difficulty == Maniac && DefaultSettings() &&
                         ((once(LeftPlayer && Character1P == character && StageWins1P == 0 && 
                         never(prev(Character1P) != Character1P)) && ArcadeClear1P()) ||
                         (once(RightPlayer && Character2P == character && StageWins2P == 0 && 
@@ -2688,7 +2690,7 @@ achievement(
 achievement(
                 title="gold arcade title", points=5,
                 description= "Complete Gold Arcade mode. [Normal+ | Default Settings | No Gold/Darkside/GG]",
-                trigger= InGame && ArcadeMode && GoldArcade && never(TwoPlayer) && Difficulty >= Normal && MatchRound >= BestOf3 &&
+                trigger= InGame && ArcadeMode && GoldArcade && never(TwoPlayer) && Difficulty >= Normal && DefaultSettings() &&
                         ((once(LeftPlayer && Character1P == character && StageWins1P == 0 && 
                         never(prev(Character1P) != Character1P)) && ArcadeClear1P()) ||
                         (once(RightPlayer && Character2P == character && StageWins2P == 0 && 
@@ -2698,7 +2700,7 @@ achievement(
 achievement(
                 title="gold arcade maniac title", points=10,
                 description= "Complete Gold Arcade mode. [Maniac | Default Settings | No Gold/Darkside/GG]",
-                trigger= InGame && ArcadeMode && GoldArcade && never(TwoPlayer) && Difficulty == Maniac && MatchRound >= BestOf3 &&
+                trigger= InGame && ArcadeMode && GoldArcade && never(TwoPlayer) && Difficulty == Maniac && DefaultSettings() &&
                         ((once(LeftPlayer && Character1P == character && StageWins1P == 0 && 
                         never(prev(Character1P) != Character1P)) && ArcadeClear1P()) ||
                         (once(RightPlayer && Character2P == character && StageWins2P == 0 && 
