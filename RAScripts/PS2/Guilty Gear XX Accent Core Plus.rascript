@@ -129,7 +129,7 @@ SurvivalAbility3 = dword(0x302BCC)
 //          0x02 - 99 seconds (Default)
 //          0x03 - Infinite
 
-RoundTimer = byte(0x34E8C0)
+RoundTimerSetting = byte(0x34E8C0)
   Sec30 = 0
   Sec60 = 1
   Sec99 = 2
@@ -2387,6 +2387,9 @@ CurrentCombo = byte(0x3C6E56)
 // $3D4A6C: color set p2
 // $3E99B8: [32-bit] Round Timer (Frames); counts down every frame and converts to decimal for display as an integer on the clock
 //          --- 0xffffffc4 - Infinite timer; does not count down
+
+RoundTimer = dword(0x3E99B8)
+
 // $3E99CC: [8-bit] Painting shown in London stage
 //          0x00 - Bridge
 //          0x01 - Alien
@@ -2586,6 +2589,8 @@ AllCharacters = range(1,0x19)
 function FullGallery() => GallerySpecial() + GallerySecret() + GalleryArcade() + GalleryStory()
 function ArcadeClear1P() =>
 function ArcadeClear2P() =>
+
+//define Stage, RoundStart
 
 
 //Achievements
@@ -2852,8 +2857,20 @@ achievement(
 //Easter Eggs and misc
 //holy order sol manual instant kill
 //alien picture in London
+achievement(
+        title="Close Encounters",points=1,
+        description="Encounter an alien when playing on the London stage.",
+        trigger= InGame && Stage == London && LondonPainting == Alien && RoundStart
+)
 //load a reload version of a stage
 //taunt after round ends to do a rakusyo
+achievement(
+        title="Bad Sportsmanship",points=1,
+        description="Disrepect your opponent after a round in Arcade or VS to give them an edge in the next.",
+        trigger=InGame && __ornext((ArcadeMode) || (VSCPU) || (VSCPUTeam)) &&
+                (LeftPlayer && P2Tension == Rakusyo && RoundStart) ||
+                (RightPlayer && P1Tension == Rakusyo && RoundStart)
+)
 
 
 //Leaderboards
