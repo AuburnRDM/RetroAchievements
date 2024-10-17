@@ -2318,6 +2318,7 @@ SpecialRP = {
 //          0x02 - Darkside
 
 Special2P = byte(0x3C6B7C)
+
 // $3C6B80: [8-bit] Player 1 movelist
 //          0x00 - Normal
 //          0x01 - EX
@@ -2630,9 +2631,11 @@ function NormalArcade(character) {
                 description= "Complete Arcade mode using only " + CharData[character]["Name] +". [Normal+ | Default Settings | No Gold/Darkside/GG]",
                 trigger= InGame && ArcadeMode && never(TwoPlayer) && Difficulty >= Normal && DefaultSettings() && 
                         ((once(LeftPlayer && Character1P == character && !EXMoves1P && StageWins1P == 0 &&
-                        never(prev(Character1P) != Character1P) && never(EXMoves1P)) && ArcadeClear1P()) ||
+                        never(prev(Character1P) != Character1P) && never(EXMoves1P)) && never(Special1P > 0) && never(Rules1P == GG) && 
+                        ArcadeClear1P()) ||
                         (once(RightPlayer && Character2P == character && !EXMoves2P && StageWins2P == 0 &&
-                        never(prev(Character2P) != Character1P) && never(EXMoves2P)) && ArcadeClear2P()))
+                        never(prev(Character2P) != Character1P) && never(EXMoves2P)) && never(Special2P > 0) && never(Rules2P == GG) && 
+                        ArcadeClear2P()))
         )
 }
 
@@ -2642,9 +2645,11 @@ function EXArcade(character) {
                 description= "Complete Arcade mode using only EX " + CharData[character]["Name] +". [Normal+ | Default Settings | No Gold/Darkside/GG]",
                 trigger= InGame && ArcadeMode && never(TwoPlayer) && Difficulty >= Normal && DefaultSettings() && 
                         ((once(LeftPlayer && Character1P == character && EXMoves1P && StageWins1P == 0 && 
-                        never(prev(Character1P) != Character1P) && never(!EXMoves1P)) && ArcadeClear1P()) ||
+                        never(prev(Character1P) != Character1P) && never(!EXMoves1P)) && never(Special1P > 0) && never(Rules1P == GG) && 
+                        ArcadeClear1P()) ||
                         (once(RightPlayer && Character2P == character && EXMoves2P && StageWins2P == 0 && 
-                        never(prev(Character2P) != Character1P) && never(!EXMoves2P)) && ArcadeClear2P()))
+                        never(prev(Character2P) != Character1P) && never(!EXMoves2P)) && never(Special2P > 0) && never(Rules2P == GG) && 
+                        ArcadeClear2P()))
         )
 }
 
@@ -2654,9 +2659,11 @@ function ManiacArcade(character) {
                 description= "Complete Arcade mode using only " + CharData[character]["Name] +". [Maniac | Default Settings | No Gold/Darkside/GG]",
                 trigger= InGame && ArcadeMode && never(TwoPlayer) && Difficulty == Maniac && DefaultSettings() &&
                         ((once(LeftPlayer && Character1P == character && StageWins1P == 0 && 
-                        never(prev(Character1P) != Character1P)) && ArcadeClear1P()) ||
+                        never(prev(Character1P) != Character1P)) && never(Special1P > 0) && never(Rules1P == GG) && 
+                        ArcadeClear1P()) ||
                         (once(RightPlayer && Character2P == character && StageWins2P == 0 && 
-                        never(prev(Character2P) != Character1P)) && ArcadeClear2P()))
+                        never(prev(Character2P) != Character1P)) && never(Special2P > 0) && never(Rules2P == GG) && 
+                        ArcadeClear2P()))
         )
 }
 
@@ -2668,9 +2675,11 @@ achievement(
                 description= "Complete EX Arcade mode. [Normal+ | Default Settings | No Gold/Darkside/GG]",
                 trigger= InGame && ArcadeMode && EXArcade && never(TwoPlayer) && Difficulty >= Normal && DefaultSettings() &&
                         ((once(LeftPlayer && Character1P == character && StageWins1P == 0 && 
-                        never(prev(Character1P) != Character1P)) && ArcadeClear1P()) ||
+                        never(prev(Character1P) != Character1P)) && never(Special1P > 0) && never(Rules1P == GG) && 
+                        ArcadeClear1P()) ||
                         (once(RightPlayer && Character2P == character && StageWins2P == 0 && 
-                        never(prev(Character2P) != Character1P)) && ArcadeClear2P()))
+                        never(prev(Character2P) != Character1P)) && never(Special2P > 0) && never(Rules2P == GG) && 
+                        ArcadeClear2P()))
 )
 //EX arcademode maniac
 achievement(
@@ -2678,9 +2687,11 @@ achievement(
                 description= "Complete EX Arcade mode. [Maniac | Default Settings | No Gold/Darkside/GG]",
                 trigger= InGame && ArcadeMode && EXArcade && never(TwoPlayer) && Difficulty == Maniac && DefaultSettings() &&
                         ((once(LeftPlayer && Character1P == character && StageWins1P == 0 && 
-                        never(prev(Character1P) != Character1P)) && ArcadeClear1P()) ||
+                        never(prev(Character1P) != Character1P)) && never(Special1P > 0) && never(Rules1P == GG) && 
+                        ArcadeClear1P()) ||
                         (once(RightPlayer && Character2P == character && StageWins2P == 0 && 
-                        never(prev(Character2P) != Character1P)) && ArcadeClear2P()))
+                        never(prev(Character2P) != Character1P)) && never(Special2P > 0) && never(Rules2P == GG) && 
+                        ArcadeClear2P()))
 )
 
 
@@ -2692,9 +2703,11 @@ achievement(
                 description= "Complete Gold Arcade mode. [Normal+ | Default Settings | No Gold/Darkside/GG]",
                 trigger= InGame && ArcadeMode && GoldArcade && never(TwoPlayer) && Difficulty >= Normal && DefaultSettings() &&
                         ((once(LeftPlayer && Character1P == character && StageWins1P == 0 && 
-                        never(prev(Character1P) != Character1P)) && ArcadeClear1P()) ||
+                        never(prev(Character1P) != Character1P)) && never(Special1P > 0) && never(Rules1P == GG) && 
+                        ArcadeClear1P()) ||
                         (once(RightPlayer && Character2P == character && StageWins2P == 0 && 
-                        never(prev(Character2P) != Character1P)) && ArcadeClear2P()))
+                        never(prev(Character2P) != Character1P)) && never(Special2P > 0) && never(Rules2P == GG) && 
+                        ArcadeClear2P()))
 )
 //gold arcade mode maniac
 achievement(
@@ -2702,9 +2715,11 @@ achievement(
                 description= "Complete Gold Arcade mode. [Maniac | Default Settings | No Gold/Darkside/GG]",
                 trigger= InGame && ArcadeMode && GoldArcade && never(TwoPlayer) && Difficulty == Maniac && DefaultSettings() &&
                         ((once(LeftPlayer && Character1P == character && StageWins1P == 0 && 
-                        never(prev(Character1P) != Character1P)) && ArcadeClear1P()) ||
+                        never(prev(Character1P) != Character1P)) && never(Special1P > 0) && never(Rules1P == GG) && 
+                        ArcadeClear1P()) ||
                         (once(RightPlayer && Character2P == character && StageWins2P == 0 && 
-                        never(prev(Character2P) != Character1P)) && ArcadeClear2P()))
+                        never(prev(Character2P) != Character1P)) && never(Special2P > 0) && never(Rules2P == GG) && 
+                        ArcadeClear2P()))
 )
 //gold arcade defeat holy order sol any? normal+?
 
