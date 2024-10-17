@@ -2639,6 +2639,9 @@ function NormalArcade(character) {
         )
 }
 
+for i in AllCharacters
+        NormalArcade(i)
+
 function EXArcade(character) {
         achievement(
                 title=CharData[character]["arcadeT"], points=CharData[character]["arcadeP],
@@ -2652,6 +2655,9 @@ function EXArcade(character) {
                         ArcadeClear2P()))
         )
 }
+
+for i in AllCharacters
+        EXArcade(i)
 
 function ManiacArcade(character) {
         achievement(
@@ -2667,6 +2673,8 @@ function ManiacArcade(character) {
         )
 }
 
+for i in AllCharacters
+        ManiacArcade(i)
 //standard arcade defeat holy order sol on normal and maniac
 
 //EX arcademode normal
@@ -2865,6 +2873,19 @@ achievement(
 //VS Challenges
 //3v3 team stuff
 //gold maniac mirror matches
+function ManiacMirrorAch(character) =>
+        achievement(
+                title=CharData2[character]["mirrorT"],points=CharData2[character]["mirrorP"],
+                description="Defeat a gold " + CharData[character]["Name"] + " as a normal " + CharData[character]["Name"] + " in VS. CPU mode. [Maniac | Default Settings | No Gold/Darkside/GG]",
+                trigger= InGame && VSCPU && Difficulty == Maniac && DefaultSettings() && 
+                        Character1P == character && Character2P == character &&
+                                ((LeftPlayer && Special1P == 0 && Special2P == Gold) ||
+                                (RightPlayer && Special1P == Gold && Special2P == 0))
+)
+
+//Mirror matches
+for i in AllCharacters
+        ManiacMirrorAch(i)
 
 //Training mode and moveset challenge
 //3 combos for each character
