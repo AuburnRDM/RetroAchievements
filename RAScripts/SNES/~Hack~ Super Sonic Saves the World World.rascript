@@ -1037,22 +1037,32 @@ leaderboard(
         value= Dead, format="VALUE",lower_is_better=true
 )
 //RP
-rich_presence_conditional_display(GameState > 9 && GameState < 15, "Sonic is selecting their fate • 💀[{0}] • ⏱️[{1}] • 🚩️[{2}]",
+rich_presence_conditional_display(once(NormalMoon(22) && prev(DaddyMoon) == 0 && DaddyMoon == 1 && !BackDoorMoonProtection()),
+  "Someone was a naughty little hedgehog • 💀[{0}] • ⏱️[{1}] • 🚩️[{2}]/27 • 🌙[{4}]/11",
       rich_presence_value("Digit",TotalDeaths,format="VALUE"),
       rich_presence_value("Minutes",TotalTimeMinutes,format="MINUTES"),
-      rich_presence_value("Digit",Exits,format="VALUE")
+      rich_presence_value("Digit",Exits,format="VALUE"),
+      rich_presence_value("Digit",AllMoons(),format="VALUE")
 )
-rich_presence_conditional_display(InLevel() && __ornext(MessageBox == 1 || MessageBox == 2), "Sonic is reading an important message • 💀[{1}] • ⏱️[{2}] • 🚩️[{3}]",
+rich_presence_conditional_display(GameState > 9 && GameState < 15, "Sonic is selecting their fate • 💀[{0}] • ⏱️[{1}] • 🚩️[{2}]/27 • 🌙[{4}]/11",
+      rich_presence_value("Digit",TotalDeaths,format="VALUE"),
+      rich_presence_value("Minutes",TotalTimeMinutes,format="MINUTES"),
+      rich_presence_value("Digit",Exits,format="VALUE"),
+      rich_presence_value("Digit",AllMoons(),format="VALUE")
+)
+rich_presence_conditional_display(InLevel() && __ornext(MessageBox == 1 || MessageBox == 2), "Sonic is reading an important message • 💀[{1}] • ⏱️[{2}] • 🚩️[{3}]/27 • 🌙[{4}]/11",
       rich_presence_lookup("Stage",prior(StageID),StageRP),
       rich_presence_value("Digit",TotalDeaths,format="VALUE"),
       rich_presence_value("Minutes",TotalTimeMinutes,format="MINUTES"),
-      rich_presence_value("Digit",Exits,format="VALUE")
+      rich_presence_value("Digit",Exits,format="VALUE"),
+      rich_presence_value("Digit",AllMoons(),format="VALUE")
 )
-rich_presence_conditional_display(once(GameState == Active && never(Overworld())),"Sonic is {0} • 💀[{1}] • ⏱️[{2}] • 🚩️[{3}]",
+rich_presence_conditional_display(once(GameState == Active && never(Overworld())),"Sonic is {0} • 💀[{1}] • ⏱️[{2}] • 🚩️[{3}]/27 • 🌙[{4}]/11",
       rich_presence_lookup("Stage",StageID,StageRP),
       rich_presence_value("Digit",TotalDeaths,format="VALUE"),
       rich_presence_value("Minutes",TotalTimeMinutes,format="MINUTES"),
-      rich_presence_value("Digit",Exits,format="VALUE")
+      rich_presence_value("Digit",Exits,format="VALUE"),
+      rich_presence_value("Digit",AllMoons(),format="VALUE")
 )
 rich_presence_display("Sonic is getting ready to work through some things")
 
