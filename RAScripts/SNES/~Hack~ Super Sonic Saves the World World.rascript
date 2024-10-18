@@ -443,7 +443,15 @@ StageRP = {
     0x51:"Float Like a Princess",
     0x9:"Float Like a Princess",
     0x4c:"Dream Within a Dream",
-    0x4d:"Daddy's Castle"
+    0x4d:"Daddy's Castle",
+    0x28:"Information Kiosk",
+    0x0a:"I. Only Yesterday",
+    0x0b:"II. The Cost of Living",
+    0x0c:"III. Life on Earth",
+    0x0d:"IV. The End is Near",
+    0x0e:"V. The End",
+    0x0f:"VI. Oblivion",
+    0x1f:"Disinformation Kiosk"
 }
 
 //Data
@@ -513,7 +521,7 @@ function NormalClear(stage) {
         trigger=__ornext(StageID == StageData[stage]["ID"] || StageID== StageData[stage]["endID"]) && NormalExit()
     )
 }
-function ProtectedClear(stage) { //5,8,12,13,14,19
+function ProtectedClear(stage) { //5,8,12,13,14,19 -- removed these for now since cheaterboards exist
     achievement(
         title=AchData[stage]["clearT"],points=AchData[stage]["clearP"],
         description="Complete " + StageData[stage]["Name"] + ". " + AchData[stage]["clearFlav"],
@@ -532,12 +540,12 @@ function Speedrun(stage,time) =>
 
 //Intro
 achievement(
-    title="Rebellious",points=1,
+    title="Rebellious",points=1,type="missable",
     description="Defy platformer standards on the initial screen for a special message.",
-    trigger= ScreenID == Bridge && InLevel() && IntroXCheck
+    trigger= ScreenID == Bridge && GameState == Active && IntroXCheck
 )
 achievement(
-    title="Where Is This Thing Taking Me!?",points=1,
+    title="Where Is This Thing Taking Me!?",points=1,type="missable",
     description="Complete floor 14 on the elevator ride. Is this thing ever going to stop?",
     trigger= prev(ScreenID) == 0xc3 && ScreenID == 0xc2 && InLevel()
 )
@@ -571,7 +579,7 @@ achievement(
 achievement(
     title="Unbearably Quick",points=10,
     description="Rush through The Unbearable Quickness of Hedgehog within 2 minutes.",
-    trigger= Speedrun(1,7201) && trigger_when(ScreenID == StageData[1]["finalS"] && LevelComplete)
+    trigger= Speedrun(1,7201) && ScreenID != Warning && trigger_when(ScreenID == StageData[1]["finalS"] && LevelComplete)
 )
 
 //Fossil Fueled
@@ -606,7 +614,7 @@ achievement(
     description="Clear all of the purple rooms in The Letter ''P''.",
     trigger= StageID == StageData[5]["ID"] && InLevel() && prev(ScreenID) == PPurpleEnd && ScreenID == PBlueStart
 )
-ProtectedClear(5)
+NormalClear(5)
 achievement(
     title="Writing on the Wall",points=3,
     description="Collect the moon in The Letter ''P''.",
@@ -625,7 +633,7 @@ achievement(
 )
 
 //For Whomst the Charles Charges
-ProtectedClear(8)
+NormalClear(8)
 achievement(
     title="Art Connoisseur",points=2,
     description="Collect the moon in For Whomst the Charles Charges.",
@@ -684,7 +692,7 @@ achievement(
 NormalClear(11)
 
 //Late Night Terror Club
-ProtectedClear(12)
+NormalClear(12)
 //find the hidden info box todo
 achievement(
     title="The Distance",points=3,
@@ -700,7 +708,7 @@ achievement(
 )
 
 //In This House,
-ProtectedClear(13)
+NormalClear(13)
 achievement(
     title="This is a Safe Space",points=2,
     description="Collect the moon in In This House,.",
@@ -762,16 +770,16 @@ achievement(
     description="Find yourself at a carnival in Float Like a Princess.",
     trigger= StageID == StageData[19]["ID"] && InLevel() && prev(ScreenID) == prevPrincessCarnival && ScreenID == PrincessCarnival
 )
-//ProtectedClear(19)
-achievement(
-        title=AchData[19]["clearT"],points=AchData[19]["clearP"],
-        description="Defeat Birdo and complete Float Like a Princess",
-        trigger=__ornext(StageID == StageData[19]["ID"] || StageID== StageData[19]["endID"]) && NormalExit() &&
-        once(InLevel() && prev(ScreenID) == StageData[19]["priorS"] && ScreenID == StageData[19]["finalS"])
-)
+NormalClear(19)
+//achievement( -- this is if we want a protected clear.
+//        title=AchData[19]["clearT"],points=AchData[19]["clearP"],
+//        description="Defeat Birdo and complete Float Like a Princess",
+//        trigger=__ornext(StageID == StageData[19]["ID"] || StageID== StageData[19]["endID"]) && NormalExit() &&
+//        once(InLevel() && prev(ScreenID) == StageData[19]["priorS"] && ScreenID == StageData[19]["finalS"])
+//)
 achievement(
     title="princess moon",points=5,
-    description="Collect the moon in Terminal Ferocity.",
+    description="Collect the moon in Float Like a Princess.",
     trigger= NormalMoon(19) && prev(PrincessMoon) == 0 && PrincessMoon == 1 && prior(ScreenID) == StageData[19]["priorMoon"]
 )
 
@@ -937,7 +945,15 @@ function Leaderboard(stage) {
 }
 //Broken up simply to keep things in order as 2,12,14,18 need custom checks
 //The Unbearable Quickness of Hedgehog
-Leaderboard(1)
+leaderboard(
+        title=StageData[1]["Name"],
+        description="Complete " + StageData[1]["Name"] + " as fast as you can.",
+        start= StageID == StageData[1]["ID"] && GameState == Active && Checkpoint == StageData[1]["firstC"],
+        cancel= __ornext(Overworld() || ScreenID == Warning),
+        submit= __ornext(StageID == StageData[1]["ID"] || StageID== StageData[1]["endID"]) && ScreenID == StageData[1]["finalS"] && LevelComplete,
+        value= measured(always_true()), format="FRAMES",lower_is_better=true
+)
+
 //Fossil Fueled
 leaderboard(
         title=StageData[2]["Name"],
@@ -1021,24 +1037,24 @@ leaderboard(
         value= Dead, format="VALUE",lower_is_better=true
 )
 //RP
-rich_presence_conditional_display(MainMenu(),"Sonic is getting ready to work through some things.")
 rich_presence_conditional_display(GameState > 9 && GameState < 15, "Sonic is selecting their fate • 💀[{0}] • ⏱️[{1}] • 🚩️[{2}]",
       rich_presence_value("Digit",TotalDeaths,format="VALUE"),
       rich_presence_value("Minutes",TotalTimeMinutes,format="MINUTES"),
       rich_presence_value("Digit",Exits,format="VALUE")
 )
-rich_presence_conditional_display(InLevel() && __ornext(MessageBox == 1 || MessageBox == 2), "Sonic is {0} • 💀[{1}] • ⏱️[{2}] • 🚩️[{3}]",
+rich_presence_conditional_display(InLevel() && __ornext(MessageBox == 1 || MessageBox == 2), "Sonic is reading an important message • 💀[{1}] • ⏱️[{2}] • 🚩️[{3}]",
       rich_presence_lookup("Stage",prior(StageID),StageRP),
       rich_presence_value("Digit",TotalDeaths,format="VALUE"),
       rich_presence_value("Minutes",TotalTimeMinutes,format="MINUTES"),
       rich_presence_value("Digit",Exits,format="VALUE")
 )
-rich_presence_display("Sonic is {0} • 💀[{1}] • ⏱️[{2}] • 🚩️[{3}]",
+rich_presence_conditional_display(once(GameState == Active && never(Overworld())),"Sonic is {0} • 💀[{1}] • ⏱️[{2}] • 🚩️[{3}]",
       rich_presence_lookup("Stage",StageID,StageRP),
       rich_presence_value("Digit",TotalDeaths,format="VALUE"),
       rich_presence_value("Minutes",TotalTimeMinutes,format="MINUTES"),
       rich_presence_value("Digit",Exits,format="VALUE")
 )
+rich_presence_display("Sonic is getting ready to work through some things")
 
 //Cheaterboards -- These will submit if the player reloads a save or leaves the stage on an exit screen (nothing but hit the exit)
 function Cheaterboard(stage) {
@@ -1055,7 +1071,7 @@ function Cheaterboard(stage) {
 leaderboard(
         title="''Back'' ''Door'' - Old",
         description="Earn as many points as you can in ''Back'' ''Door''.",
-        start=Stage == DaddysCastle && BackDoorExit() && BackDoorRooms < 8,
+        start=StageID == DaddysCastle && BackDoorExit() && BackDoorRooms < 8,
         cancel=always_false(),
         submit=always_true(),
         value=measured(Exits),format="VALUE"
@@ -1063,7 +1079,7 @@ leaderboard(
 leaderboard(
         title="Daddy's Castle Moon - Old",
         description="Collect the Daddy's Castle moon as fast as you can.",
-        start=NormalMoon(22) && prev(DaddyMoon) == 0 && DaddyMoon == 1 && !BackDoorMoonProtection()
+        start=NormalMoon(22) && prev(DaddyMoon) == 0 && DaddyMoon == 1 && !BackDoorMoonProtection(),
         cancel=always_false(),
         submit=always_true(),
         value=measured(Exits),format="VALUE"
