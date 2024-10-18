@@ -807,7 +807,7 @@ achievement(
 
 //Daddy's Castle
 achievement(
-    title="daddy's castle",points=10,type="progression",
+    title="Can You Feel It?",points=10,type="progression",
     description="Complete the first screen of Daddy's Castle and enter the ''Back'' ''Door''. I swear it's not what it sounds like.",
     trigger= StageID == DaddysCastle && InLevel() && prev(ScreenID) == DaddyStart && ScreenID == BackDoorStart
 )
@@ -840,7 +840,7 @@ achievement(
 //Full Moon Eclipse
 achievement(
     title="Saved the World?",points=10,type="win_condition",
-    description="Finish the game and save the world?",
+    description="Finish the game and save the world? What was it all for?",
     trigger= StageID == DaddysCastle && NormalExit()
 )
 achievement(
