@@ -132,6 +132,8 @@ ScreenID = word(0x10b)
   Bridge = 0xc5
   PPurpleEnd = 0x135
   PBlueStart = 0x136
+  MiddayStart = 0x01
+  MiddaySecond = 0x1d0
   prevElonTower = 0x124
   ElonTower = 0x125
   ElonBoss = 0x126
@@ -310,6 +312,8 @@ StageID = byte(0x13bf)
 MessageBox = byte(0x1426)
   Message1 = 1
   Message2 = 2
+// $00148f: [8-bit] Holding something (ex: a shell) / 0x00 - Nothing / 0x01 - Holding
+GrabItem = prev(byte(0x148f)) == 0 && byte(0x148f) == 1
 // $001493: [8-bit] End level timer
 //          Value is 0x00 until a goal is touched and the end level fanfare begins; value will tick down each frame until it reaches 0x01 and begin exiting the stage on the next frame
 
@@ -482,26 +486,26 @@ StageData = {
     23:{"Name":"Full Moon Eclipse","ID":0x4d,"endID":0x4d,"firstC":0x52f}
 }
 AchData = {
-    1:{"clearT":"RIP Sonic","clearP":10,"clearFlav":"a"},
-    2:{"clearT":"Wild Ride","clearP":10,"clearFlav":"b"},
-    3:{"clearT":"When Shells Are On a Bagel","clearP":10,"clearFlav":"c"},
-    4:{"clearT":"Our Little Sonic, All Grown Up","clearP":10,"clearFlav":"d"},
-    5:{"clearT":"Paid Programming","clearP":10,"clearFlav":"e"},
-    6:{"clearT":"ted title","clearP":10,"clearFlav":"f"},
-    7:{"clearT":"You Can Have Shells Any Time","clearP":10,"clearFlav":"g"},
-    8:{"clearT":"All Star","clearP":25,"clearFlav":"h"},
-    9:{"clearT":"Special Delivery","clearP":10,"clearFlav":"i"},
-    10:{"clearT":"We're Having Fun","clearP":25,"clearFlav":"j"},
-    11:{"clearT":"We Own These Streets","clearP":25,"clearFlav":"k"},
-    12:{"clearT":"terror title","clearP":10,"clearFlav":"l"},
-    13:{"clearT":"We Believe","clearP":10,"clearFlav":"m"},
-    14:{"clearT":"Celeste, A Performance","clearP":25,"clearFlav":"n"},
-    15:{"clearT":"terminal title","clearP":10,"clearFlav":"o"},
-    16:{"clearT":"mega mole title","clearP":25,"clearFlav":"p"},
-    17:{"clearT":"reaping title","clearP":25,"clearFlav":"q"},
-    18:{"clearT":"Complete!","clearP":10,"clearFlav":"r"},
-    19:{"clearT":"She Chose Violence","clearP":25,"clearFlav":"s"},
-    20:{"clearT":"dream title","clearP":25,"clearFlav":"t"}
+    1:{"clearT":"RIP Sonic","clearP":10,"clearFlav":"He died doing what he loved."},
+    2:{"clearT":"Wild Ride","clearP":10,"clearFlav":"How is this park still allowed to be open?"},
+    3:{"clearT":"Shells in the Morning","clearP":10,"clearFlav":"It's too early for this."},
+    4:{"clearT":"Our Little Sonic, All Grown Up","clearP":10,"clearFlav":"It's time to spread my cape and fly."},
+    5:{"clearT":"Paid Programming","clearP":10,"clearFlav":"Please protect me from this preposterous portion of P's."},
+    6:{"clearT":"Father of the Year","clearP":10,"clearFlav":"He was taken from us too soon."},
+    7:{"clearT":"Shells in the Evening","clearP":10,"clearFlav":"It's still too early for this."},
+    8:{"clearT":"All Star","clearP":25,"clearFlav":"Hey now, you're an all-star."},
+    9:{"clearT":"Special Delivery","clearP":10,"clearFlav":"The future isn't looking great, but at least that's one less billionaire to worry about."},
+    10:{"clearT":"We're Having Fun","clearP":25,"clearFlav":"That was fun, right? Let's do it again sometime."},
+    11:{"clearT":"Shells at Suppertime","clearP":25,"clearFlav":"We own these streets. Which streets? All of them."},
+    12:{"clearT":"Night Terrors","clearP":10,"clearFlav":"l"},
+    13:{"clearT":"We Believe","clearP":10,"clearFlav":"What awful things are behind that other door?"},
+    14:{"clearT":"Celeste, A Performance","clearP":25,"clearFlav":"Keep an eye out for Goomba's upcoming performance in the Undertale stage play."},
+    15:{"clearT":"Gotta Go Fast","clearP":10,"clearFlav":"The doctor called and said my speed is terminal."},
+    16:{"clearT":"Yes, He Does","clearP":25,"clearFlav":"Is it getting hot in here?"},
+    17:{"clearT":"Bloody Tears","clearP":25,"clearFlav":"How could it come to this?"},
+    18:{"clearT":"Complete!","clearP":10,"clearFlav":"What's next? Boarding platforms?"},
+    19:{"clearT":"A Journey of Self-Discovery","clearP":25,"clearFlav":"This was a very informative journey of self-discovery."},
+    20:{"clearT":"Such is Life","clearP":25,"clearFlav":"All that we see or seem is but a dream within a dream."}
 }
 //Functions and such
 
@@ -603,7 +607,7 @@ NormalClear(4)
 
 //Zone 2
 achievement(
-    title="Hello, Brain",points=5,type="progression",
+    title="Antagonistic Approach",points=5,type="progression",
     description="Unlock Zone 2: The City of Freaks.",
     trigger= StageID == Brain2 && NormalExit()
 )
@@ -627,6 +631,13 @@ NormalClear(6)
 //Shells at Midday
 NormalClear(7)
 achievement(
+    title="Let it Ride",points=2,
+    description="Make it through the first screen of Shells at Midday while only grabbing a shell once.",
+    trigger= StageID == StageData[7]["ID"] && InLevel() && prev(ScreenID) == MiddayStart && trigger_when(ScreenID == MiddaySecond) &&
+             once(StageID == StageData[7]["ID"] && ScreenID == MiddayStart && GameState == Active) &&
+             never(Overworld()) && disable_when(tally(2,GrabItem),until=Dead || Overworld()) && never(Dead)
+)
+achievement(
     title="Rush Hour",points=10,
     description="Rush through Shells at Midday within 7 minutes.",
     trigger= Speedrun(7,25201) && trigger_when(ScreenID == StageData[7]["finalS"] && LevelComplete)
@@ -642,7 +653,7 @@ achievement(
 
 //Chapter 3
 achievement(
-    title="Hello, Brain3",points=5,type="progression",
+    title="Finding Purpose",points=5,type="progression",
     description="Unlock Chapter 3: Wealth & Power.",
     trigger= StageID == Brain3 && NormalExit()
 )
@@ -673,7 +684,7 @@ achievement(
 //Good Vibes Only
 NormalClear(10)
 achievement(
-    title="good vibes moon",points=5,
+    title="This Moon is DOOMed",points=5,
     description="Collect the moon in Good Vibes Only.",
     trigger= NormalMoon(10) && prev(VibesMoon) == 0 && VibesMoon == 1
 )
@@ -702,7 +713,7 @@ achievement(
 
 //Act IV
 achievement(
-    title="Hello, Brain4",points=5,type="progression",
+    title="My Brian Hurts",points=5,type="progression",
     description="Unlock Act IV: Kaizo Mario World.",
     trigger= StageID == Brain4 && NormalExit()
 )
@@ -717,7 +728,7 @@ achievement(
 
 //Celeste (2018)
 achievement( // double check that this is actually the best part to do this. perhaps should change over when ch 5  is beaten
-    title="reach badeline",points=10,
+    title="Enter Goomba, Stage Left",points=10,
     description="Complete Chapter 5 in Celeste (2018).",
     trigger= StageID == StageData[14]["ID"] && InLevel() && prev(ScreenID) == CelesteBrinstar && ScreenID == CelesteChapter6
 )
@@ -743,7 +754,7 @@ NormalClear(16)
 
 //Book 5
 achievement(
-    title="Hello, Brain5",points=5,type="progression",
+    title="Just Another Hedgehog in the Machine",points=5,type="progression",
     description="Unlock Book 5: Comeuppance.",
     trigger= StageID == Brain5 && NormalExit()
 )
@@ -751,7 +762,7 @@ achievement(
 //Me, Reaping
 NormalClear(17)
 achievement(
-    title="reaping moon",points=10,
+    title="Blink and You'll Miss It",points=10,
     description="Collect the moon in Terminal Ferocity.",
     trigger= NormalMoon(17) && prev(ReapingMoon) == 0 && ReapingMoon == 1
 )
@@ -766,7 +777,7 @@ achievement(
 
 //Float Like a Princess -- adding an extra bit of flavor. maybe a trigger?
 achievement(
-    title="carnival",points=10,
+    title="Girls Just Want to Have Fun",points=10,
     description="Find yourself at a carnival in Float Like a Princess.",
     trigger= StageID == StageData[19]["ID"] && InLevel() && prev(ScreenID) == prevPrincessCarnival && ScreenID == PrincessCarnival
 )
@@ -778,7 +789,7 @@ NormalClear(19)
 //        once(InLevel() && prev(ScreenID) == StageData[19]["priorS"] && ScreenID == StageData[19]["finalS"])
 //)
 achievement(
-    title="princess moon",points=5,
+    title="Top Prize",points=5,
     description="Collect the moon in Float Like a Princess.",
     trigger= NormalMoon(19) && prev(PrincessMoon) == 0 && PrincessMoon == 1 && prior(ScreenID) == StageData[19]["priorMoon"]
 )
@@ -796,7 +807,7 @@ achievement(
 //Disinformation Kiosk
 //all boxes todo
 achievement(
-    title="info",points=1,
+    title="What Have We Learned?",points=1,
     description="Read all of the message boxes in Disinformation Kiosk.",
     trigger= ScreenID == DisinformationKiosk && measured(tally(7,
             once(MessageBox == 1 && StageID == 0x4d), once(MessageBox == 2 && StageID == 0x49),
@@ -1038,26 +1049,26 @@ leaderboard(
 )
 //RP
 rich_presence_conditional_display(once(NormalMoon(22) && prev(DaddyMoon) == 0 && DaddyMoon == 1 && !BackDoorMoonProtection()),
-  "Someone was a naughty little hedgehog • 💀[{0}] • ⏱️[{1}] • 🚩️[{2}]/27 • 🌙[{4}]/11",
+  "Someone was a naughty little hedgehog • 💀{0} • ⏱️{1} • 🚩️{2}/27 • 🌙{3}/11",
       rich_presence_value("Digit",TotalDeaths,format="VALUE"),
       rich_presence_value("Minutes",TotalTimeMinutes,format="MINUTES"),
       rich_presence_value("Digit",Exits,format="VALUE"),
       rich_presence_value("Digit",AllMoons(),format="VALUE")
 )
-rich_presence_conditional_display(GameState > 9 && GameState < 15, "Sonic is selecting their fate • 💀[{0}] • ⏱️[{1}] • 🚩️[{2}]/27 • 🌙[{4}]/11",
+rich_presence_conditional_display(GameState > 9 && GameState < 15, "Sonic is selecting their fate • 💀{0} • ⏱️{1} • 🚩️{2}/27 • 🌙{3}/11",
       rich_presence_value("Digit",TotalDeaths,format="VALUE"),
       rich_presence_value("Minutes",TotalTimeMinutes,format="MINUTES"),
       rich_presence_value("Digit",Exits,format="VALUE"),
       rich_presence_value("Digit",AllMoons(),format="VALUE")
 )
-rich_presence_conditional_display(InLevel() && __ornext(MessageBox == 1 || MessageBox == 2), "Sonic is reading an important message • 💀[{1}] • ⏱️[{2}] • 🚩️[{3}]/27 • 🌙[{4}]/11",
+rich_presence_conditional_display(InLevel() && __ornext(MessageBox == 1 || MessageBox == 2), "Sonic is reading an important message • 💀{1} • ⏱️{2} • 🚩️{3}/27 • 🌙{4}/11",
       rich_presence_lookup("Stage",prior(StageID),StageRP),
       rich_presence_value("Digit",TotalDeaths,format="VALUE"),
       rich_presence_value("Minutes",TotalTimeMinutes,format="MINUTES"),
       rich_presence_value("Digit",Exits,format="VALUE"),
       rich_presence_value("Digit",AllMoons(),format="VALUE")
 )
-rich_presence_conditional_display(once(GameState == Active && never(Overworld())),"Sonic is {0} • 💀[{1}] • ⏱️[{2}] • 🚩️[{3}]/27 • 🌙[{4}]/11",
+rich_presence_conditional_display(once(GameState == Active && never(Overworld())),"Sonic is {0} • 💀{1} • ⏱️{2} • 🚩️{3}/27 • 🌙{4}/11",
       rich_presence_lookup("Stage",StageID,StageRP),
       rich_presence_value("Digit",TotalDeaths,format="VALUE"),
       rich_presence_value("Minutes",TotalTimeMinutes,format="MINUTES"),
@@ -1097,3 +1108,4 @@ leaderboard(
 //Run Cheaterboards
 for i in [5,8,10,12,13,18]
     Cheaterboard(i)
+
