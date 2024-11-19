@@ -46,7 +46,7 @@ function SpecialExit() => prev(Exit) == 0 && Exit == 2
 Overworld = 0x80
 
 ScreenID = word(0x10b)
-
+StageID = byte(0x13bf)
 Music = byte(0x1dfb)
 
 ClockSec = byte(0xf62)
@@ -64,10 +64,15 @@ Retry = bit0(0x1b405)
 Death = byte(0x1b424)
 Rings = byte(0xdbf)
 
-GameStatus = byte(0x100)
-function Overworld() => __ornext(GameStatus <= 0x0e || (Character == Tails && Retry > prev(Retry)))
-Start = 0x14
-Exits = byte(0x1f2e)
+GameState = byte(0x100)
+    MainMenu = 0x0a
+    Overworld = 0x0e
+    Active = 0x14
+
+function MainMenu() => GameState <= 0x0a
+function Overworld() => GameState <= 0x0e 
+function InLevel() => GameState >= 0x0f
+function LevelStart() => prev(GameState) <= 0x0e && GameState >= 0x0f
 
 Pause = bit0(0x13d4)
 Slowdown = byte(0x140b) // anything other than 0 slows down the game
@@ -82,16 +87,34 @@ Any1 = bit7(0x1ecb) Any2 = bit7(0x1ecc) Any3 = bit7(0x1ecd) Any4 = bit7(0x1ed2) 
 
 function Orb() => byte(0x1493) > 0
 function Key() => byte(0x1434) > 0
-function LevelStart(level) => once(GameStatus == Start && level == Level)
-function LBStart(level,checkpoint) => GameStatus == Start && Level == level && Checkpoint == checkpoint
 function LBExitKey(level) => Level == level && Key()
 function LBExitOrb(level) => Level == level && Orb()
-function SpeedKey(level,checkpoint,time) => Level == level && trigger_when(Key()) && once(GameStatus == Start && Checkpoint == checkpoint) &&
-            unless(repeated(time, once(GameStatus == Start) && once(Checkpoint == checkpoint) && always_true())) && (always_false() || never(Overworld()))
-function SpeedOrb(level,checkpoint,time) => Level == level && trigger_when(Orb()) && once(GameStatus == Start && Checkpoint == checkpoint) &&
-            unless(repeated(time, once(GameStatus == Start) && once(Checkpoint == checkpoint) && always_true())) && (always_false() || never(Overworld()))
-function SpeedMidway(time) => Level == BigMidway && trigger_when(prev(Music) == 0x3a && Music == 0x80) && once(GameStatus == Start && Checkpoint == CBigMidway) &&
-            unless(repeated(time, once(GameStatus == Start) && once(Checkpoint == CBigMidway) && always_true())) && (always_false() || never(Overworld()))
-function Any() => (Any1 + Any2 + Any3 + Any4 + Any5 + Any6 + Any7 + Any8)
+
+either figure out how to reset only if the level hasn't been competed, or
+
+function MiniStageComplete(stage) =>
+        once(StageID == StageData[stage]["ID"] && Checkpoint == StageData[stage]["Checkpoint"] && LevelStart() &&
+            never(Overworld()) && never(RidingYoshi)
+            ) && 
+            
+            never(RidingYoshi)
+
+achievement(
+        title="Mini Mario vs. Yoshi's Island",points=5,
+        description=Clear each of the 5 stages in Yoshi's Island as small Mario without using power-ups, checkpoints, or riding Yoshi.",
+        trigger=never(MainMenu()) && 
+            measured(tally(5,
+                once(MiniStageComplete(Yoshi1)),
+                once(MiniStageComplete(Yoshi2)),
+                once(MiniStageComplete(Yoshi3)),
+                once(MiniStageComplete(Yoshi4)),
+                once(MiniStageComplete(IggyCastle))
+                ))
+)
+
+                    
+
+
+
 
 
