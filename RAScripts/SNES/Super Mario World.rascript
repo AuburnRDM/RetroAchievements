@@ -7,11 +7,14 @@
 //          0x03 - Fire
 
 PowerUp = byte(0x19)
-
+  None = 0
 // $000078: [8-bit] Player sprite status
 //          0x7f - Hidden; used when riding the bone cars in Fossil Fueled
 
 InCar = byte(0x78) == 0x7f
+
+RidingYoshi = byte(0x187a) > 0
+StarPower = byte(0x1490) > 0
 
 // $000094: [16-bit] Player's X-position (Left of map is 0x0000)
 //          0x0030 - Start of Daddy's Castle
@@ -40,9 +43,9 @@ GameState = byte(0x100)
 
 Moon = bit1(0x1ff2)
 
-Exit = byte(0xdd5)
-function NormalExit() => prev(Exit) == 0 && Exit == 1
-function SpecialExit() => prev(Exit) == 0 && Exit == 2
+StageExit = byte(0xdd5)
+function NormalExit() => prev(StageExit) == 0 && StageExit == 1
+function SpecialExit() => prev(StageExit) == 0 && StageExit == 2
 Overworld = 0x80
 
 ScreenID = word(0x10b)
@@ -73,6 +76,7 @@ function MainMenu() => GameState <= 0x0a
 function Overworld() => GameState <= 0x0e 
 function InLevel() => GameState >= 0x0f
 function LevelStart() => prev(GameState) <= 0x0e && GameState >= 0x0f
+function LevelComplete() => prev(StageExit) == 0 && __ornext(StageExit == 1 || StageExit == 2)
 
 Pause = bit0(0x13d4)
 Slowdown = byte(0x140b) // anything other than 0 slows down the game
@@ -87,21 +91,23 @@ Any1 = bit7(0x1ecb) Any2 = bit7(0x1ecc) Any3 = bit7(0x1ecd) Any4 = bit7(0x1ed2) 
 
 function Orb() => byte(0x1493) > 0
 function Key() => byte(0x1434) > 0
-function LBExitKey(level) => Level == level && Key()
-function LBExitOrb(level) => Level == level && Orb()
+function LBExitKey(stage) => StageID == StageData[stage]["ID"] && Key()
+function LBExitOrb(stage) => StageID == StageData[stage]["ID"] && Orb()
 
-either figure out how to reset only if the level hasn't been competed, or
+either figure out how to reset only if the level hasn't been completed, or
 
 function MiniStageComplete(stage) =>
         once(StageID == StageData[stage]["ID"] && Checkpoint == StageData[stage]["Checkpoint"] && LevelStart() &&
-            never(Overworld()) && never(RidingYoshi)
+            PowerUp == 0 && never(Overworld()) && !RidingYoshi
             ) && 
-            
-            never(RidingYoshi)
+            StageID == StageData[stage]["ID"] && LevelComplete &&
+            never(prev(PowerUp) == 0 && PowerUp > 0 && StageID == StageData[stage]["ID"]) &&
+            never(StarPower && StageID == Stagedata[stage]["ID"]) &&
+            never(RidingYoshi && StageID == StageData[stage]["ID"])
 
 achievement(
         title="Mini Mario vs. Yoshi's Island",points=5,
-        description=Clear each of the 5 stages in Yoshi's Island as small Mario without using power-ups, checkpoints, or riding Yoshi.",
+        description=Clear each of the 5 stages in Yoshi's Island as small Mario without using power-ups, checkpoints, or riding Yoshi in a single session.",
         trigger=never(MainMenu()) && 
             measured(tally(5,
                 once(MiniStageComplete(Yoshi1)),
