@@ -48,18 +48,9 @@ function NormalExit() => prev(StageExit) == 0 && StageExit == 1
 function SpecialExit() => prev(StageExit) == 0 && StageExit == 2
 Overworld = 0x80
 
-ScreenID = word(0x10b)
 StageID = byte(0x13bf)
+Midway = byte(0x13ce) == 1
 Music = byte(0x1dfb)
-
-ClockSec = byte(0xf62)
-ClockMSec = byte(0xf61)
-ClockSwitch = bit0(0xf60)
-ClockDisplay = bit0(0xf63)
-
-function Clock(target) => ClockSec == target && ClockMSec == 0 && ClockSwitch == 1 && prev(ClockDisplay) == 0 && ClockDisplay == 1
-function ClockEnd(target) => __ornext(ClockSec != target || ClockMSec != 0) && ClockSwitch == 1 && prev(ClockDisplay) == 0 && ClockDisplay == 1 || 
-         (ClockDisplay == 1 && prev(ClockSwitch) == 0 && ClockSwitch == 1)
 
 Save = byte(0x10a)
 Checkpoint = word(0x1b403)
@@ -79,7 +70,6 @@ function LevelStart() => prev(GameState) <= 0x0e && GameState >= 0x0f
 function LevelComplete() => prev(StageExit) == 0 && __ornext(StageExit == 1 || StageExit == 2)
 
 Pause = bit0(0x13d4)
-Slowdown = byte(0x140b) // anything other than 0 slows down the game
 
 XPos = word(0x94)
 YPos = word(0x96)
@@ -94,10 +84,10 @@ function Key() => byte(0x1434) > 0
 function LBExitKey(stage) => StageID == StageData[stage]["ID"] && Key()
 function LBExitOrb(stage) => StageID == StageData[stage]["ID"] && Orb()
 
-either figure out how to reset only if the level hasn't been completed, or
+//either figure out how to reset only if the level hasn't been completed, or
 
 function MiniStageComplete(stage) =>
-        once(StageID == StageData[stage]["ID"] && Checkpoint == StageData[stage]["Checkpoint"] && LevelStart() &&
+        once(StageID == StageData[stage]["ID"] && LevelStart() &&
             PowerUp == 0 && never(Overworld()) && !RidingYoshi
             ) && 
             StageID == StageData[stage]["ID"] && LevelComplete &&
@@ -107,7 +97,7 @@ function MiniStageComplete(stage) =>
 
 achievement(
         title="Mini Mario vs. Yoshi's Island",points=5,
-        description=Clear each of the 5 stages in Yoshi's Island as small Mario without using power-ups, checkpoints, or riding Yoshi in a single session.",
+        description="Clear each of the 5 stages in Yoshi's Island as small Mario without using power-ups, checkpoints, or riding Yoshi in a single session.",
         trigger=never(MainMenu()) && 
             measured(tally(5,
                 once(MiniStageComplete(Yoshi1)),
