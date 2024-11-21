@@ -87,31 +87,140 @@ function LBExitOrb(stage) => StageID == StageData[stage]["ID"] && Orb()
 //either figure out how to reset only if the level hasn't been completed, or
 //check if midway value at 0x13ce works
 
-function MiniStageComplete(stage) =>
+function MiniStageComplete2(stage) =>
         once(StageID == StageData[stage]["ID"] && LevelStart() &&
             PowerUp == 0 && never(Overworld()) && !RidingYoshi && bit6(StageData[stage]["Midway"]) == 0
             ) && 
-            (StageID == StageData[stage]["ID"] && LevelComplete &&
+            (StageID == StageData[stage]["ID"] && LevelComplete() &&
             never(prev(PowerUp) == 0 && PowerUp > 0 && StageID == StageData[stage]["ID"]) &&
             never(StarPower && StageID == Stagedata[stage]["ID"]) &&
             never(RidingYoshi && StageID == StageData[stage]["ID"]))
+
+function MiniStageComplete(stage) =>
+        once(once(StageID == StageData[stage]["ID"] && LevelStart() &&
+            PowerUp == 0 && !RidingYoshi && bit6(StageData[stage]["Midway"]) == 0
+            ) &&
+            StageID == StageData[stage]["ID"] && LevelComplete() &&
+            never(prev(PowerUp) == 0 && PowerUp > 0 && StageID == StageData[stage]["ID"]) &&
+            never(StarPower && StageID == Stagedata[stage]["ID"]) &&
+            never(prev(!RidingYoshi) && RidingYoshi && StageID == StageData[stage]["ID"]))
 
 achievement(
         title="Mini Mario vs. Yoshi's Island",points=5,
         description="Clear each of the 5 stages in Yoshi's Island as small Mario without using power-ups, checkpoints, or riding Yoshi in a single session.",
         trigger=never(MainMenu()) && 
             measured(tally(5,
-                once(MiniStageComplete(Yoshi1)),
-                once(MiniStageComplete(Yoshi2)),
-                once(MiniStageComplete(Yoshi3)),
-                once(MiniStageComplete(Yoshi4)),
-                once(MiniStageComplete(IggyCastle))
+                MiniStageComplete(Yoshi1),
+                MiniStageComplete(Yoshi2),
+                MiniStageComplete(Yoshi3),
+                MiniStageComplete(Yoshi4),
+                MiniStageComplete(IggyCastle)
                 ))
 )
-
-                    
-
-
-
-
-
+achievement(
+        title="Mini Mario vs. Donut Plains",points=10,
+        description="Clear each of the 9 stages in Donut Plains as small Mario without using power-ups, checkpoints, or riding Yoshi in a single session.",
+        trigger=never(MainMenu()) && 
+            measured(tally(9,
+                MiniStageComplete(Donut1),
+                MiniStageComplete(Donut2),
+                MiniStageComplete(Donut3),
+                MiniStageComplete(Donut4),
+                MiniStageComplete(DonutGhost),
+                MiniStageComplete(DonutSecret1),
+                MiniStageComplete(DonutSecret2),
+                MiniStageComplete(DonutSecretGhost),
+                MiniStageComplete(MortonCastle)
+                ))
+)            
+achievement(
+        title="Mini Mario vs. Vanilla Dome",points=10,
+        description="Clear each of the 10 stages in Vanilla Dome as small Mario without using power-ups, checkpoints, or riding Yoshi in a single session.",
+        trigger=never(MainMenu()) && 
+            measured(tally(10,
+                MiniStageComplete(Vanilla1),
+                MiniStageComplete(Vanilla2),
+                MiniStageComplete(Vanilla3),
+                MiniStageComplete(Vanilla4),
+                MiniStageComplete(VanillaGhost),
+                MiniStageComplete(VanillaSecret1),
+                MiniStageComplete(VanillaSecret2),
+                MiniStageComplete(VanillaSecret3),
+                MiniStageComplete(VanillaFortress),
+                MiniStageComplete(LemmyCastle)
+                ))
+)
+achievement(
+        title="Mini Mario vs. Twin Bridges",points=10,
+        description="Clear each of the 6 stages in Twin Bridges as small Mario without using power-ups, checkpoints, or riding Yoshi in a single session.",
+        trigger=never(MainMenu()) && 
+            measured(tally(6,
+                MiniStageComplete(Butter1),
+                MiniStageComplete(Butter2),
+                MiniStageComplete(CheeseBridge),
+                MiniStageComplete(CookieMountain),
+                MiniStageComplete(SodaLake),
+                MiniStageComplete(LudwidCastle)
+                ))
+)
+achievement(
+        title="Mini Mario vs. Forest of Illusion",points=10,
+        description="Clear each of the 8 stages in Forest of Illusion as small Mario without using power-ups, checkpoints, or riding Yoshi in a single session.",
+        trigger=never(MainMenu()) && 
+            measured(tally(8,
+                MiniStageComplete(Forest1),
+                MiniStageComplete(Forest2),
+                MiniStageComplete(Forest3),
+                MiniStageComplete(Forest4),
+                MiniStageComplete(ForestGhost),
+                MiniStageComplete(ForestSecret),
+                MiniStageComplete(ForestFortress),
+                MiniStageComplete(RoyCastle)
+                ))
+)
+achievement(
+        title="Mini Mario vs. Chocolate Island",points=10,
+        description="Clear each of the 9 stages in Chocolate Island as small Mario without using power-ups, checkpoints, or riding Yoshi in a single session.",
+        trigger=never(MainMenu()) && 
+            measured(tally(9,
+                MiniStageComplete(Chocolate1),
+                MiniStageComplete(Chocolate2),
+                MiniStageComplete(Chocolate3),
+                MiniStageComplete(Chocolate4),
+                MiniStageComplete(Chocolate5),
+                MiniStageComplete(ChocolateGhost),
+                MiniStageComplete(ChocolateSecret),
+                MiniStageComplete(ChocolateFortress),
+                MiniStageComplete(WendyCastle)
+                ))
+)
+achievement(
+        title="Mini Mario vs. Valley of Bowser",points=10,
+        description="Clear each of the 8 stages in Valley of Bowser as small Mario without using power-ups, checkpoints, or riding Yoshi in a single session.",
+        trigger=never(MainMenu()) && 
+            measured(tally(8,
+                MiniStageComplete(Bowser1),
+                MiniStageComplete(Bowser2),
+                MiniStageComplete(Bowser3),
+                MiniStageComplete(Bowser4),
+                MiniStageComplete(BowserGhost),
+                MiniStageComplete(BowserFortress),
+                MiniStageComplete(LarryCastle),
+                MiniStageComplete(BowserCastle)
+                ))
+)
+achievement(
+        title="Mini Mario vs. Special World",points=10,
+        description="Clear each of the 8 stages in Special World as small Mario without using power-ups, checkpoints, or riding Yoshi in a single session.",
+        trigger=never(MainMenu()) && 
+            measured(tally(8,
+                MiniStageComplete(Special1),
+                MiniStageComplete(Special2),
+                MiniStageComplete(Special3),
+                MiniStageComplete(Special4),
+                MiniStageComplete(Special5),
+                MiniStageComplete(Special6),
+                MiniStageComplete(Special7),
+                MiniStageComplete(Special8)
+                ))
+)
