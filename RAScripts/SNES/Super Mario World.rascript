@@ -85,15 +85,16 @@ function LBExitKey(stage) => StageID == StageData[stage]["ID"] && Key()
 function LBExitOrb(stage) => StageID == StageData[stage]["ID"] && Orb()
 
 //either figure out how to reset only if the level hasn't been completed, or
+//check if midway value at 0x13ce works
 
 function MiniStageComplete(stage) =>
         once(StageID == StageData[stage]["ID"] && LevelStart() &&
-            PowerUp == 0 && never(Overworld()) && !RidingYoshi
+            PowerUp == 0 && never(Overworld()) && !RidingYoshi && bit6(StageData[stage]["Midway"]) == 0
             ) && 
-            StageID == StageData[stage]["ID"] && LevelComplete &&
+            (StageID == StageData[stage]["ID"] && LevelComplete &&
             never(prev(PowerUp) == 0 && PowerUp > 0 && StageID == StageData[stage]["ID"]) &&
             never(StarPower && StageID == Stagedata[stage]["ID"]) &&
-            never(RidingYoshi && StageID == StageData[stage]["ID"])
+            never(RidingYoshi && StageID == StageData[stage]["ID"]))
 
 achievement(
         title="Mini Mario vs. Yoshi's Island",points=5,
