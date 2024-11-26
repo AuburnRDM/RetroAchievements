@@ -75,7 +75,7 @@ XPos = word(0x94)
 YPos = word(0x96)
 
 MessageBox = byte(0x1426)
-
+Balloon = byte(0x1891) > 0
 //level flags for any% leaderboard
 Any1 = bit7(0x1ecb) Any2 = bit7(0x1ecc) Any3 = bit7(0x1ecd) Any4 = bit7(0x1ed2) Any5 = bit7(0x1ec8) Any6 = bit7(0x1ed4) Any7 = bit7(0x1ed6) Any8 = bit7(0x1ee6)
 
@@ -102,7 +102,8 @@ function MiniStageComplete(stage) =>
             ) &&
             StageID == StageData[stage]["ID"] && LevelComplete() &&
             never(prev(PowerUp) == 0 && PowerUp > 0 && StageID == StageData[stage]["ID"]) &&
-            never(StarPower && StageID == Stagedata[stage]["ID"]) &&
+            never(StarPower && StageID == StageData[stage]["ID"]) &&
+            never(Balloon && StageID == StageData[stage]["ID"]) &&
             never(prev(!RidingYoshi) && RidingYoshi && StageID == StageData[stage]["ID"]))
 
 achievement(
@@ -210,7 +211,7 @@ achievement(
                 ))
 )
 achievement(
-        title="Mini Mario vs. Special World",points=10,
+        title="Mini Mario vs. Special World",points=25,
         description="Clear each of the 8 stages in Special World as small Mario without using power-ups, checkpoints, or riding Yoshi in a single session.",
         trigger=never(MainMenu()) && 
             measured(tally(8,
