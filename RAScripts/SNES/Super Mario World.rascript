@@ -215,13 +215,13 @@ achievement(
         description="Clear each of the 8 stages in Special World as small Mario without using power-ups, checkpoints, or riding Yoshi in a single session.",
         trigger=never(MainMenu()) && 
             measured(tally(8,
-                MiniStageComplete(Special1),
-                MiniStageComplete(Special2),
-                MiniStageComplete(Special3),
-                MiniStageComplete(Special4),
-                MiniStageComplete(Special5),
-                MiniStageComplete(Special6),
-                MiniStageComplete(Special7),
-                MiniStageComplete(Special8)
+                MiniStageComplete(Gnarly),
+                MiniStageComplete(Tubular),
+                MiniStageComplete(WayCool),
+                MiniStageComplete(Awesome),
+                MiniStageComplete(Groovy),
+                MiniStageComplete(Mondo),
+                MiniStageComplete(Outrageous),
+                MiniStageComplete(Funky)
                 ))
 )
