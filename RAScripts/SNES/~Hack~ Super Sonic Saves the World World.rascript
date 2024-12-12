@@ -497,7 +497,7 @@ AchData = {
     9:{"clearT":"Special Delivery","clearP":10,"clearFlav":"The future isn't looking great, but at least that's one less billionaire to worry about."},
     10:{"clearT":"We're Having Fun","clearP":25,"clearFlav":"That was fun, right? Let's do it again sometime."},
     11:{"clearT":"Shells at Suppertime","clearP":25,"clearFlav":"We own these streets. Which streets? All of them."},
-    12:{"clearT":"Night Terrors","clearP":10,"clearFlav":"l"},
+    12:{"clearT":"Night Terrors","clearP":10,"clearFlav":"Nothing personnel, kid."},
     13:{"clearT":"We Believe","clearP":10,"clearFlav":"What awful things are behind that other door?"},
     14:{"clearT":"Celeste, A Performance","clearP":25,"clearFlav":"Keep an eye out for Goomba's upcoming performance in the Undertale stage play."},
     15:{"clearT":"Gotta Go Fast","clearP":10,"clearFlav":"The doctor called and said my speed is terminal."},
@@ -854,12 +854,14 @@ achievement(
     description="Finish the game and save the world? What was it all for?",
     trigger= StageID == DaddysCastle && NormalExit()
 )
-achievement(
-    title="Humble Hedgehog", points=10,
-    description="Complete Full Moon Eclipse without collecting more than 30 rings or coins.",
-    trigger= StageID == DaddysCastle && ScreenID == FullMoon && trigger_when(FullMoonXCheck) &&
-            unless(tally(31,ScreenID == FullMoon && Rings != prev(Rings)) && never(Dead) && never(Overworld()))
-)
+
+//not feeling this one
+//achievement(
+//    title="Humble Hedgehog", points=10,
+//    description="Complete Full Moon Eclipse without collecting more than 30 rings or coins.",
+//    trigger= StageID == DaddysCastle && ScreenID == FullMoon && trigger_when(FullMoonXCheck) &&
+//            unless(tally(31,ScreenID == FullMoon && Rings != prev(Rings)) && never(Dead) && never(Overworld()))
+//)
 
 //100% levels
 achievement(
