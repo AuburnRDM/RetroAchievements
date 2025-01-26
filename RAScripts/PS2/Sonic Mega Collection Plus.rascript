@@ -148,6 +148,9 @@ StageTime = (StageSeconds * 60) + StageFrames
 InMatch = bit0(0x8EDCC7) == 1
 
 // $8EE301: acdtual mean beans placed by both side not counting trash
+// $8EE308: [Mean Bean Machine (GG)]
+//          [8-bit] Current combo (flips to 0x01 with first clear)
+Combo = byte(0x8EE308)
 // $8EE30B: [Mean Bean Machine (GG)]
 //          [8-bit] Current puzzle; starts at 0x00
 CurrentPuzzle = byte(0x8EE30B) + 1
