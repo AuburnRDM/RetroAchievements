@@ -2311,7 +2311,7 @@ SpecialRP = {
   0:"",
   1:"Gold",
   2:"Darkside"
-
+}
 // $3C6B7C: [8-bit] Player 2/CPU special mode
 //          0x00 - Normal
 //          0x01 - Gold
@@ -2343,7 +2343,7 @@ RulesRP = {
   0:"",
   1:"GG",
   2:"GGX"
-
+}
 // $3C6B8C: [8-bit] Player 2/CPU character mode
 //          0x00 - Normal
 //          0x01 - GG
@@ -2353,6 +2353,9 @@ Rules2P = byte(0x3C6B8C)
 // $3C6BA4: [32-bit] potential game file timer?
 // $3C6C10: [16-bit] Tension - Player 1
 //          0x2710 - Max Tension
+//          0x1388 - Rakusyo
+P1Tension = word(0x3C6C10)
+    Rakusyo = 0x1388
 // $3C6C2A: [16-bit] Player 1 Guard meter
 //          0x0000 - Neutral
 //          0x0080 - Full
@@ -2363,6 +2366,7 @@ Rules2P = byte(0x3C6B8C)
 //          0x13a98 - Full meter; ready to use burst
 // $3C6D58: [16-bit] Tension - Player 2/CPU
 //          0x2710 - Max Tension
+P2Tension = word(0x3C6D58)
 // $3C6E56: [8-bit] Current combo count; resets to 0x00 when combo window is over
 CurrentCombo = byte(0x3C6E56)
 // $3C6E58: [8-bit] Most recent combo total
@@ -2381,6 +2385,9 @@ CurrentCombo = byte(0x3C6E56)
 //          0x0b - Sound
 //          0x0d - Exit
 // $3D4A10: [8-bit] VS CPU - Stage selected
+//          0x00 - London
+Stage = byte(0x3D4A10)
+    London = 0x00
 // $3D4A14: [8-bit] VS CPU - BGM selected
 // $3D4A18: select mode
 // $3D4A19: p2 select mode
@@ -2541,16 +2548,16 @@ CharData2 = {
 }
 
 SurvivalData = {
-    100:{"progT":"any 100","progP":10,"classicT":"classic 100","classicP":10,"daredevil":0x34,"desc":"in "),
-    200:{"progT":"any 200","progP":10,"classicT":"classic 200","classicP":10,"daredevil":,"desc":"in "),
-    300:{"progT":"any 300","progP":10,"classicT":"classic 300","classicP":10,"daredevil":,"desc":"in "),
-    400:{"progT":"any 400","progP":10,"classicT":"classic 400","classicP":10,"daredevil":,"desc":"in "),
-    500:{"progT":"any 500","progP":10,"classicT":"classic 500","classicP":10,"daredevil":,"desc":"in "),
-    600:{"progT":"any 600","progP":25,"classicT":"classic 600","classicP":25,"daredevil":,"desc":"in "),
-    700:{"progT":"any 700","progP":25,"classicT":"classic 700","classicP":25,"daredevil":,"desc":"in "),
-    800:{"progT":"any 800","progP":25,"classicT":"classic 800","classicP":25,"daredevil":,"desc":"in "),
-    900:{"progT":"any 900","progP":25,"classicT":"classic 900","classicP":25,"daredevil":,"desc":"in "),
-    999:{"progT":"any 999","progP":50,"classicT":"classic 1000","classicP":50,"daredevil":,"desc":"and complete ")
+    100:{"progT":"any 100","progP":10,"classicT":"classic 100","classicP":10,"daredevil":5,"desc":"in "},
+    200:{"progT":"any 200","progP":10,"classicT":"classic 200","classicP":10,"daredevil":10,"desc":"in "},
+    300:{"progT":"any 300","progP":10,"classicT":"classic 300","classicP":10,"daredevil":15,"desc":"in "},
+    400:{"progT":"any 400","progP":10,"classicT":"classic 400","classicP":10,"daredevil":20,"desc":"in "},
+    500:{"progT":"any 500","progP":10,"classicT":"classic 500","classicP":10,"daredevil":25,"desc":"in "},
+    600:{"progT":"any 600","progP":25,"classicT":"classic 600","classicP":25,"daredevil":30,"desc":"in "},
+    700:{"progT":"any 700","progP":25,"classicT":"classic 700","classicP":25,"daredevil":35,"desc":"in "},
+    800:{"progT":"any 800","progP":25,"classicT":"classic 800","classicP":25,"daredevil":40,"desc":"in "},
+    900:{"progT":"any 900","progP":25,"classicT":"classic 900","classicP":25,"daredevil":45,"desc":"in "},
+    999:{"progT":"any 999","progP":50,"classicT":"classic 1000","classicP":50,"daredevil":52,"desc":"and complete "}
 }
 
 MissionData = {
@@ -2591,13 +2598,13 @@ AllCharacters = range(1,0x19)
 //Functions
 function FullGallery() => GallerySpecial() + GallerySecret() + GalleryArcade() + GalleryStory()
 
-function ArcadeClear1P() =>
-function ArcadeClear2P() =>
-function MatchWon1P() =>
-function MatchWon2P() =>
+function ArcadeClear1P() => prev(byte(0x1)) == 0 && byte(0x01) == 1
+function ArcadeClear2P() => prev(byte(0x2)) == 0 && byte(0x02) == 1
+function MatchWon1P() => prev(byte(0x3)) == 0 && byte(0x03) == 1
+function MatchWon2P() => prev(byte(0x3)) == 0 && byte(0x03) == 1
 
 //define Stage, RoundStart, Rakusyo
-
+RoundStart = prev(RoundTimer) > RoundTimer
 
 //Achievements
 //Story mode
@@ -2606,7 +2613,7 @@ function CharacterStoryAch(character) {
         achievement(
                 title=CharData[character]["storyT"], points=CharData[character]["storyP"],
                 description="Reach both endings as " + CharData[character]["Name"] + " in Story mode.",
-                title= InGame && StoryMode && prev(CharacterStory(character)) == 1 && 
+                trigger= InGame && StoryMode && prev(CharacterStory(character)) == 1 && 
                       CharacterStory(character) == 2
         )
 }
@@ -2614,7 +2621,7 @@ function CharacterSingleStoryAch(character) {
         achievement(
                 title=CharData[character]["storyT"], points=CharData[character]["storyP"],
                 description="Reach the ending as " + CharData[character]["Name"] + " in Story mode.",
-                title= InGame && StoryMode && prev(CharacterStory(character)) == 0 && 
+                trigger= InGame && StoryMode && prev(CharacterStory(character)) == 0 && 
                       CharacterStory(character) == 1
         )
 }
@@ -2630,8 +2637,8 @@ for i in range(0x17,0x19)
 //Arcade normal+ no darkside/gold
 function NormalArcade(character) {
         achievement(
-                title=CharData[character]["arcadeT"], points=CharData[character]["arcadeP],
-                description= "Complete Arcade mode using only " + CharData[character]["Name] +". [Normal+ | Default Settings | No Gold/Darkside/GG]",
+                title=CharData[character]["arcadeT"], points=CharData[character]["arcadeP"],
+                description= "Complete Arcade mode using only " + CharData[character]["Name"] +". [Normal+ | Default Settings | No Gold/Darkside/GG]",
                 trigger= InGame && ArcadeMode && never(TwoPlayer) && Difficulty >= Normal && DefaultSettings() && 
                         ((once(LeftPlayer && Character1P == character && !EXMoves1P && StageWins1P == 0 &&
                         never(prev(Character1P) != Character1P) && never(EXMoves1P)) && never(Special1P > 0) && never(Rules1P == GG) && 
@@ -2647,8 +2654,8 @@ for i in AllCharacters
 
 function EXArcade(character) {
         achievement(
-                title=CharData[character]["arcadeT"], points=CharData[character]["arcadeP],
-                description= "Complete Arcade mode using only EX " + CharData[character]["Name] +". [Normal+ | Default Settings | No Gold/Darkside/GG]",
+                title=CharData[character]["arcadeT"], points=CharData[character]["arcadeP"],
+                description= "Complete Arcade mode using only EX " + CharData[character]["Name"] +". [Normal+ | Default Settings | No Gold/Darkside/GG]",
                 trigger= InGame && ArcadeMode && never(TwoPlayer) && Difficulty >= Normal && DefaultSettings() && 
                         ((once(LeftPlayer && Character1P == character && EXMoves1P && StageWins1P == 0 && 
                         never(prev(Character1P) != Character1P) && never(!EXMoves1P)) && never(Special1P > 0) && never(Rules1P == GG) && 
@@ -2664,8 +2671,8 @@ for i in AllCharacters
 
 function ManiacArcade(character) {
         achievement(
-                title=CharData[character]["maniacT"], points=CharData[character]["arcadeP],
-                description= "Complete Arcade mode using only " + CharData[character]["Name] +". [Maniac | Default Settings | No Gold/Darkside/GG]",
+                title=CharData[character]["maniacT"], points=CharData[character]["arcadeP"],
+                description= "Complete Arcade mode using only " + CharData[character]["Name"] +". [Maniac | Default Settings | No Gold/Darkside/GG]",
                 trigger= InGame && ArcadeMode && never(TwoPlayer) && Difficulty == Maniac && DefaultSettings() &&
                         ((once(LeftPlayer && Character1P == character && StageWins1P == 0 && 
                         never(prev(Character1P) != Character1P)) && never(Special1P > 0) && never(Rules1P == GG) && 
@@ -2685,10 +2692,10 @@ achievement(
                 title="EX arcade title", points=5,
                 description= "Complete EX Arcade mode. [Normal+ | Default Settings | No Gold/Darkside/GG]",
                 trigger= InGame && ArcadeMode && EXArcade && never(TwoPlayer) && Difficulty >= Normal && DefaultSettings() &&
-                        ((once(LeftPlayer && Character1P == character && StageWins1P == 0 && 
+                        ((once(LeftPlayer && Character1P != 0 && StageWins1P == 0 && 
                         never(prev(Character1P) != Character1P)) && never(Special1P > 0) && never(Rules1P == GG) && 
                         ArcadeClear1P()) ||
-                        (once(RightPlayer && Character2P == character && StageWins2P == 0 && 
+                        (once(RightPlayer && Character2P != 0 && StageWins2P == 0 && 
                         never(prev(Character2P) != Character1P)) && never(Special2P > 0) && never(Rules2P == GG) && 
                         ArcadeClear2P()))
 )
@@ -2697,10 +2704,10 @@ achievement(
                 title="EX arcade maniac title", points=10,
                 description= "Complete EX Arcade mode. [Maniac | Default Settings | No Gold/Darkside/GG]",
                 trigger= InGame && ArcadeMode && EXArcade && never(TwoPlayer) && Difficulty == Maniac && DefaultSettings() &&
-                        ((once(LeftPlayer && Character1P == character && StageWins1P == 0 && 
+                        ((once(LeftPlayer && Character1P != 0 && StageWins1P == 0 && 
                         never(prev(Character1P) != Character1P)) && never(Special1P > 0) && never(Rules1P == GG) && 
                         ArcadeClear1P()) ||
-                        (once(RightPlayer && Character2P == character && StageWins2P == 0 && 
+                        (once(RightPlayer && Character2P != 0 && StageWins2P == 0 && 
                         never(prev(Character2P) != Character1P)) && never(Special2P > 0) && never(Rules2P == GG) && 
                         ArcadeClear2P()))
 )
@@ -2713,10 +2720,10 @@ achievement(
                 title="gold arcade title", points=5,
                 description= "Complete Gold Arcade mode. [Normal+ | Default Settings | No Gold/Darkside/GG]",
                 trigger= InGame && ArcadeMode && GoldArcade && never(TwoPlayer) && Difficulty >= Normal && DefaultSettings() &&
-                        ((once(LeftPlayer && Character1P == character && StageWins1P == 0 && 
+                        ((once(LeftPlayer && Character1P != 0 && StageWins1P == 0 && 
                         never(prev(Character1P) != Character1P)) && never(Special1P > 0) && never(Rules1P == GG) && 
                         ArcadeClear1P()) ||
-                        (once(RightPlayer && Character2P == character && StageWins2P == 0 && 
+                        (once(RightPlayer && Character2P != 0 && StageWins2P == 0 && 
                         never(prev(Character2P) != Character1P)) && never(Special2P > 0) && never(Rules2P == GG) && 
                         ArcadeClear2P()))
 )
@@ -2725,10 +2732,10 @@ achievement(
                 title="gold arcade maniac title", points=10,
                 description= "Complete Gold Arcade mode. [Maniac | Default Settings | No Gold/Darkside/GG]",
                 trigger= InGame && ArcadeMode && GoldArcade && never(TwoPlayer) && Difficulty == Maniac && DefaultSettings() &&
-                        ((once(LeftPlayer && Character1P == character && StageWins1P == 0 && 
+                        ((once(LeftPlayer && Character1P != 0 && StageWins1P == 0 && 
                         never(prev(Character1P) != Character1P)) && never(Special1P > 0) && never(Rules1P == GG) && 
                         ArcadeClear1P()) ||
-                        (once(RightPlayer && Character2P == character && StageWins2P == 0 && 
+                        (once(RightPlayer && Character2P != 0 && StageWins2P == 0 && 
                         never(prev(Character2P) != Character1P)) && never(Special2P > 0) && never(Rules2P == GG) && 
                         ArcadeClear2P()))
 )
@@ -2782,7 +2789,7 @@ achievement(
 //allow any char for now
 function SurvivalClassicAch(round) {
         achievement(
-                title=SurvivalData[round]["progT"],points=SurvivalData[round]["progP"],
+                title=SurvivalData[round]["classicT"],points=SurvivalData[round]["classicP"],
                 description="Defeat the Daredevil challenger on floor " + round + SurvivalData[round]["desc"] + "Classic Survival mode.",
                 trigger= InGame && SurvivalMode && ClassicSurvival &&
                 prev(DaredevilDefeated) == SurvivalData[round]["daredevil"] -1  && 
@@ -2798,17 +2805,17 @@ for i in [100,200,300,400,500,600,700,800,900,999]
 achievement(
         title="mission 10", points=5,
         description="Complete 10 different missions in Mission mode.",
-        trigger= InGame && MissionMode && prev(MissionProgress()) == 9 && MissionProgress == 10
+        trigger= InGame && MissionMode && prev(MissionProgress()) == 9 && MissionProgress() == 10
 )
 achievement(
         title="mission 20", points=10,
         description="Complete 20 different missions in Mission mode.",
-        trigger= InGame && MissionMode && prev(MissionProgress()) == 19 && MissionProgress == 20
+        trigger= InGame && MissionMode && prev(MissionProgress()) == 19 && MissionProgress() == 20
 )
 achievement(
         title="mission 30", points=10,
         description="Complete 30 different missions in Mission mode.",
-        trigger= InGame && MissionMode && prev(MissionProgress()) == 29 && MissionProgress == 30
+        trigger= InGame && MissionMode && prev(MissionProgress()) == 29 && MissionProgress() == 30
 )
 //GGXX ranks
 function GGXXAch(mission) {
@@ -2825,8 +2832,8 @@ for i in range(1,30)
 //Character clears
 function CharacterMissionAch(character) {
         achievement(
-            title=AchData[character]["missionT"], points=AchData[character]["missionP"],
-            description="Clear all 30 missions with " + AchData[character]["Name"] + ".",
+            title=CharData2[character]["missionT"], points=CharData2[character]["missionP"],
+            description="Clear all 30 missions with " + CharData[character]["Name"] + ".",
             trigger= InGame && MissionMode && prev(CharacterMission(character)) == 29 && CharacterMission(character) == 30
         )
 }
@@ -2876,7 +2883,7 @@ achievement(
 //VS Challenges
 //3v3 team stuff
 //gold maniac mirror matches
-function ManiacMirrorAch(character) =>
+function ManiacMirrorAch(character) {
         achievement(
                 title=CharData2[character]["mirrorT"],points=CharData2[character]["mirrorP"],
                 description="Defeat a gold " + CharData[character]["Name"] + " as a normal " + CharData[character]["Name"] + " in VS. CPU mode. [Maniac | Default Settings | No Gold/Darkside/GG]",
@@ -2885,7 +2892,7 @@ function ManiacMirrorAch(character) =>
                                 ((LeftPlayer && Special1P == 0 && Special2P == Gold && MatchWon1P()) ||
                                 (RightPlayer && Special1P == Gold && Special2P == 0 && MatchWon2P()))
 )
-
+}
 //Mirror matches
 for i in AllCharacters
         ManiacMirrorAch(i)
@@ -2908,9 +2915,9 @@ achievement(
 achievement(
         title="Bad Sportsmanship",points=1,
         description="Disrepect your opponent after a round in Arcade or VS to give them an edge in the next.",
-        trigger=InGame && __ornext((ArcadeMode) || (VSCPU) || (VSCPUTeam)) &&
-                (LeftPlayer && P2Tension == Rakusyo && RoundStart) ||
-                (RightPlayer && P1Tension == Rakusyo && RoundStart)
+        trigger=(InGame && (ArcadeMode) || (VSCPU) || (VSCPUTeam)) &&
+                ((LeftPlayer && P2Tension == Rakusyo && RoundStart) ||
+                (RightPlayer && P1Tension == Rakusyo && RoundStart))
 )
 
 
