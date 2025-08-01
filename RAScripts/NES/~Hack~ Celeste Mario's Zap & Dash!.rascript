@@ -588,16 +588,23 @@ RotMKSeasonRP = {
     3:"Winter"
 }
 // $7021: [8-bit] RotMK - Year; 2xx is static and this value is just for the xx
+RotMKYear = byte(0x7021) + 200
 // $77A9: [8-bit] RotMK - Difficulty
 //        0x00 - Easy
 //        0x01 - Normal
 //        0x02 - Hard
+RotMKDifficulty = byte(0x77A9)
+    RotMKEasy = 0
+    RotMKNormal = 1
+    RotMKHard = 2
 // $77C0: [8-bit] RotMK - Invasion Food
 //        0x03 - 30 seconds base
 //        0x05 - 50 seconds base
 //        0x08 - 80 seconds base
 // $77C2: [8-bit] RotMK - Food
+RotMKFood = byte(0x77C2)
 // $77C5: [8-bit] RotMK - Current round; starts at 0x00
+RotMKRound = byte(0x77C5) + 1
 
 //---Worst Minichallenges for Masochists---
 
@@ -1112,6 +1119,7 @@ FarewellKosmic = Map == 6 && Room == 0x13
 FarewellWin = Map == 7 && Room == 0x13 && prev(PageX) == 0 && PageX == 1
 
 //Playing for RP and misc cheevos
+PlayingRotMK = Map == 7 && Room <= 0x11
 PlayingFarewell = (Map == 6 && (Room >= 0x03 && Room <= 0x0a) || (Room >= 0x0e)) || (Map == 7 && __ornext(Room == 0x12 || Room == 0x13)) ||
                   (Map == 5 && __ornext(Room == 2 && Room == 3))
 
@@ -1448,7 +1456,21 @@ leaderboard(
     format = "FRAMES", lower_is_better = true
 )
 //---Romance of the Mushroom Kingdom---
-
+achievement(
+    title = "easy rotmk", points = 5,
+    description = "[Archive] Win a game of Realm of the Mushroom Kingdom on any difficulty.",
+    trigger = ArchiveMode && PlayingRotMK && RotMKVictory
+)
+achievement(
+    title = "normal rotmk", points = 5,
+    description = "[Archive] Win a game of Realm of the Mushroom Kingdom on normal difficulty or higher.",
+    trigger = ArchiveMode && PlayingRotMK && RotMKVictory && RotMKDifficulty >= RotMKNormal
+)
+achievement(
+    title = "Hard rotmk", points = 5,
+    description = "[Archive] Win a game of Realm of the Mushroom Kingdom on hard difficulty.",
+    trigger = ArchiveMode && PlayingRotMK && RotMKVictory && RotMKDifficulty == RotMKHard
+)
 //---Worst Minichallenges for Masochists---
 
 //---Farewell---
