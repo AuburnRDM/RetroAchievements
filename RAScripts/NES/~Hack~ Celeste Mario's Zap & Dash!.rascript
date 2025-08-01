@@ -1804,12 +1804,23 @@ achievement(
     description = "[Driller] Complete the special level and end the first loop as Sponge.",
     trigger = DrillerMode && prev(DrillerLevel) == 5 && DrillerLevel == 6 && DrillerCharacter == Sponge
 )
-DrillerCharacterRP = {
-    0:"Mario",
-    1:"Kamikaze Mario",
-    2:"Hana-Chan",
-    3:"Madeline",
-    4:"Spelunker",
-    5:"Matheline",
-    6:"Minky Momo",
-    7:"Sponge"
+
+//DRILLER leaderboards
+leaderboard(
+    title = "Driller Mario - Score",
+    description = "[Driller] Score as many points as you can with any character.",
+    start  = DrillerMode && prev(DrillerLives) == 1 && DrillerLives == 0,
+    cancel = always_false(),
+    submit = always_true(),
+    value = DrillerScore,
+    format = "VALUE", lower_is_better = false
+)
+leaderboard(
+    title = "Driller Mario - Levels",
+    description = "[Driller] Complete as many levels as you can with any character.",
+    start  = DrillerMode && prev(DrillerLives) == 1 && DrillerLives == 0,
+    cancel = always_false(),
+    submit = always_true(),
+    value = DrillerLevel,
+    format = "VALUE", lower_is_better = false
+)
