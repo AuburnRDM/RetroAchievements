@@ -184,6 +184,9 @@ AssistRP = {
     0:"",
     1:"[Assist]"
 }
+// $77B7: [8-bit] Driller Mario - Cheat mode
+//        bit7 - On
+DrillerCheat = bit7(0x77B7)
 // $7F1F: [8-bit] Game mode
 //        0x00 - None / Celeste Mario
 //        0x02 - Celeste Archive
@@ -192,7 +195,7 @@ GameMode = byte(0x7F1F)
 
 StandardMode = GameMode == 0 && NoAssist
 ArchiveMode = GameMode == 2 && NoAssist
-DrillerMode = GameMode == 3 && NoAssist
+DrillerMode = GameMode == 3 && NoAssist && DrillerCheat == 0
 
 StandardModeAssist = GameMode == 0
 
@@ -736,8 +739,6 @@ DrillerCharacterRP = {
 //        0x01 - Speed 2
 //        0x02 - Speed 3
 DrillerSpeed = byte(0x77C2) + 1
-
-
 
 
 //Functions
@@ -1691,7 +1692,7 @@ leaderboard(
     cancel = __ornext(ArchiveHub || GameMode != 2),
     submit = ArchiveMode && FarewellWin,
     value = always_true(),
-    format = "FRAMES", lower_is_better = false
+    format = "FRAMES", lower_is_better = true
 )
 leaderboard(
     title = "Farewell - 100%",
@@ -1700,7 +1701,115 @@ leaderboard(
     cancel = __ornext(ArchiveHub || GameMode != 2 || ArchiveCancel),
     submit = ArchiveMode && FarewellWin && TotalMoons == 20,
     value = always_true(),
-    format = "FRAMES", lower_is_better = false
+    format = "FRAMES", lower_is_better = true
 )
 
+//---DRILLER MARIO---
+//DrillerScore, DrillerLives, DrillerLevel, DrillerCharacter, DrillerSpeed, DrillerMode, DrillerCheat (0/1)
 
+//driller progression
+achievement(
+    title = "driller 1", points = 5,
+    description = "[Driller] Complete level 1 as any character. Cheat mode is blocked from all Driller Mario achievements and leaderboards.",
+    trigger = DrillerMode && prev(DrillerLevel) == 1 && DrillerLevel == 2
+)
+achievement(
+    title = "driller 2", points = 5,
+    description = "[Driller] Complete level 2 as any character.",
+    trigger = DrillerMode && prev(DrillerLevel) == 2 && DrillerLevel == 3
+)
+achievement(
+    title = "driller 3", points = 5,
+    description = "[Driller] Complete level 3 as any character.",
+    trigger = DrillerMode && prev(DrillerLevel) == 3 && DrillerLevel == 4
+)
+achievement(
+    title = "driller 4", points = 5,
+    description = "[Driller] Complete level 4 as any character.",
+    trigger = DrillerMode && prev(DrillerLevel) == 4 && DrillerLevel == 5
+)
+achievement(
+    title = "driller loop", points = 5,
+    description = "[Driller] Complete the special level and end the first loop as any character.",
+    trigger = DrillerMode && prev(DrillerLevel) == 5 && DrillerLevel == 6
+)
+achievement(
+    title = "driller loop 2", points = 5,
+    description = "[Driller] Complete the special level and end the second loop as any character.",
+    trigger = DrillerMode && prev(DrillerLevel) == 10 && DrillerLevel == 11
+)
+achievement(
+    title = "driller loop 3", points = 5,
+    description = "[Driller] Complete the special level and end the third loop as any character.",
+    trigger = DrillerMode && prev(DrillerLevel) == 15 && DrillerLevel == 16
+)
+
+//driller score
+achievement(
+    title = "driller 100k", points = 5,
+    description = "[Driller] Score 100,000 points or more.",
+    trigger = DrillerMode && DrillerLevel > 0 && prev(DrillerScore) < 100000 && DrillerScore >= 100000
+)
+achievement(
+    title = "driller 500k", points = 5,
+    description = "[Driller] Score 500,000 points or more.",
+    trigger = DrillerMode && DrillerLevel > 0 && prev(DrillerScore) < 500000 && DrillerScore >= 500000
+)
+achievement(
+    title = "driller 1m", points = 5,
+    description = "[Driller] Score 1,000,000 points or more.",
+    trigger = DrillerMode && DrillerLevel > 0 && prev(DrillerScore) < 1000000 && DrillerScore >= 100000
+)
+achievement(
+    title = "driller 3m", points = 5,
+    description = "[Driller] Score 3,000,000 points or more.",
+    trigger = DrillerMode && DrillerLevel > 0 && prev(DrillerScore) < 3000000 && DrillerScore >= 300000
+)
+//driller challenges
+//no items
+//3x progress
+achievement(
+    title = "driller loop 3x", points = 5,
+    description = "[Driller] Complete the special level and end the first loop as any character with a 3x progression speed modifier.",
+    trigger = DrillerMode && prev(DrillerLevel) == 5 && DrillerLevel == 6 && DrillerSpeed == 3
+)
+//driller characters
+achievement(
+    title = "driller mario", points = 5,
+    description = "[Driller] Complete the special level and end the first loop as Mario.",
+    trigger = DrillerMode && prev(DrillerLevel) == 5 && DrillerLevel == 6 && DrillerCharacter == Mario
+)
+achievement(
+    title = "driller kamikaze", points = 5,
+    description = "[Driller] Complete the special level and end the first loop as Kamikaze Mario.",
+    trigger = DrillerMode && prev(DrillerLevel) == 5 && DrillerLevel == 6 && DrillerCharacter == KamikazeMario
+)
+achievement(
+    title = "driller hanachan", points = 5,
+    description = "[Driller] Complete the special level and end the first loop as Hana-Chan.",
+    trigger = DrillerMode && prev(DrillerLevel) == 5 && DrillerLevel == 6 && DrillerCharacter == HanaChan
+)
+achievement(
+    title = "driller madeline", points = 5,
+    description = "[Driller] Complete the special level and end the first loop as Madeline or Matheline.",
+    trigger = DrillerMode && prev(DrillerLevel) == 5 && DrillerLevel == 6 && __ornext(DrillerCharacter == Madeline || DrillerCharacter == Matheline)
+)
+achievement(
+    title = "driller minky momo", points = 5,
+    description = "[Driller] Complete the special level and end the first loop as Minky Momo.",
+    trigger = DrillerMode && prev(DrillerLevel) == 5 && DrillerLevel == 6 && DrillerCharacter == MinkyMomo
+)
+achievement(
+    title = "driller sponge", points = 5,
+    description = "[Driller] Complete the special level and end the first loop as Sponge.",
+    trigger = DrillerMode && prev(DrillerLevel) == 5 && DrillerLevel == 6 && DrillerCharacter == Sponge
+)
+DrillerCharacterRP = {
+    0:"Mario",
+    1:"Kamikaze Mario",
+    2:"Hana-Chan",
+    3:"Madeline",
+    4:"Spelunker",
+    5:"Matheline",
+    6:"Minky Momo",
+    7:"Sponge"
