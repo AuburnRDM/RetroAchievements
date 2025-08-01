@@ -1506,7 +1506,7 @@ MasoBumper = Map == 6 && Room == 0x0c && PageX == 3
 MasoBar = Map == 6 && Room == 0x0d && PageX == 0
 MasoSpeedyOrb = Map == 6 && Room == 0x0d && PageX == 2
 MasoSlowOrb = Map == 6 && Room == 0x0d && PageX == 3
-
+AnyMaso = __ornext(MasoWalljump || MasoPlatform || MasoDash || MasoDiagonal || MasoShell || MasoBumper || MasoBar || MasoSpeedyOrb || MasoSlowOrb)
 achievement(
     title = "lower maso", points = 5,
     description = "[Archive] In the Worst Minichallenges for Masochists, survive for 10 seconds or more on each of the ground floor rooms.",
@@ -1530,6 +1530,13 @@ achievement(
                         once(MasoTightOrb && Dead() && MasoSeconds >= 10)
                 ))
 )
+//not sure if i like this one
+achievement(
+    title = "maso30", points = 5,
+    description = "[Archive] In the Worst Minichallenges for Masochists, survive for 30 seconds or more in any room.",
+    trigger = ArchiveMode && AnyMaso && Dead() && MasoSeconds >= 30
+)
+
 walljump, platform, dash, diagonal, shell, bumper, bar, speedy orb, slow orb
 leaderboard(
     title = "Worse Minichallenges for Masochists - Walljump",
