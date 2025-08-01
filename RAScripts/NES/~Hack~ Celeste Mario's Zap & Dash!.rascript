@@ -611,6 +611,8 @@ RotMKRound = byte(0x77C5) + 1
 // $7010: [8-bit] Masochist Challenge - Time (seconds)
 // $7011: [8-bit] Masochist Challenge - Time (tenths of a second)
 // $7012: [8-bit] Masochist Challenge - Frame timer
+MasochistSeconds = byte(0x7010)
+MasochistLB = (MasochistSeconds * 60) + byte(0x7012) //this should match up
 
 //---Farewell---
 
@@ -1491,7 +1493,125 @@ achievement(
     trigger = ArchiveMode && PlayingRotMK && RotMKVictory && RotMKDifficulty == RotMKHard
 )
 //---Worst Minichallenges for Masochists---
+//MasochistSeconds, MasochistLB
+//walljump, platform, dash, diagonal, shell, bumper, bar, speedy orb, slow orb
+//ground
+MasoWalljump = Map == 6 && Room == 0x0c && PageX == 0
+MasoPlatform = Map == 6 && Room == 0x0c && PageX == 2
+MasoDash = Map == 6 && Room == 0x0c && PageX == 4
+MasoDiagonal = Map == 6 && Room == 0x0d && PageX == 1
+//platform
+MasoShell = Map == 6 && Room == 0x0c && PageX == 1
+MasoBumper = Map == 6 && Room == 0x0c && PageX == 3
+MasoBar = Map == 6 && Room == 0x0d && PageX == 0
+MasoSpeedyOrb = Map == 6 && Room == 0x0d && PageX == 2
+MasoSlowOrb = Map == 6 && Room == 0x0d && PageX == 3
 
+achievement(
+    title = "lower maso", points = 5,
+    description = "[Archive] In the Worst Minichallenges for Masochists, survive for 10 seconds or more on each of the ground floor rooms.",
+    trigger = ArchiveMode && never(GameMode != 2) &&
+                measured(tally(4,
+                        once(MasoWallJump && Dead() && MasoSeconds >= 10),
+                        once(MasoPlatform && Dead() && MasoSeconds >= 10),
+                        once(MasoDash && Dead() && MasoSeconds >= 10),
+                        once(MasoDiagonal && Dead() && MasoSeconds >= 10)
+                ))
+)
+achievement(
+    title = "upper maso", points = 5,
+    description = "[Archive] In the Worst Minichallenges for Masochists, survive for 10 seconds or more on each of the rooms on platforms.",
+    trigger = ArchiveMode && never(GameMode != 2) &&
+                measured(tally(5,
+                        once(MasoShell && Dead() && MasoSeconds >= 10),
+                        once(MasoBumper && Dead() && MasoSeconds >= 10),
+                        once(MasoBar && Dead() && MasoSeconds >= 10),
+                        once(MasoSpeedyOrb && Dead() && MasoSeconds >= 10),
+                        once(MasoTightOrb && Dead() && MasoSeconds >= 10)
+                ))
+)
+walljump, platform, dash, diagonal, shell, bumper, bar, speedy orb, slow orb
+leaderboard(
+    title = "Worse Minichallenges for Masochists - Walljump",
+    description = "[Archive] Survive as long as you can in the Walljump minichallenge.",
+    start  = ArchiveMode && MasoWalljump && Dead() && MasoSeconds >= 1,
+    cancel = always_false(),
+    submit = always_true(),
+    value = MasochistLB,
+    format = "VALUE", lower_is_better = false
+)
+leaderboard(
+    title = "Worse Minichallenges for Masochists - Platform",
+    description = "[Archive] Survive as long as you can in the Platform minichallenge.",
+    start  = ArchiveMode && MasoPlatform && Dead() && MasoSeconds >= 1,
+    cancel = always_false(),
+    submit = always_true(),
+    value = MasochistLB,
+    format = "VALUE", lower_is_better = false
+)
+leaderboard(
+    title = "Worse Minichallenges for Masochists - Dash",
+    description = "[Archive] Survive as long as you can in the Dash minichallenge.",
+    start  = ArchiveMode && MasoDash && Dead() && MasoSeconds >= 1,
+    cancel = always_false(),
+    submit = always_true(),
+    value = MasochistLB,
+    format = "VALUE", lower_is_better = false
+)
+leaderboard(
+    title = "Worse Minichallenges for Masochists - Diagonal",
+    description = "[Archive] Survive as long as you can in the Diagonal minichallenge.",
+    start  = ArchiveMode && MasoDiagonal && Dead() && MasoSeconds >= 1,
+    cancel = always_false(),
+    submit = always_true(),
+    value = MasochistLB,
+    format = "VALUE", lower_is_better = false
+)
+leaderboard(
+    title = "Worse Minichallenges for Masochists - Shell",
+    description = "[Archive] Survive as long as you can in the Shell minichallenge.",
+    start  = ArchiveMode && MasoShell && Dead() && MasoSeconds >= 1,
+    cancel = always_false(),
+    submit = always_true(),
+    value = MasochistLB,
+    format = "VALUE", lower_is_better = false
+)
+leaderboard(
+    title = "Worse Minichallenges for Masochists - Bumper",
+    description = "[Archive] Survive as long as you can in the Bumper minichallenge.",
+    start  = ArchiveMode && MasoBumper && Dead() && MasoSeconds >= 1,
+    cancel = always_false(),
+    submit = always_true(),
+    value = MasochistLB,
+    format = "VALUE", lower_is_better = false
+)
+leaderboard(
+    title = "Worse Minichallenges for Masochists - Bar",
+    description = "[Archive] Survive as long as you can in the Bar minichallenge.",
+    start  = ArchiveMode && MasoBar && Dead() && MasoSeconds >= 1,
+    cancel = always_false(),
+    submit = always_true(),
+    value = MasochistLB,
+    format = "VALUE", lower_is_better = false
+)
+leaderboard(
+    title = "Worse Minichallenges for Masochists - Speedy Orbs",
+    description = "[Archive] Survive as long as you can in the Speedy Orbs minichallenge.",
+    start  = ArchiveMode && MasoSpeedyOrb && Dead() && MasoSeconds >= 1,
+    cancel = always_false(),
+    submit = always_true(),
+    value = MasochistLB,
+    format = "VALUE", lower_is_better = false
+)
+leaderboard(
+    title = "Worse Minichallenges for Masochists - Slow Orbs",
+    description = "[Archive] Survive as long as you can in the Slow Orbs minichallenge.",
+    start  = ArchiveMode && MasoSlowOrb && Dead() && MasoSeconds >= 1,
+    cancel = always_false(),
+    submit = always_true(),
+    value = MasochistLB,
+    format = "VALUE", lower_is_better = false
+)
 //---Farewell---
 achievement(
     title = "Kosmic Ray", points = 5,
@@ -1539,8 +1659,17 @@ leaderboard(
     title = "Farewell - Any%",
     description = "[Archive] Complete Farewell as fast as you can.",
     start  = ArchiveMode && FarewellStart,
-    cancel = ArchiveHub || GameMode != 2,
+    cancel = __ornext(ArchiveHub || GameMode != 2),
     submit = ArchiveMode && FarewellWin,
+    value = always_true(),
+    format = "FRAMES", lower_is_better = false
+)
+leaderboard(
+    title = "Farewell - 100%",
+    description = "[Archive] Complete Farewell with all 20 moons as fast as you can.",
+    start  = ArchiveMode && FarewellStart,
+    cancel = __ornext(ArchiveHub || GameMode != 2 || ArchiveCancel),
+    submit = ArchiveMode && FarewellWin && TotalMoons == 20,
     value = always_true(),
     format = "FRAMES", lower_is_better = false
 )
