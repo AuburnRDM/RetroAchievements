@@ -700,7 +700,9 @@ DrillerScore = (byte(0x77AA)) + (byte(0x77A9) * 100) + (byte(0x77A8) *10000) + (
 // $77B7: [8-bit] Driller Mario - Cheat mode
 //        bit7 - On
 // $77B9: [8-bit] Driller Mario - Lives
+DrillerLives = byte(0x77B9)
 // $77BC: [8-bit] Driller Mario - Level (does not take special stages into account)
+DrillerLevel = byte(0x77BC)
 // $77C0: [8-bit] Driller Mario - Character
 //        0x00 - Mario
 //        0x01 - Kamikaze Mario
@@ -710,10 +712,30 @@ DrillerScore = (byte(0x77AA)) + (byte(0x77A9) * 100) + (byte(0x77A8) *10000) + (
 //        0x05 - Matheline
 //        0x06 - Minky Momo
 //        0x07 - Sponge
+DrillerCharacter = byte(0x77C0)
+    Mario = 0
+    KamikazeMario = 1
+    HanaChan = 2
+    Madeline = 3
+    Spelunker = 4
+    Matheline = 5
+    MinkyMomo = 6
+    Sponge = 7
+DrillerCharacterRP = {
+    0:"Mario",
+    1:"Kamikaze Mario",
+    2:"Hana-Chan",
+    3:"Madeline",
+    4:"Spelunker",
+    5:"Matheline",
+    6:"Minky Momo",
+    7:"Sponge"
+}
 // $77C2: [8-bit] Driller Mario - Progression Scaling (requires 1million points)
 //        0x00 - Speed 1
 //        0x01 - Speed 2
 //        0x02 - Speed 3
+DrillerSpeed = byte(0x77C2) + 1
 
 
 
