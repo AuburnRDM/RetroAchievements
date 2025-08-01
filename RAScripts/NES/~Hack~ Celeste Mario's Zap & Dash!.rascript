@@ -1111,7 +1111,7 @@ RainbowStart = prevArchiveHub && Map == 3 && Room == 0x01// && State == 7
 RainbowWin = Map == 4 && Room == 0x1d && ArchiveComplete
 RainbowNormalClear = prior(Room) == 0x1b && Map == 4 && Room == 0x1d && RainbowComplete
 RainbowReverseClear = prior(Map) == 3 && prior(Room) == 0x01 && Map == 4 && Room == 0x1d && RainbowComplete
-RainbowCancel = prev(byte(0x7c0b)) == 0xff
+ArchiveCancel = prev(byte(0x7c0b)) == 0xff
 MakerStart = Map == 5 && Room == 0x10 && State == 7//=&& prev(Map) == 5 && prev(Room) == 0x09
 MakerWin = Map == 5 && Room == 0x7 && ArchiveComplete
 FarewellStart = prevArchiveHub && Map == 6 && Room == 0x10// && State == 7
@@ -1152,11 +1152,20 @@ achievement(
 leaderboard(
     title = "Duality Mario - Score",
     description = "[Archive] Complete Duality Mario with as many points as you can.",
-    start  = ArchiveMode && Map == 2 && Room == 0x1b && ArchiveComplete,
+    start  = ArchiveMode && DualityWin,
     cancel = always_false(),
     submit = always_true(),
     value = ArchiveScore,
     format = "VALUE", lower_is_better = false
+)
+leaderboard(
+    title = "Duality Mario - GM%",
+    description = "[Archive] Complete Duality Mario with a GM rank as fast as you can.",
+    start  = ArchiveMode && DualityStart,
+    cancel = __ornext(ArchiveHub || GameMode != 2 || ArchiveCancel),
+    submit = ArchiveMode && DualityWin && ArchiveScore >= 80000000,
+    value = always_true(),
+    format = "FRAMES", lower_is_better = true
 )
 //---Celeste Mario's Splat & Splash!---
 achievement(
@@ -1179,6 +1188,7 @@ achievement(
     description = "[Archive] Complete Celeste Mario's Splat and Splash! with at least 160,000,000 points to earn a GM rank.",
     trigger = ArchiveMode && SplatWin && ArchiveScore >= 160000000
 )
+//achieve hyper status with 40 or more seconds left on the clock
 leaderboard(
     title = "Splat and Splash! - Score",
     description = "[Archive] Complete Celeste Mario's Splat and Splash! with as many points as you can.",
@@ -1212,11 +1222,20 @@ achievement(
 leaderboard(
     title = "Spelunker Mario - Score",
     description = "[Archive] Complete Spelunker Mario with as many points as you can.",
-    start  = ArchiveMode && Map == 3 && Room == 0x1c && ArchiveComplete,
+    start  = ArchiveMode && SpelunkerWin,
     cancel = always_false(),
     submit = always_true(),
     value = ArchiveScore,
     format = "VALUE", lower_is_better = false
+)
+leaderboard(
+    title = "Spelunker Mario - GM%",
+    description = "[Archive] Complete Spelunker Mario with a GM rank as fast as you can.",
+    start  = ArchiveMode && SpelunkerStart,
+    cancel = __ornext(ArchiveHub || GameMode != 2 || ArchiveCancel),
+    submit = ArchiveMode && SpelunkerWin && ArchiveScore >= 150000,
+    value = always_true(),
+    format = "FRAMES", lower_is_better = true
 )
 //---Mario is You---
 //5, 10, 15, 20, 22 and GM
@@ -1346,7 +1365,7 @@ leaderboard(
     title = "Rainbow Dash - Standard",
     description = "[Archive] Complete the standard route of Rainbow Dash as fast as you can.",
     start  = ArchiveMode && RainbowStart,
-    cancel = __ornext(ArchiveHub || GameMode != 2 || RainbowCancel), // maybe cancel on byte(0x7c0b) == 0xff
+    cancel = __ornext(ArchiveHub || GameMode != 2 || ArchiveCancel), // maybe cancel on byte(0x7c0b) == 0xff
     submit = ArchiveMode && RainbowNormalClear,
     value = always_true(),
     format = "FRAMES", lower_is_better = true
@@ -1355,7 +1374,7 @@ leaderboard(
     title = "Rainbow Dash - Reverse",
     description = "[Archive] Complete the standard and reverse route of Rainbow Dash as fast as you can.",
     start  = ArchiveMode && RainbowStart,
-    cancel = __ornext(ArchiveHub || GameMode != 2 || RainbowCancel),
+    cancel = __ornext(ArchiveHub || GameMode != 2 || ArchiveCancel),
     submit = ArchiveMode && RainbowReverseClear,
     value = always_true(),
     format = "FRAMES", lower_is_better = true
